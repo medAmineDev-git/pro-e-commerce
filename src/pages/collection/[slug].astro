@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CarteProduit from '../../components/CarteProduit.astro';
 import Icone from '../../components/Icone.astro';
-import { gammeDe, image, lienGamme, lienWhatsapp, produits, site, type Produit } from '../../lib/contenu';
+import { etendueTailles, gammeDe, image, lienDevis, lienGamme, lienWhatsapp, produits, site, type Produit } from '../../lib/contenu';
 
 export function getStaticPaths() {
   return produits.map((produit) => ({ params: { slug: produit.slug }, props: { produit } }));
@@ -22,7 +22,8 @@ const message = `Bonjour ${site.marque.nom}, je suis intéressé(e) par le modè
 const details = [
   { terme: 'Tissu', valeur: produit.tissu },
   { terme: 'Grammage', valeur: produit.grammage },
-  { terme: 'Tailles et coloris', valeur: 'Sur demande · panachage possible' },
+  { terme: 'Tailles', valeur: `${etendueTailles(produit)} · panachées` },
+  { terme: 'Coloris', valeur: 'Au choix · panachés' },
   { terme: 'Délai indicatif', valeur: produit.delai },
   { terme: 'Personnalisation', valeur: produit.personnalisation },
 ];
@@ -35,6 +36,7 @@ const details = [
   titre={`${produit.nom} · Fabriqué en Tunisie`}
   description={`${produit.resume} ${produit.tissu}, ${produit.grammage}, à votre marque dès ${produit.minimum} pièces.`}
   apercu={image(produit.images[0])}
+  lienDevis={lienDevis(produit)}
   ariane={[
     { nom: gamme.nom, chemin: lienGamme(gamme) },
     { nom: produit.nom, chemin: `/collection/${produit.slug}` },
@@ -102,7 +104,7 @@ const details = [
         </dl>
 
         <div class="infos__actions">
-          <a class="bouton" href={`/devis?modele=${produit.slug}`}>Demander un devis pour ce modèle <Icone nom="fleche" /></a>
+          <a class="bouton" href={lienDevis(produit)}>Demander un devis pour ce modèle <Icone nom="fleche" /></a>
           <a class="bouton bouton--contour" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
             <Icone nom="whatsapp" /> Poser une question
           </a>

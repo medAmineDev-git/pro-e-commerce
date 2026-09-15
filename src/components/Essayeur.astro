@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Icone from './Icone.astro';
-import { image, site } from '../lib/contenu';
+import { image, insecables, site } from '../lib/contenu';
 
 /**
  * L'essayeur d'étiquette : le visiteur tape le nom de sa marque, et la voit
@@ -15,7 +15,7 @@ const { marqueBlanche } = site;
   <div class="essayeur-bloc__texte">
     <slot />
 
-    <form class="essayeur" data-essayeur data-reveler action="/devis">
+    <form class="essayeur" data-essayeur data-reveler action="/collection">
       <label class="essayeur__champ">
         <span>Votre marque</span>
         <input type="text" name="marque" maxlength="22" autocomplete="organization" placeholder={marqueBlanche.placeholder} data-essayeur-nom />
@@ -39,7 +39,10 @@ const { marqueBlanche } = site;
         {marqueBlanche.options.map((option) => <li><Icone nom="coche" taille={16} /> {option}</li>)}
       </ul>
 
-      <button class="bouton" type="submit">{marqueBlanche.bouton} <Icone nom="fleche" /></button>
+      <div class="essayeur__envoi">
+        <button class="bouton" type="submit">{marqueBlanche.bouton} <Icone nom="fleche" /></button>
+        <p>{insecables(marqueBlanche.suite)}</p>
+      </div>
     </form>
   </div>
 
@@ -217,8 +220,16 @@ const { marqueBlanche } = site;
     color: var(--terracotta);
   }
 
-  .essayeur .bouton {
-    justify-self: start;
+  .essayeur__envoi {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+
+  .essayeur__envoi p {
+    font-size: 0.8125rem;
+    color: var(--encre-douce);
+    max-width: 30rem;
   }
 
   /* L'aperçu : une photo de t-shirt, l'étiquette tissée cousue dessus, et
@@ -409,6 +420,8 @@ const { marqueBlanche } = site;
 </style>
 
 <script>
+  import { enregistrerCoordonnees } from '../lib/coordonnees';
+
   const essayeur = document.querySelector<HTMLFormElement>('[data-essayeur]');
   const apercu = document.querySelector<HTMLElement>('[data-apercu]');
   if (essayeur && apercu) {
@@ -425,5 +438,17 @@ const { marqueBlanche } = site;
     };
     essayeur.addEventListener('input', mettreAJour);
     essayeur.addEventListener('change', mettreAJour);
+
+    // Le visiteur part choisir un modèle : son nom de marque l'attendra dans
+    // la demande de devis, étiquette tissée cochée.
+    essayeur.addEventListener('submit', (evenement) => {
+      evenement.preventDefault();
+      const marque = champ?.value.trim();
+      if (marque) enregistrerCoordonnees({ marque });
+      try {
+        sessionStorage.setItem('yomna-etiquette', '1');
+      } catch {}
+      location.href = essayeur.action;
+    });
   }
 </script>

@@ -27,6 +27,31 @@ export function lienGamme(gamme: Gamme): string {
   return `/${gamme.page.slug}`;
 }
 
+/** La demande de devis d'un modèle : un devis par modèle. */
+export function lienDevis(produit: Produit): string {
+  return `/devis/${produit.slug}`;
+}
+
+/** Les tailles du modèle : les siennes s'il en a, sinon celles de sa gamme. */
+export function taillesDe(produit: Produit): string[] {
+  return produit.tailles ?? gammeDe(produit).tailles;
+}
+
+/** « XS – XXL », « Naissance – 18 mois » : l'étendue des tailles, en bref. */
+export function etendueTailles(produit: Produit): string {
+  const tailles = taillesDe(produit);
+  return tailles.length > 1 ? `${tailles[0]} – ${tailles.at(-1)}` : (tailles[0] ?? '');
+}
+
+/** « Étiquette tissée, broderie » → ["Étiquette tissée", "Broderie"]. */
+export function personnalisationsDe(produit: Produit): string[] {
+  return produit.personnalisation
+    .split(',')
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => option[0].toUpperCase() + option.slice(1));
+}
+
 /*
  * Les images sont désignées par leur nom de fichier dans les fichiers de
  * contenu. Elles vivent dans src/assets/images : Astro les optimise à la
@@ -66,8 +91,7 @@ export function lienTelephone(): string {
  * Le reste est échappé : aucun balisage saisi ne passe tel quel.
  */
 export function titre(texte: string): string {
-  const echappe = insecables(texte)
-    .replaceAll('{nombre}', String(produits.length))
+  const echappe = insecables(texte.replaceAll('{nombre}', String(produits.length)))
     .replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
   return (
     echappe
@@ -80,10 +104,15 @@ export function titre(texte: string): string {
 
 /**
  * Typographie française : l'espace avant « ? ! : ; » devient insécable, pour
- * que le signe ne passe jamais seul à la ligne.
+ * que le signe ne passe jamais seul à la ligne ; un nombre reste collé à ce
+ * qu'il compte (« 24 h », « 50 pièces »), et « e-mail » ne se coupe pas.
  */
 export function insecables(texte: string): string {
-  return texte.replace(/ ([?!:;»])/g, ' $1').replace(/« /g, '« ');
+  return texte
+    .replace(/ ([?!:;»])/g, ' $1')
+    .replace(/« /g, '« ')
+    .replace(/(\d) (?=[\p{L}%€])/gu, '$1 ')
+    .replace(/\be-mail/g, 'e‑mail');
 }
 
 /** Le même texte, sans mise en forme : pour les titres de page et les descriptions lus par Google. */

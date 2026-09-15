@@ -1,0 +1,934 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icone from '../../components/Icone.astro';
+import {
+  gammeDe,
+  image,
+  insecables,
+  lienDevis,
+  lienTelephone,
+  personnalisationsDe,
+  produits,
+  site,
+  taillesDe,
+  titre,
+  type Produit,
+} from '../../lib/contenu';
+
+/*
+ * Un devis par modèle : la demande porte sur un seul produit, ce qui permet de
+ * poser les bonnes questions (ses tailles, ses marquages possibles) et donne à
+ * l'atelier un message clair, chiffrable aussitôt.
+ */
+export function getStaticPaths() {
+  return produits.map((produit) => ({ params: { slug: produit.slug }, props: { produit } }));
+}
+
+interface Props {
+  produit: Produit;
+}
+
+const { produit } = Astro.props;
+const gamme = gammeDe(produit);
+const { formulaire } = site.devis;
+const adresseFiche = new URL(`/collection/${produit.slug}`, Astro.site).toString();
+
+// Après l'envoi, on propose d'ajouter un modèle : la même gamme d'abord.
+const suggestions = [
+  ...produits.filter((p) => p.gamme === produit.gamme && p.slug !== produit.slug),
+  ...produits.filter((p) => p.gamme !== produit.gamme),
+].slice(0, 3);
+---
+
+<Base
+  titre={`Devis · ${produit.nom}`}
+  description={`Demandez un devis pour ${produit.nom} : prix par pièce, délai et livraison en France, réponse sous 24 h.`}
+  apercu={image(produit.images[0])}
+  sansBarre
+  indexable={false}
+>
+  <section class="devis conteneur">
+    <nav class="fil" aria-label="Retour">
+      <a href={`/collection/${produit.slug}`}><Icone nom="retour" taille={16} /> Retour au modèle</a>
+    </nav>
+
+    <header class="devis__tete">
+      <p class="surtitre">{formulaire.surtitre}</p>
+      <h1 set:html={titre('Votre devis, *en une minute.*')} />
+      <p class="chapeau">{insecables(formulaire.texte)}</p>
+    </header>
+
+    <div class="devis__grille">
+      <form
+        class="formulaire"
+        novalidate
+        data-formulaire
+        data-atelier={site.marque.nom}
+        data-numero={site.marque.whatsapp.replace(/\D/g, '')}
+        data-email={site.marque.email}
+        data-modele={produit.nom}
+        data-gamme={gamme.nom}
+        data-fiche={adresseFiche}
+        data-minimum={produit.minimum}
+      >
+        <div class="modele">
+          <Image src={image(produit.images[0])} alt="" widths={[160, 320]} sizes="6.5rem" class="modele__image" />
+          <div class="modele__texte">
+            <p class="modele__gamme">{gamme.nom}</p>
+            <p class="modele__nom">{produit.nom}</p>
+            <p class="modele__details">{produit.tissu} · {produit.grammage}</p>
+            <p class="modele__details">Dès {produit.minimum} pièces · {produit.delai}</p>
+          </div>
+          <a class="modele__changer" href="/collection">Changer</a>
+        </div>
+
+        <fieldset>
+          <legend><span>1</span> Votre commande</legend>
+
+          <div class="champ">
+            <label for="quantite">Quantité totale *</label>
+            <div class="quantite">
+              <button type="button" class="quantite__pas" data-pas="-10" aria-label="10 pièces de moins">−</button>
+              <input id="quantite" name="quantite" type="number" inputmode="numeric" min="1" step="1" value={produit.minimum} required />
+              <button type="button" class="quantite__pas" data-pas="10" aria-label="10 pièces de plus">+</button>
+              <span class="quantite__unite">pièces</span>
+            </div>
+            <p class="aide" data-aide-quantite>
+              Minimum {produit.minimum} pièces, tailles et coloris panachés.
+            </p>
+          </div>
+
+          <div class="groupe" role="group" aria-labelledby="titre-tailles">
+            <p class="groupe__titre" id="titre-tailles">Tailles souhaitées</p>
+            <div class="options">
+              {
+                taillesDe(produit).map((taille) => (
+                  <label class="case case--pastille">
+                    <input type="checkbox" name="tailles" value={taille} />
+                    <span>{taille}</span>
+                  </label>
+                ))
+              }
+            </div>
+            <p class="aide">Aucune cochée ? Nous vous proposons une répartition courante.</p>
+          </div>
+
+          <label class="champ">
+            <span>Coloris souhaités</span>
+            <input name="coloris" type="text" placeholder="Ex. noir, écru, vert olive" />
+          </label>
+
+          <div class="groupe" role="group" aria-labelledby="titre-perso">
+            <p class="groupe__titre" id="titre-perso">Personnalisation</p>
+            <div class="options">
+              {
+                personnalisationsDe(produit).map((option) => (
+                  <label class="case case--pastille">
+                    <input type="checkbox" name="personnalisation" value={option} />
+                    <span>{option}</span>
+                  </label>
+                ))
+              }
+            </div>
+            <p class="aide">Votre logo s'envoie ensuite dans la conversation WhatsApp.</p>
+          </div>
+
+          <label class="champ">
+            <span>Précisions</span>
+            <textarea name="message" rows="3" placeholder="Délai souhaité, emplacement du logo, emballage…"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>2</span> Vous</legend>
+          <p class="retenues" hidden data-retenues>
+            <Icone nom="coche" taille={16} /> Nous avons repris vos coordonnées.
+            <button type="button" data-effacer>Ce n'est pas vous ?</button>
+          </p>
+          <div class="champs">
+            <label class="champ">
+              <span>Nom et prénom *</span>
+              <input name="nom" type="text" autocomplete="name" required />
+            </label>
+            <label class="champ">
+              <span>Boutique ou marque *</span>
+              <input name="marque" type="text" autocomplete="organization" required />
+            </label>
+            <label class="champ">
+              <span>Ville et pays *</span>
+              <input name="ville" type="text" autocomplete="address-level2" required />
+            </label>
+            <label class="champ">
+              <span>Téléphone *</span>
+              <input name="telephone" type="tel" autocomplete="tel" inputmode="tel" required />
+            </label>
+          </div>
+          <p class="aide">Retenues sur cet appareil pour vos prochaines demandes.</p>
+        </fieldset>
+
+        <p class="erreur" role="alert" hidden data-erreur></p>
+
+        <button class="bouton bouton--whatsapp envoi" type="submit">
+          <Icone nom="whatsapp" /> Envoyer ma demande sur WhatsApp
+        </button>
+        <p class="mention">Votre demande s'ouvre dans WhatsApp, déjà rédigée : vous la relisez avant de l'envoyer.</p>
+      </form>
+
+      <!-- Après l'envoi : ce qui se passe, d'autres moyens si WhatsApp n'a pas pu
+           s'ouvrir, et la suite pour l'acheteur qui veut plusieurs modèles. -->
+      <div class="confirmation" hidden tabindex="-1" data-confirmation>
+        <span class="confirmation__icone"><Icone nom="coche" taille={28} /></span>
+        <h2>Presque fini&#8239;!</h2>
+        <p>{insecables(formulaire.confirmation)}</p>
+        <div class="confirmation__actions">
+          <a class="bouton bouton--whatsapp" href="#" target="_blank" rel="noopener" data-rouvrir>
+            <Icone nom="whatsapp" /> Ouvrir WhatsApp
+          </a>
+          <a class="bouton bouton--contour" href="#" data-courriel><Icone nom="mail" /> Envoyer par e-mail</a>
+        </div>
+        <button type="button" class="lien-fleche confirmation__retour" data-modifier>Modifier ma demande</button>
+
+        <div class="suite">
+          <p class="suite__titre">Un autre modèle à ajouter&#8239;?</p>
+          <p>{insecables(formulaire.autreModele)}</p>
+          <ul class="suite__modeles">
+            {
+              suggestions.map((suggestion) => (
+                <li>
+                  <a href={lienDevis(suggestion)}>
+                    <Image src={image(suggestion.images[0])} alt="" widths={[160, 320]} sizes="5rem" />
+                    <span>
+                      <strong>{suggestion.nom}</strong>
+                      <span>Dès {suggestion.minimum} pièces</span>
+                    </span>
+                    <Icone nom="fleche" taille={18} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <a class="lien-fleche" href="/collection">Voir toute la collection <Icone nom="fleche" taille={16} /></a>
+        </div>
+      </div>
+
+      <aside class="cote">
+        <div class="cote__bloc">
+          <p class="cote__titre">Et ensuite&#8239;?</p>
+          <ol>
+            {site.etapesCommande.etapes.map((etape) => <li><strong>{etape.titre}.</strong> {insecables(etape.texte)}</li>)}
+          </ol>
+        </div>
+        <div class="cote__bloc">
+          <p class="cote__titre">Vous préférez parler&#8239;?</p>
+          <a class="cote__lien" href={lienTelephone()}><Icone nom="telephone" taille={18} /> {site.marque.telephone}</a>
+          <a class="cote__lien" href={`mailto:${site.marque.email}`}><Icone nom="mail" taille={18} /> {site.marque.email}</a>
+          <p class="cote__horaires"><Icone nom="horloge" taille={18} /> {site.marque.horaires}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .devis {
+    padding-top: 2rem;
+    padding-bottom: var(--section);
+  }
+
+  .fil a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--encre-douce);
+  }
+
+  .fil a:hover {
+    color: var(--terracotta);
+  }
+
+  .devis__tete {
+    display: grid;
+    gap: 1.25rem;
+    padding-top: clamp(1.5rem, 4vw, 3rem);
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .devis__tete .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 340;
+  }
+
+  .devis__grille {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .devis__grille {
+      grid-template-columns: 1.6fr 1fr;
+      gap: 5rem;
+    }
+
+    .cote {
+      position: sticky;
+      top: calc(var(--entete) + 2rem);
+    }
+  }
+
+  /* ------------------------------------------------ le modèle */
+
+  .modele {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 28%, transparent);
+    outline-offset: -6px;
+  }
+
+  .modele :global(.modele__image) {
+    width: 6.5rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .modele__texte {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .modele__gamme {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .modele__nom {
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    line-height: 1.15;
+    margin-bottom: 0.2rem;
+  }
+
+  .modele__details {
+    font-size: 0.8125rem;
+    color: var(--encre-douce);
+  }
+
+  .modele__changer {
+    align-self: start;
+    padding: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--encre-douce);
+  }
+
+  .modele__changer:hover {
+    color: var(--terracotta);
+  }
+
+  @media (max-width: 30rem) {
+    .modele {
+      grid-template-columns: 5rem 1fr;
+    }
+
+    .modele :global(.modele__image) {
+      width: 5rem;
+    }
+
+    .modele__changer {
+      grid-column: 2;
+      justify-self: start;
+      padding: 0;
+    }
+  }
+
+  /* ------------------------------------------------ formulaire */
+
+  .formulaire,
+  .confirmation {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .formulaire[hidden],
+  .confirmation[hidden] {
+    display: none;
+  }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  legend {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    font-family: var(--titre);
+    font-size: 1.75rem;
+  }
+
+  legend span {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: var(--ecru);
+    font-family: var(--texte);
+    font-size: 0.9375rem;
+    font-weight: 800;
+  }
+
+  .champs {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 40rem) {
+    .champs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .champ {
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  input[type='text'],
+  input[type='tel'],
+  input[type='number'],
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    min-height: 3.1rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 22%, transparent);
+    border-radius: var(--rayon);
+    background: #fbf8f2;
+    color: var(--encre);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--terracotta);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--terracotta) 18%, transparent);
+  }
+
+  input[aria-invalid='true'] {
+    border-color: #b3261e;
+  }
+
+  .aide {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--encre-douce);
+  }
+
+  .aide.est-avertie {
+    color: var(--terracotta-fonce);
+    font-weight: 600;
+  }
+
+  /* La quantité : un grand chiffre, et deux boutons pour avancer de 10 en 10. */
+  .quantite {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quantite input {
+    width: 7.5rem;
+    text-align: center;
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    padding-block: 0.5rem;
+    -moz-appearance: textfield;
+  }
+
+  .quantite input::-webkit-inner-spin-button,
+  .quantite input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .quantite__pas {
+    width: 3.1rem;
+    height: 3.1rem;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--encre) 22%, transparent);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--encre);
+    font: inherit;
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .quantite__pas:hover {
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--ecru);
+  }
+
+  .quantite__unite {
+    margin-left: 0.25rem;
+    font-weight: 600;
+    color: var(--encre-douce);
+  }
+
+  .groupe {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .groupe__titre {
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .case {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 14%, transparent);
+    border-radius: 999px;
+    background: #fbf8f2;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .case input {
+    width: 1.05rem;
+    height: 1.05rem;
+    margin: 0;
+    accent-color: var(--terracotta);
+  }
+
+  .case:has(input:checked) {
+    border-color: var(--terracotta);
+    background: color-mix(in srgb, var(--terracotta) 8%, #fbf8f2);
+  }
+
+  .retenues {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+    margin-top: -0.5rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .retenues[hidden] {
+    display: none;
+  }
+
+  .retenues :global(svg) {
+    color: #1f8a4c;
+  }
+
+  .retenues button {
+    padding: 0;
+    background: none;
+    border: none;
+    border-bottom: 1px solid currentColor;
+    font: inherit;
+    font-weight: 700;
+    color: var(--encre);
+    cursor: pointer;
+  }
+
+  .erreur {
+    padding: 0.9rem 1rem;
+    border-left: 3px solid #b3261e;
+    background: #f8e5e2;
+    color: #8c1d17;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .erreur[hidden] {
+    display: none;
+  }
+
+  .envoi {
+    justify-self: start;
+    min-height: 3.6rem;
+    padding-inline: 2rem;
+    font-size: 1rem;
+  }
+
+  .mention {
+    margin-top: -1.75rem;
+    font-size: 0.8125rem;
+    color: var(--encre-douce);
+  }
+
+  /* ------------------------------------------------ confirmation */
+
+  .confirmation {
+    gap: 1.25rem;
+    justify-items: start;
+    padding: clamp(2rem, 5vw, 3rem);
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+    outline-offset: -10px;
+  }
+
+  .confirmation:focus {
+    outline-style: dashed;
+  }
+
+  .confirmation__icone {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #1f8a4c;
+    color: #fff;
+  }
+
+  .confirmation h2 {
+    font-size: 2.25rem;
+  }
+
+  .confirmation p {
+    color: var(--encre-douce);
+    max-width: 34rem;
+  }
+
+  .confirmation__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .confirmation__retour {
+    background: none;
+    border: none;
+    border-bottom: 1px solid currentColor;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--encre);
+  }
+
+  .suite {
+    justify-self: stretch;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    margin-top: 1rem;
+    padding-top: 2rem;
+    border-top: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+  }
+
+  .suite__titre {
+    font-family: var(--titre);
+    font-size: 1.6rem;
+    color: var(--encre) !important;
+  }
+
+  .suite__modeles {
+    justify-self: stretch;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .suite__modeles a {
+    display: grid;
+    grid-template-columns: 4rem 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    background: var(--ecru);
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .suite__modeles a:hover {
+    background: #fbf8f2;
+  }
+
+  .suite__modeles a:hover :global(svg) {
+    color: var(--terracotta);
+  }
+
+  .suite__modeles :global(img) {
+    width: 4rem;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .suite__modeles strong {
+    display: block;
+    font-family: var(--titre);
+    font-size: 1.15rem;
+    font-weight: 400;
+  }
+
+  .suite__modeles span span {
+    font-size: 0.8125rem;
+    color: var(--encre-douce);
+  }
+
+  /* ------------------------------------------------ à côté */
+
+  .cote {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .cote__bloc {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.75rem;
+    background: var(--nuit);
+    color: #c9bfb1;
+  }
+
+  .cote__bloc + .cote__bloc {
+    background: var(--sable);
+    color: var(--encre);
+  }
+
+  .cote__titre {
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    color: inherit;
+  }
+
+  .cote__bloc:first-child .cote__titre {
+    color: var(--ecru);
+  }
+
+  .cote ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .cote ol strong {
+    color: var(--ecru);
+  }
+
+  .cote__lien,
+  .cote__horaires {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cote__horaires {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--encre-douce);
+  }
+
+  .cote__bloc :global(svg) {
+    color: var(--terracotta);
+    flex: none;
+  }
+</style>
+
+<script>
+  import { lireProvenance } from '../../lib/provenance';
+  import { effacerCoordonnees, enregistrerCoordonnees, lireCoordonnees, type Coordonnees } from '../../lib/coordonnees';
+
+  const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]');
+
+  if (formulaire) {
+    const { atelier = '', numero = '', email = '', modele = '', gamme = '', fiche = '' } = formulaire.dataset;
+    const minimum = Number(formulaire.dataset.minimum);
+    const confirmation = document.querySelector<HTMLElement>('[data-confirmation]');
+    const erreur = document.querySelector<HTMLElement>('[data-erreur]');
+    const retenues = document.querySelector<HTMLElement>('[data-retenues]');
+    const aideQuantite = document.querySelector<HTMLElement>('[data-aide-quantite]');
+    const rouvrir = document.querySelector<HTMLAnchorElement>('[data-rouvrir]');
+    const courriel = document.querySelector<HTMLAnchorElement>('[data-courriel]');
+
+    const champ = (nom: string) => formulaire.elements.namedItem(nom) as HTMLInputElement;
+    const coordonnees = ['nom', 'marque', 'ville', 'telephone'] as const;
+    const quantite = champ('quantite');
+
+    // ------------------------------------------ coordonnées déjà connues
+
+    const connues = lireCoordonnees();
+    const reprises = coordonnees.filter((nom) => connues[nom]);
+    reprises.forEach((nom) => (champ(nom).value = connues[nom] ?? ''));
+    // Un nom de marque seul vient de l'essayeur d'étiquette : ce n'est pas
+    // encore « vos coordonnées ».
+    if (retenues) retenues.hidden = reprises.length < 2;
+
+    document.querySelector('[data-effacer]')?.addEventListener('click', () => {
+      effacerCoordonnees();
+      coordonnees.forEach((nom) => (champ(nom).value = ''));
+      if (retenues) retenues.hidden = true;
+      champ('nom').focus();
+    });
+
+    // Venu de l'essayeur d'étiquette : l'étiquette tissée est cochée d'office.
+    try {
+      if (sessionStorage.getItem('yomna-etiquette') === '1') {
+        const etiquette = formulaire.querySelector<HTMLInputElement>('input[name="personnalisation"][value="Étiquette tissée"]');
+        if (etiquette) etiquette.checked = true;
+      }
+    } catch {}
+
+    // ------------------------------------------ quantité
+
+    const aideInitiale = aideQuantite?.textContent?.trim() ?? '';
+    const verifierQuantite = () => {
+      if (!aideQuantite) return;
+      const valeur = Number(quantite.value);
+      const enDessous = valeur > 0 && valeur < minimum;
+      aideQuantite.textContent = enDessous
+        ? `En dessous de ${minimum} pièces : possible pour une première commande, nous étudions votre demande.`
+        : aideInitiale;
+      aideQuantite.classList.toggle('est-avertie', enDessous);
+    };
+    quantite.addEventListener('input', verifierQuantite);
+
+    formulaire.querySelectorAll<HTMLButtonElement>('[data-pas]').forEach((bouton) =>
+      bouton.addEventListener('click', () => {
+        const actuelle = Number(quantite.value) || minimum;
+        quantite.value = String(Math.max(10, actuelle + Number(bouton.dataset.pas)));
+        verifierQuantite();
+      }),
+    );
+
+    // ------------------------------------------ message
+
+    const composer = (donnees: FormData): string => {
+      const lignes = [
+        `Bonjour ${atelier}, je souhaite un devis pour ce modèle :`,
+        '',
+        `• Modèle : ${modele} (${gamme})`,
+        fiche,
+        `• Quantité : ${donnees.get('quantite')} pièces`,
+      ];
+      const tailles = donnees.getAll('tailles');
+      lignes.push(`• Tailles : ${tailles.length ? tailles.join(', ') : 'répartition à me conseiller'}`);
+      const coloris = String(donnees.get('coloris') ?? '').trim();
+      if (coloris) lignes.push(`• Coloris : ${coloris}`);
+      const personnalisation = donnees.getAll('personnalisation');
+      if (personnalisation.length) lignes.push(`• Personnalisation : ${personnalisation.join(', ')}`);
+      const message = String(donnees.get('message') ?? '').trim();
+      if (message) lignes.push(`• Précisions : ${message}`);
+      lignes.push(
+        '',
+        `• Nom : ${donnees.get('nom')}`,
+        `• Boutique / marque : ${donnees.get('marque')}`,
+        `• Ville et pays : ${donnees.get('ville')}`,
+        `• Téléphone : ${donnees.get('telephone')}`,
+      );
+      const provenance = lireProvenance();
+      if (provenance) lignes.push('', `(Réf. ${provenance})`);
+      return lignes.join('\n');
+    };
+
+    // ------------------------------------------ envoi
+
+    formulaire.addEventListener('submit', (evenement) => {
+      evenement.preventDefault();
+
+      const quantiteValide = Number.isInteger(Number(quantite.value)) && Number(quantite.value) > 0;
+      const manquants = coordonnees.map(champ).filter((element) => !element.value.trim());
+      quantite.setAttribute('aria-invalid', String(!quantiteValide));
+      coordonnees.map(champ).forEach((element) => element.setAttribute('aria-invalid', String(manquants.includes(element))));
+
+      const problemes = [];
+      if (!quantiteValide) problemes.push('Indiquez la quantité souhaitée, en nombre de pièces.');
+      if (manquants.length) problemes.push('Indiquez votre nom, votre boutique, votre ville et votre téléphone.');
+      if (erreur) {
+        erreur.textContent = problemes.join(' ');
+        erreur.hidden = problemes.length === 0;
+      }
+      if (problemes.length) {
+        (quantiteValide ? manquants[0] : quantite).focus();
+        return;
+      }
+
+      const donnees = new FormData(formulaire);
+      enregistrerCoordonnees(
+        Object.fromEntries(coordonnees.map((nom) => [nom, String(donnees.get(nom) ?? '').trim()])) as Coordonnees,
+      );
+
+      const texte = composer(donnees);
+      const lienWhatsapp = `https://wa.me/${numero}?text=${encodeURIComponent(texte)}`;
+      if (rouvrir) rouvrir.href = lienWhatsapp;
+      if (courriel) {
+        courriel.href = `mailto:${email}?subject=${encodeURIComponent(`Demande de devis : ${modele}`)}&body=${encodeURIComponent(texte)}`;
+      }
+
+      window.open(lienWhatsapp, '_blank', 'noopener');
+
+      formulaire.hidden = true;
+      if (confirmation) {
+        confirmation.hidden = false;
+        confirmation.focus();
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    document.querySelector('[data-modifier]')?.addEventListener('click', () => {
+      if (!confirmation) return;
+      confirmation.hidden = true;
+      formulaire.hidden = false;
+      quantite.focus();
+    });
+  }
+</script>

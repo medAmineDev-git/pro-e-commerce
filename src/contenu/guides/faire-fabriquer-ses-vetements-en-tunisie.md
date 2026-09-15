@@ -55,4 +55,4 @@ Dans les deux cas, l'atelier prépare la facture, la liste de colisage et le cer
 
 Produire en Tunisie, c'est choisir la proximité, les séries courtes et un dialogue simple, avec un savoir-faire éprouvé. La clé d'un projet réussi tient en trois mots : un brief précis, un échantillon validé, et un partenaire qui vous répond.
 
-Vous avez un projet ? [Demandez un devis](/devis) : nous vous répondons sous 24 heures, en français, avec un prix, un délai et le coût de livraison en France.
+Vous avez un projet ? Choisissez vos modèles dans [notre collection](/collection) : depuis chaque fiche, la demande de devis prend une minute, et nous vous répondons sous 24 heures, en français, avec un prix, un délai et le coût de livraison en France.

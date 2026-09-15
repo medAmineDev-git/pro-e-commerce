@@ -56,4 +56,4 @@ La meilleure stratégie pour une marque qui débute : **commander peu, puis rela
 - [ ] Le délai de production et l'incoterm écrits dans le devis.
 - [ ] Un plan de réassort pour les modèles qui marchent.
 
-Vous préparez votre première collection ? Découvrez notre offre [marque blanche](/marque-blanche), ou [décrivez-nous votre projet](/devis) : nous vous aidons à dimensionner votre première commande.
+Vous préparez votre première collection ? Découvrez notre offre [marque blanche](/marque-blanche), puis [choisissez vos modèles](/collection) : nous vous aidons à dimensionner votre première commande.

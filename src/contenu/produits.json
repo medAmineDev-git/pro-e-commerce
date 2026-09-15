@@ -1,13 +1,14 @@
 {
   "_lisezMoi": "Une entrée par modèle. « images » : noms de fichiers du dossier src/assets/images, la première est la photo principale. « slug » : l'adresse de la fiche (minuscules, tirets, sans accent). Voir GUIDE.md.",
 
-  "_gammes": "Chaque gamme a sa page (adresse « page.slug ») : titre et description pour Google, texte d'introduction, arguments et questions fréquentes propres au métier.",
+  "_gammes": "Chaque gamme a sa page (adresse « page.slug ») : titre et description pour Google, texte d'introduction, arguments et questions fréquentes propres au métier. « tailles » : les tailles proposées dans la demande de devis ; un produit peut avoir les siennes (champ « tailles » du produit).",
   "gammes": [
     {
       "id": "t-shirts",
       "nom": "T-shirts",
       "accroche": "Du classique 160 g à l'oversize 240 g, en coton peigné.",
       "image": "tshirt-04.jpg",
+      "tailles": ["XS", "S", "M", "L", "XL", "XXL"],
       "page": {
         "slug": "fabrication-t-shirts-tunisie",
         "seoTitre": "Fabricant de t-shirts en Tunisie, à votre marque",
@@ -31,6 +32,7 @@
       "nom": "Sweats",
       "accroche": "Hoodies, cols ronds, zippés et ensembles en molleton gratté.",
       "image": "sweat-01.jpg",
+      "tailles": ["XS", "S", "M", "L", "XL", "XXL"],
       "page": {
         "slug": "fabrication-sweats-hoodies-tunisie",
         "seoTitre": "Fabricant de sweats et hoodies en Tunisie",
@@ -54,6 +56,7 @@
       "nom": "Enfants",
       "accroche": "Du bébé au 12 ans, des matières douces et des coutures qui tiennent.",
       "image": "enfant-02-2.jpg",
+      "tailles": ["2 ans", "4 ans", "6 ans", "8 ans", "10 ans", "12 ans"],
       "page": {
         "slug": "confection-vetements-enfants-tunisie",
         "seoTitre": "Confection de vêtements pour enfants en Tunisie",
@@ -77,6 +80,7 @@
       "nom": "Prêt-à-porter femme",
       "accroche": "Robes, chemises et pantalons, en lin, crêpe et viscose.",
       "image": "femme-01.jpg",
+      "tailles": ["36", "38", "40", "42", "44", "46", "48"],
       "page": {
         "slug": "confection-pret-a-porter-femme-tunisie",
         "seoTitre": "Confection de prêt-à-porter femme en Tunisie",
@@ -86,12 +90,12 @@
         "arguments": [
           { "titre": "Des séries courtes", "texte": "Dès 30 pièces par modèle : de quoi tester, puis relancer ce qui plaît." },
           { "titre": "Des matières qui tombent", "texte": "Lin lavé, crêpe fluide, viscose imprimée : choisis pour le mouvement et le confort." },
-          { "titre": "Vos patrons", "texte": "Nous reproduisons un modèle à partir d'une pièce ou d'un croquis, et le gradons du 34 au 48." },
+          { "titre": "Des coupes éprouvées", "texte": "Chaque modèle a son patron gradué du 36 au 48 : le tombé et les tailles sont identiques d'une commande à l'autre." },
           { "titre": "Au fil des saisons", "texte": "Réassorts rapides, pour suivre les ventes plutôt que les deviner." }
         ],
         "faq": [
-          { "question": "Pouvez-vous reproduire un modèle de ma boutique ?", "reponse": "Oui, à partir d'une pièce, d'une photo ou d'un croquis. Nous réalisons le patron et un prototype, que vous validez avant la série." },
-          { "question": "Quelles tailles proposez-vous ?", "reponse": "Nous gradons du 34 au 48, et au-delà sur demande, selon les tailles françaises." }
+          { "question": "Peut-on adapter un modèle ?", "reponse": "Le coloris, l'étiquette et le marquage, oui. La coupe reste celle de notre collection : c'est ce qui garantit un tombé et des tailles identiques d'une commande à l'autre." },
+          { "question": "Quelles tailles proposez-vous ?", "reponse": "Du 36 au 48, selon les tailles françaises, panachées librement dans une même commande." }
         ]
       }
     }
@@ -213,6 +217,7 @@
       "minimum": 40,
       "delai": "15 à 20 jours",
       "personnalisation": "Étiquette tissée, emballage",
+      "tailles": ["2 ans", "3 ans", "4 ans", "5 ans", "6 ans", "8 ans"],
       "images": ["enfant-01.jpg"]
     },
     {
@@ -226,6 +231,7 @@
       "minimum": 40,
       "delai": "20 à 25 jours",
       "personnalisation": "Étiquette tissée, broderie",
+      "tailles": ["12 mois", "18 mois", "2 ans", "3 ans", "4 ans", "6 ans"],
       "images": ["enfant-02.jpg", "enfant-02-2.jpg"]
     },
     {
@@ -239,6 +245,7 @@
       "minimum": 50,
       "delai": "15 à 20 jours",
       "personnalisation": "Étiquette tissée, emballage cadeau",
+      "tailles": ["Naissance", "1 mois", "3 mois", "6 mois", "12 mois", "18 mois"],
       "images": ["enfant-03.jpg"]
     },
     {
@@ -252,6 +259,7 @@
       "minimum": 40,
       "delai": "20 à 25 jours",
       "personnalisation": "Étiquette tissée, broderie",
+      "tailles": ["2 ans", "4 ans", "6 ans", "8 ans", "10 ans"],
       "images": ["enfant-04.jpg"]
     },
     {

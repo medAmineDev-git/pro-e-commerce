@@ -14,8 +14,9 @@ export default defineConfig({
   site: ADRESSE_DU_SITE,
   integrations: [
     sitemap({
-      // La page d'erreur n'a rien à faire dans le plan du site.
-      filter: (page) => !page.includes('/404'),
+      // La page d'erreur et les formulaires de devis de chaque modèle n'ont
+      // rien à faire dans le plan du site.
+      filter: (page) => !page.includes('/404') && !page.includes('/devis/'),
     }),
   ],
   // Des adresses sans « .html » ni barre finale : /collection/le-classique

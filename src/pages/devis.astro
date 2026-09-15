@@ -1,558 +1,398 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icone from '../components/Icone.astro';
-import { gammes, lienTelephone, produitsDe, site, titre } from '../lib/contenu';
+import { gammes, image, insecables, lienTelephone, lienWhatsapp, produits, produitsDe, site, texteBrut, titre } from '../lib/contenu';
 
-const { devis, marqueBlanche, etapesCommande } = site;
+/*
+ * La page « Demander un devis » du menu. Nous ne produisons que nos modèles :
+ * le devis se demande depuis la fiche de chacun. Cette page explique comment,
+ * rassure, et mène à la collection.
+ */
+const { devis } = site;
+const message = `Bonjour ${site.marque.nom}, j'ai une question avant de choisir mes modèles.`;
 ---
 
-<Base titre="Demande de devis" description={devis.seoDescription} sansBarre ariane={[{ nom: "Demande de devis", chemin: "/devis" }]}>
-  <section class="devis conteneur">
-    <header class="devis__tete">
+<Base
+  titre={devis.titre}
+  description={texteBrut(devis.seoDescription)}
+  ariane={[{ nom: 'Demande de devis', chemin: '/devis' }]}
+  sansBarre
+>
+  <section class="tete conteneur">
+    <div class="tete__texte">
       <p class="surtitre">{devis.surtitre}</p>
       <h1 set:html={titre(devis.titrePage)} />
-      <p class="chapeau">{devis.texte}</p>
-    </header>
+      <p class="chapeau">{insecables(texteBrut(devis.texte))}</p>
+      <div class="tete__boutons">
+        <a class="bouton" href="/collection">{devis.bouton} <Icone nom="fleche" /></a>
+        <a class="bouton bouton--contour" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
+          <Icone nom="whatsapp" /> Une question&#8239;?
+        </a>
+      </div>
+    </div>
+    <figure class="tete__visuel">
+      <Image src={image('atelier-pile.jpg')} alt="Vêtements pliés et prêts à expédier, à l'atelier" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 100vw" loading="eager" />
+      <span class="tete__etiquette">Réponse sous 24 h</span>
+    </figure>
+  </section>
 
-    <div class="devis__grille">
-      <form
-        class="formulaire"
-        novalidate
-        data-formulaire
-        data-atelier={site.marque.nom}
-        data-numero={site.marque.whatsapp.replace(/\D/g, '')}
-        data-email={site.marque.email}
-      >
-        <fieldset>
-          <legend><span>1</span> Vous</legend>
-          <div class="champs">
-            <label class="champ">
-              <span>Nom et prénom *</span>
-              <input name="nom" type="text" autocomplete="name" required />
-            </label>
-            <label class="champ">
-              <span>Boutique ou marque *</span>
-              <input name="marque" type="text" autocomplete="organization" required />
-            </label>
-            <label class="champ">
-              <span>Ville et pays *</span>
-              <input name="ville" type="text" autocomplete="address-level2" required />
-            </label>
-            <label class="champ">
-              <span>Téléphone *</span>
-              <input name="telephone" type="tel" autocomplete="tel" inputmode="tel" required />
-            </label>
-          </div>
-        </fieldset>
+  <section class="section section--sable" aria-labelledby="titre-etapes">
+    <div class="conteneur">
+      <p class="surtitre">Comment ça marche</p>
+      <h2 id="titre-etapes" class="bloc-titre">Quatre étapes, <em>un seul interlocuteur.</em></h2>
+      <ol class="etapes">
+        {
+          devis.etapes.map((etape, rang) => (
+            <li data-reveler style={`--rang:${rang}`}>
+              <span class="etapes__point">{rang + 1}</span>
+              <strong>{etape.titre}</strong>
+              <span>{insecables(etape.texte)}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
 
-        <fieldset>
-          <legend><span>2</span> Les modèles</legend>
-          <p class="aide">Cochez ceux qui vous intéressent. Aucun ? Décrivez votre idée plus bas.</p>
-          <div class="modeles">
-            {
-              gammes.map((gamme) => (
-                <div class="modeles__gamme">
-                  <p class="modeles__titre">{gamme.nom}</p>
-                  {produitsDe(gamme.id).map((produit) => (
-                    <label class="case">
-                      <input type="checkbox" name="modeles" value={produit.nom} data-slug={produit.slug} />
-                      <span>{produit.nom}</span>
-                    </label>
-                  ))}
-                </div>
-              ))
-            }
-          </div>
-        </fieldset>
+  <section class="section conteneur" aria-labelledby="titre-gammes">
+    <div class="gammes__tete">
+      <h2 id="titre-gammes" class="bloc-titre">Par où <em>commencer&#8239;?</em></h2>
+      <a class="lien-fleche" href="/collection">Les {produits.length} modèles <Icone nom="fleche" taille={16} /></a>
+    </div>
+    <div class="gammes">
+      {
+        gammes.map((gamme, rang) => {
+          const modeles = produitsDe(gamme.id);
+          const minimum = Math.min(...modeles.map((modele) => modele.minimum));
+          return (
+            <a class="gamme" href={`/collection?gamme=${gamme.id}`} data-reveler style={`--rang:${rang}`}>
+              <Image src={image(gamme.image)} alt="" widths={[360, 640]} sizes="(min-width: 60rem) 24vw, 45vw" />
+              <strong>{gamme.nom}</strong>
+              <span>{modeles.length} modèles · dès {minimum} pièces</span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
 
-        <fieldset>
-          <legend><span>3</span> Votre projet</legend>
-          <label class="champ">
-            <span>Quantité envisagée, par modèle</span>
-            <select name="quantite">
-              {devis.quantites.map((quantite) => <option>{quantite}</option>)}
-            </select>
-          </label>
-
-          <p class="modeles__titre">Personnalisation</p>
-          <div class="options">
-            {
-              marqueBlanche.options.map((option) => (
-                <label class="case case--pastille">
-                  <input type="checkbox" name="personnalisation" value={option} />
-                  <span>{option}</span>
-                </label>
-              ))
-            }
-          </div>
-
-          <label class="champ">
-            <span>Votre message</span>
-            <textarea name="message" rows="4" placeholder="Couleurs, tailles, délai souhaité, modèle à reproduire…"></textarea>
-          </label>
-        </fieldset>
-
-        <p class="erreur" role="alert" hidden data-erreur>Indiquez votre nom, votre boutique, votre ville et votre téléphone.</p>
-
-        <button class="bouton bouton--whatsapp envoi" type="submit">
-          <Icone nom="whatsapp" /> Envoyer ma demande sur WhatsApp
-        </button>
-        <p class="mention">Votre demande s'ouvre dans WhatsApp, déjà rédigée : vous la relisez avant de l'envoyer.</p>
-      </form>
-
-      <!-- Après l'envoi : ce qui se passe, et d'autres moyens si WhatsApp n'a pas pu s'ouvrir. -->
-      <div class="confirmation" hidden tabindex="-1" data-confirmation>
-        <span class="confirmation__icone"><Icone nom="coche" taille={28} /></span>
-        <h2>Presque fini !</h2>
-        <p>{devis.confirmation}</p>
-        <div class="confirmation__actions">
-          <a class="bouton bouton--whatsapp" href="#" target="_blank" rel="noopener" data-rouvrir>
-            <Icone nom="whatsapp" /> Ouvrir WhatsApp
-          </a>
-          <a class="bouton bouton--contour" href="#" data-courriel><Icone nom="mail" /> Envoyer par e-mail</a>
-        </div>
-        <button type="button" class="lien-fleche confirmation__retour" data-modifier>Modifier ma demande</button>
+  <section class="section section--nuit" aria-labelledby="titre-contenu">
+    <div class="conteneur contenu">
+      <div>
+        <h2 id="titre-contenu" class="bloc-titre" set:html={titre(devis.contenuTitre)} />
+        <ul class="contenu__liste">
+          {devis.contenu.map((point) => <li><span><Icone nom="coche" taille={16} /></span> {insecables(point)}</li>)}
+        </ul>
+        <a class="bouton" href="/collection">{devis.bouton} <Icone nom="fleche" /></a>
       </div>
 
-      <aside class="cote">
-        <div class="cote__bloc">
-          <p class="cote__titre">Et ensuite ?</p>
-          <ol>
-            {etapesCommande.etapes.map((etape) => <li><strong>{etape.titre}.</strong> {etape.texte}</li>)}
-          </ol>
+      <div class="contenu__cotes">
+        <div class="encart">
+          <p class="encart__titre">{insecables(devis.plusieursTitre)}</p>
+          <p>{insecables(devis.plusieurs)}</p>
         </div>
-        <div class="cote__bloc">
-          <p class="cote__titre">Vous préférez parler ?</p>
-          <a class="cote__lien" href={lienTelephone()}><Icone nom="telephone" taille={18} /> {site.marque.telephone}</a>
-          <a class="cote__lien" href={`mailto:${site.marque.email}`}><Icone nom="mail" taille={18} /> {site.marque.email}</a>
-          <p class="cote__horaires"><Icone nom="horloge" taille={18} /> {site.marque.horaires}</p>
+        <div class="encart encart--clair">
+          <p class="encart__titre">{insecables(devis.questionTitre)}</p>
+          <p>{insecables(devis.question)}</p>
+          <a class="bouton bouton--whatsapp" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
+            <Icone nom="whatsapp" /> Écrire sur WhatsApp
+          </a>
+          <a class="encart__lien" href={lienTelephone()}><Icone nom="telephone" taille={18} /> {site.marque.telephone}</a>
+          <p class="encart__horaires"><Icone nom="horloge" taille={18} /> {site.marque.horaires}</p>
         </div>
-      </aside>
+      </div>
     </div>
   </section>
 </Base>
 
+<!-- Les anciens liens « /devis?modele=… » mènent au devis du modèle. -->
+<script is:inline define:vars={{ slugs: produits.map((produit) => produit.slug) }}>
+  const modele = new URLSearchParams(location.search).get('modele');
+  if (modele && slugs.includes(modele)) location.replace(`/devis/${modele}`);
+</script>
+
 <style>
-  .devis {
-    padding-top: clamp(3rem, 7vw, 5.5rem);
+  .tete {
+    display: grid;
+    gap: 2.5rem;
+    padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: var(--section);
+    align-items: center;
   }
 
-  .devis__tete {
+  .tete__texte {
     display: grid;
     gap: 1.5rem;
-    margin-bottom: clamp(2.5rem, 6vw, 4rem);
   }
 
-  .devis__tete .surtitre {
+  .tete__texte .surtitre {
     margin-bottom: -0.25rem;
   }
 
   h1 {
-    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
     font-weight: 340;
+    max-width: 14ch;
   }
 
-  .devis__grille {
-    display: grid;
-    gap: 3rem;
-    align-items: start;
+  .tete__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
-  @media (min-width: 64rem) {
-    .devis__grille {
-      grid-template-columns: 1.6fr 1fr;
+  .tete__visuel {
+    position: relative;
+    margin: 0;
+  }
+
+  .tete__visuel :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 999px 999px 0 0;
+  }
+
+  /* Une étiquette cousue sur la photo, comme sur les cartes produit. */
+  .tete__etiquette {
+    position: absolute;
+    left: -0.75rem;
+    bottom: 2rem;
+    padding: 0.7rem 1.1rem;
+    background: var(--ecru);
+    font-size: 0.875rem;
+    font-weight: 700;
+    outline: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+    outline-offset: -5px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (min-width: 60rem) {
+    .tete {
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 5rem;
     }
-
-    .cote {
-      position: sticky;
-      top: calc(var(--entete) + 2rem);
-    }
   }
 
-  /* ------------------------------------------------ formulaire */
-
-  .formulaire,
-  .confirmation {
-    display: grid;
-    gap: 2.5rem;
+  .bloc-titre {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    margin-bottom: 2.5rem;
   }
 
-  .formulaire[hidden],
-  .confirmation[hidden] {
-    display: none;
-  }
+  /* ------------------------------------------------ étapes */
 
-  fieldset {
-    border: none;
+  .etapes {
+    list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1.25rem;
+    gap: 2rem;
   }
 
-  legend {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
-    padding: 0;
+  .etapes li {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 3.75rem;
+    color: var(--encre-douce);
+  }
+
+  .etapes strong {
     font-family: var(--titre);
-    font-size: 1.75rem;
+    font-size: 1.4rem;
+    font-weight: 420;
+    line-height: 1.2;
+    color: var(--encre);
   }
 
-  legend span {
-    width: 2.25rem;
-    height: 2.25rem;
+  .etapes__point {
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
+    width: 2.6rem;
+    height: 2.6rem;
     display: grid;
     place-items: center;
     border-radius: 50%;
     background: var(--terracotta);
     color: var(--ecru);
-    font-family: var(--texte);
-    font-size: 0.9375rem;
     font-weight: 800;
   }
 
-  .champs {
-    display: grid;
-    gap: 1.25rem;
-  }
+  @media (min-width: 64rem) {
+    .etapes {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5rem;
+    }
 
-  @media (min-width: 40rem) {
-    .champs {
-      grid-template-columns: 1fr 1fr;
+    .etapes li {
+      padding: 3.75rem 0 0;
+    }
+
+    .etapes__point {
+      top: 0;
+    }
+
+    /* Un fil de couture relie les quatre étapes. */
+    .etapes li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1.3rem;
+      left: 3.4rem;
+      right: -1.75rem;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--encre) 30%, transparent) 0 6px, transparent 6px 11px);
     }
   }
 
-  .champ {
-    display: grid;
-    gap: 0.45rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-  }
+  /* ------------------------------------------------ gammes */
 
-  input[type='text'],
-  input[type='tel'],
-  select,
-  textarea {
-    font: inherit;
-    font-size: 1rem;
-    font-weight: 500;
-    width: 100%;
-    padding: 0.85rem 1rem;
-    min-height: 3.1rem;
-    border: 1px solid color-mix(in srgb, var(--encre) 22%, transparent);
-    border-radius: var(--rayon);
-    background: #fbf8f2;
-    color: var(--encre);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  textarea {
-    resize: vertical;
-  }
-
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: none;
-    border-color: var(--terracotta);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--terracotta) 18%, transparent);
-  }
-
-  input[aria-invalid='true'] {
-    border-color: #b3261e;
-  }
-
-  .aide {
-    margin-top: -0.75rem;
-    font-size: 0.875rem;
-    color: var(--encre-douce);
-  }
-
-  .modeles {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  @media (min-width: 40rem) {
-    .modeles {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .modeles__gamme {
-    display: grid;
-    gap: 0.5rem;
-    align-content: start;
-  }
-
-  .modeles__titre {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-  }
-
-  .case {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.55rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--encre) 14%, transparent);
-    background: #fbf8f2;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .case input {
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: var(--terracotta);
-  }
-
-  .case:has(input:checked) {
-    border-color: var(--terracotta);
-    background: color-mix(in srgb, var(--terracotta) 8%, #fbf8f2);
-  }
-
-  .options {
+  .gammes__tete {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: -0.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
-  .case--pastille {
-    border-radius: 999px;
-    padding-inline: 1rem;
+  .gammes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
   }
 
-  .erreur {
-    padding: 0.9rem 1rem;
-    border-left: 3px solid #b3261e;
-    background: #f8e5e2;
-    color: #8c1d17;
-    font-size: 0.9375rem;
-    font-weight: 600;
+  .gamme {
+    display: grid;
+    gap: 0.35rem;
+    text-decoration: none;
   }
 
-  .erreur[hidden] {
-    display: none;
+  .gamme :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    transition: transform 1s var(--doux);
   }
 
-  .envoi {
-    justify-self: start;
-    min-height: 3.6rem;
-    padding-inline: 2rem;
-    font-size: 1rem;
+  .gamme:hover :global(img) {
+    transform: scale(1.03);
   }
 
-  .mention {
-    margin-top: -1.75rem;
-    font-size: 0.8125rem;
+  .gamme strong {
+    font-family: var(--titre);
+    font-size: 1.35rem;
+    font-weight: 400;
+  }
+
+  .gamme span {
+    font-size: 0.875rem;
     color: var(--encre-douce);
   }
 
-  /* ------------------------------------------------ confirmation */
-
-  .confirmation {
-    gap: 1.25rem;
-    justify-items: start;
-    padding: clamp(2rem, 5vw, 3rem);
-    background: var(--sable);
-    outline: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
-    outline-offset: -10px;
+  @media (min-width: 60rem) {
+    .gammes {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
   }
 
-  .confirmation:focus {
-    outline-style: dashed;
+  /* ------------------------------------------------ contenu du devis */
+
+  .contenu {
+    display: grid;
+    gap: 3.5rem;
+    align-items: start;
   }
 
-  .confirmation__icone {
-    width: 3.5rem;
-    height: 3.5rem;
+  @media (min-width: 64rem) {
+    .contenu {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  .contenu .bloc-titre :global(em) {
+    color: #e08a5f;
+  }
+
+  .contenu__liste {
+    list-style: none;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    display: grid;
+  }
+
+  .contenu__liste li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 0;
+    border-bottom: 1px dashed rgba(245, 240, 230, 0.2);
+    color: #e6ddcf;
+    font-size: 1.0625rem;
+  }
+
+  .contenu__liste li span {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: #1f8a4c;
-    color: #fff;
+    background: var(--terracotta);
+    color: var(--ecru);
   }
 
-  .confirmation h2 {
-    font-size: 2.25rem;
-  }
-
-  .confirmation p {
-    color: var(--encre-douce);
-    max-width: 34rem;
-  }
-
-  .confirmation__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .confirmation__retour {
-    background: none;
-    border: none;
-    border-bottom: 1px solid currentColor;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--encre);
-  }
-
-  /* ------------------------------------------------ à côté */
-
-  .cote {
+  .contenu__cotes {
     display: grid;
     gap: 1rem;
   }
 
-  .cote__bloc {
+  .encart {
     display: grid;
     gap: 0.9rem;
+    justify-items: start;
     padding: 1.75rem;
-    background: var(--nuit);
+    background: var(--nuit-douce);
     color: #c9bfb1;
   }
 
-  .cote__bloc + .cote__bloc {
-    background: var(--sable);
+  .encart--clair {
+    background: var(--ecru);
+    color: var(--encre-douce);
+  }
+
+  .encart__titre {
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    color: var(--ecru);
+  }
+
+  .encart--clair .encart__titre {
     color: var(--encre);
   }
 
-  .cote__titre {
-    font-family: var(--titre);
-    font-size: 1.5rem;
-    color: inherit;
-  }
-
-  .cote__bloc:first-child .cote__titre {
-    color: var(--ecru);
-  }
-
-  .cote ol {
-    margin: 0;
-    padding-left: 1.25rem;
-    display: grid;
-    gap: 0.75rem;
-    font-size: 0.9375rem;
-  }
-
-  .cote ol strong {
-    color: var(--ecru);
-  }
-
-  .cote__lien,
-  .cote__horaires {
+  .encart__lien,
+  .encart__horaires {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     font-weight: 600;
     text-decoration: none;
+    color: var(--encre);
   }
 
-  .cote__horaires {
+  .encart__horaires {
     font-weight: 500;
     font-size: 0.9375rem;
     color: var(--encre-douce);
   }
 
-  .cote__bloc :global(svg) {
+  .encart__lien :global(svg),
+  .encart__horaires :global(svg) {
     color: var(--terracotta);
     flex: none;
   }
 </style>
-
-<script>
-  import { lireProvenance } from '../lib/provenance';
-
-  const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]');
-  const atelier = formulaire?.dataset.atelier ?? '';
-  const numero = formulaire?.dataset.numero ?? '';
-  const email = formulaire?.dataset.email ?? '';
-  const confirmation = document.querySelector<HTMLElement>('[data-confirmation]');
-  const erreur = document.querySelector<HTMLElement>('[data-erreur]');
-  const rouvrir = document.querySelector<HTMLAnchorElement>('[data-rouvrir]');
-  const courriel = document.querySelector<HTMLAnchorElement>('[data-courriel]');
-  const modifier = document.querySelector<HTMLButtonElement>('[data-modifier]');
-
-  // Arrivé depuis une fiche produit ou depuis l'essayeur d'étiquette : la
-  // demande est déjà à moitié remplie.
-  const parametres = new URLSearchParams(location.search);
-  const modele = parametres.get('modele');
-  if (modele) {
-    const caseModele = formulaire?.querySelector<HTMLInputElement>(`input[data-slug="${CSS.escape(modele)}"]`);
-    if (caseModele) caseModele.checked = true;
-  }
-  const marque = parametres.get('marque');
-  if (marque && formulaire) {
-    (formulaire.elements.namedItem('marque') as HTMLInputElement).value = marque;
-    formulaire.querySelector<HTMLInputElement>('input[value="Étiquette tissée"]')?.click();
-  }
-
-  const composer = (donnees: FormData): string => {
-    const lignes = [
-      `Bonjour ${atelier}, je souhaite un devis pour une commande en gros.`,
-      '',
-      `• Nom : ${donnees.get('nom')}`,
-      `• Boutique / marque : ${donnees.get('marque')}`,
-      `• Ville et pays : ${donnees.get('ville')}`,
-      `• Téléphone : ${donnees.get('telephone')}`,
-    ];
-    const modeles = donnees.getAll('modeles');
-    if (modeles.length) lignes.push(`• Modèles : ${modeles.join(', ')}`);
-    lignes.push(`• Quantité par modèle : ${donnees.get('quantite')}`);
-    const personnalisation = donnees.getAll('personnalisation');
-    if (personnalisation.length) lignes.push(`• Personnalisation : ${personnalisation.join(', ')}`);
-    const message = String(donnees.get('message') ?? '').trim();
-    if (message) lignes.push('', message);
-    const provenance = lireProvenance();
-    if (provenance) lignes.push('', `(Réf. ${provenance})`);
-    return lignes.join('\n');
-  };
-
-  formulaire?.addEventListener('submit', (evenement) => {
-    evenement.preventDefault();
-
-    const obligatoires = Array.from(formulaire.querySelectorAll<HTMLInputElement>('input[required]'));
-    const manquants = obligatoires.filter((champ) => !champ.value.trim());
-    obligatoires.forEach((champ) => champ.setAttribute('aria-invalid', String(manquants.includes(champ))));
-    if (erreur) erreur.hidden = manquants.length === 0;
-    if (manquants.length) {
-      manquants[0].focus();
-      return;
-    }
-
-    const texte = composer(new FormData(formulaire));
-    const lienWhatsapp = `https://wa.me/${numero}?text=${encodeURIComponent(texte)}`;
-    if (rouvrir) rouvrir.href = lienWhatsapp;
-    if (courriel) {
-      courriel.href = `mailto:${email}?subject=${encodeURIComponent('Demande de devis')}&body=${encodeURIComponent(texte)}`;
-    }
-
-    window.open(lienWhatsapp, '_blank', 'noopener');
-
-    formulaire.hidden = true;
-    if (confirmation) {
-      confirmation.hidden = false;
-      confirmation.focus();
-      confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  });
-
-  modifier?.addEventListener('click', () => {
-    if (!formulaire || !confirmation) return;
-    confirmation.hidden = true;
-    formulaire.hidden = false;
-    formulaire.querySelector<HTMLInputElement>('input')?.focus();
-  });
-</script>

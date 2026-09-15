@@ -33,7 +33,8 @@ Vous n'avez besoin de rien d'autre.
 | `/confection-vetements-enfants-tunisie`   | Page métier Enfants                    |
 | `/confection-pret-a-porter-femme-tunisie` | Page métier Femme                      |
 | `/guides` et `/guides/…`                  | Les articles de conseil                |
-| `/devis`                                  | La demande de devis                    |
+| `/devis`                                  | Comment obtenir un devis               |
+| `/devis/…`                                | La demande de devis d'un modèle        |
 
 Les pages métier répondent à ce que tapent les acheteurs sur Google
 (« fabrication t-shirt Tunisie », « atelier confection enfant »…) : c'est par
@@ -116,6 +117,22 @@ Dans `src/contenu/produits.json`, chaque produit est un bloc entre `{ }`.
   sans accent, unique), le `"nom"` et les `"images"`.
 - **Retirer :** supprimez le bloc, et la virgule qui le suit.
 - `"gamme"` doit être l'une de : `t-shirts`, `sweats`, `enfants`, `femme`.
+- `"personnalisation"` : les marquages possibles, séparés par des virgules. Ce sont
+  les cases proposées dans la demande de devis du modèle.
+- `"tailles"` (facultatif) : les tailles du modèle, par exemple
+  `["2 ans", "4 ans", "6 ans"]`. Sans ce champ, le modèle reprend les tailles de
+  sa gamme (champ `"tailles"` de la gamme).
+
+**Les demandes de devis.** L'atelier ne produit que les modèles de la collection :
+chaque devis porte donc sur un modèle, depuis sa fiche (bouton « Demander un
+devis pour ce modèle »). Le formulaire reprend la photo du modèle, ses tailles et
+ses marquages ; la demande part sur WhatsApp, déjà rédigée, avec le lien de la
+fiche. Le site retient les coordonnées de l'acheteur sur son appareil : sa
+demande suivante, pour un autre modèle, ne prend que quelques secondes.
+
+La page `/devis` du menu ne contient pas de formulaire : elle explique comment
+obtenir un devis et mène à la collection. Ses textes sont dans le bloc `"devis"`
+de `site.json`.
 
 **Les pages métier** se règlent dans le bloc `"page"` de chaque gamme : titre
 affiché, introduction, 4 arguments et questions fréquentes. `"seoTitre"` (60

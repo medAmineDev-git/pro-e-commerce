@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import CarteProduit from '../../components/CarteProduit.astro';
 import Icone from '../../components/Icone.astro';
-import { gammes, lienGamme, produits, produitsDe, site, texteBrut, titre } from '../../lib/contenu';
+import { gammes, insecables, lienGamme, produits, produitsDe, site, texteBrut, titre } from '../../lib/contenu';
 
 const { collection } = site;
 ---
@@ -43,12 +43,12 @@ const { collection } = site;
     </ul>
   </nav>
 
-  <section class="conteneur sur-mesure">
-    <div class="sur-mesure__cadre">
-      <p class="surtitre">{collection.surMesure.surtitre}</p>
-      <h2 set:html={titre(collection.surMesure.titre)} />
-      <p class="chapeau">{collection.surMesure.texte}</p>
-      <a class="bouton" href="/devis">{collection.surMesure.bouton} <Icone nom="fleche" /></a>
+  <section class="conteneur encart-devis">
+    <div class="encart-devis__cadre">
+      <p class="surtitre">{collection.encartDevis.surtitre}</p>
+      <h2 set:html={titre(collection.encartDevis.titre)} />
+      <p class="chapeau">{insecables(collection.encartDevis.texte)}</p>
+      <a class="bouton" href="/devis">{collection.encartDevis.bouton} <Icone nom="fleche" /></a>
     </div>
   </section>
 </Base>
@@ -171,11 +171,11 @@ const { collection } = site;
     }
   }
 
-  .sur-mesure {
+  .encart-devis {
     padding-bottom: var(--section);
   }
 
-  .sur-mesure__cadre {
+  .encart-devis__cadre {
     display: grid;
     gap: 1.5rem;
     justify-items: start;
@@ -186,21 +186,21 @@ const { collection } = site;
     outline-offset: -14px;
   }
 
-  .sur-mesure__cadre .surtitre {
+  .encart-devis__cadre .surtitre {
     color: #e08a5f;
     margin-bottom: -0.25rem;
   }
 
-  .sur-mesure__cadre h2 {
+  .encart-devis__cadre h2 {
     font-size: clamp(2rem, 4.5vw, 3.5rem);
     max-width: 18ch;
   }
 
-  .sur-mesure__cadre h2 :global(em) {
+  .encart-devis__cadre h2 :global(em) {
     color: #e08a5f;
   }
 
-  .sur-mesure__cadre .chapeau {
+  .encart-devis__cadre .chapeau {
     color: #c9bfb1;
   }
 </style>

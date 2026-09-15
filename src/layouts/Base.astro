@@ -26,6 +26,8 @@ interface Props {
   ariane?: { nom: string; chemin: string }[];
   /** false : la page ne doit jamais être référencée (page d'erreur…). */
   indexable?: boolean;
+  /** Où mène « Demander un devis » dans la barre du bas : la fiche y met son modèle. */
+  lienDevis?: string;
 }
 
 const {
@@ -37,6 +39,7 @@ const {
   donnees,
   ariane,
   indexable = true,
+  lienDevis = '/devis',
 } = Astro.props;
 
 const titreComplet = titre ? `${titre} · ${site.marque.nom}` : site.seo.titre;
@@ -148,7 +151,7 @@ const jetonAudience = site.analytics.jetonCloudflare.trim();
     {
       !sansBarre && (
         <div class="barre-mobile" aria-label="Contact rapide">
-          <a class="bouton barre-mobile__devis" href="/devis">
+          <a class="bouton barre-mobile__devis" href={lienDevis}>
             Demander un devis
           </a>
           <a

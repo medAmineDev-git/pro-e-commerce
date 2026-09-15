@@ -19,7 +19,7 @@
     "facebook": ""
   },
 
-  "_analytics": "Jeton Cloudflare Web Analytics (voir GUIDE.md, partie 9). Vide : aucune mesure d'audience.",
+  "_analytics": "Jeton Cloudflare Web Analytics (voir GUIDE.md, partie 8). Vide : aucune mesure d'audience.",
   "analytics": {
     "jetonCloudflare": ""
   },
@@ -102,7 +102,7 @@
       },
       {
         "titre": "Le patronage",
-        "texte": "Chaque modèle naît d'un patron gradué taille par taille, selon les tailles françaises. Vous avez une référence ? Nous la reproduisons, ou l'adaptons à votre clientèle.",
+        "texte": "Chaque modèle de la collection a son patron, gradué taille par taille selon les tailles françaises. Une coupe éprouvée, identique d'une commande à l'autre.",
         "image": "atelier-patronage.jpg"
       },
       {
@@ -130,7 +130,8 @@
     "placeholder": "Le nom de votre marque",
     "exemple": "MAISON LÉA",
     "options": ["Étiquette tissée", "Sérigraphie", "Broderie", "Emballage personnalisé"],
-    "bouton": "Je veux mes pièces à ma marque"
+    "bouton": "Je veux mes pièces à ma marque",
+    "suite": "Choisissez ensuite un modèle : le nom de votre marque sera repris dans votre demande de devis."
   },
 
   "qualite": {
@@ -154,15 +155,15 @@
   "collection": {
     "surtitre": "La collection",
     "titre": "{nombre} modèles, *prêts à produire.*",
-    "texte": "Des bases qui se vendent toute l'année, à produire telles quelles ou à adapter : tissu, couleur, finitions, étiquette. Chaque modèle se commande dès quelques dizaines de pièces.",
-    "textePage": "Chaque modèle se produit tel quel ou s'adapte à votre boutique : tissu, coloris, finitions et étiquette à votre marque. Tailles et coloris panachables dans une même commande.",
+    "texte": "Des bases qui se vendent toute l'année, produites à votre marque : coloris, étiquette et marquage au choix. Chaque modèle se commande dès quelques dizaines de pièces.",
+    "textePage": "Chaque modèle se produit dans vos coloris, avec votre étiquette et votre marquage, tailles et coloris panachés dans une même commande. Un modèle vous plaît ? Sa fiche vous donne un devis en une minute.",
     "seoTitre": "Collection : t-shirts, sweats, enfants et femme",
     "seoDescription": "{nombre} modèles fabriqués en Tunisie pour les marques françaises : t-shirts, sweats, enfants et prêt-à-porter femme, dès 30 à 60 pièces par modèle.",
-    "surMesure": {
-      "surtitre": "Sur mesure",
-      "titre": "Votre modèle n'est pas là ? *Nous le fabriquons.*",
-      "texte": "Envoyez-nous une photo, un croquis ou une pièce type : nous réalisons le patron, un prototype, puis la série après votre validation.",
-      "bouton": "Proposer mon modèle"
+    "encartDevis": {
+      "surtitre": "Devis",
+      "titre": "Un modèle vous plaît ? *Demandez votre prix.*",
+      "texte": "Ouvrez sa fiche et cliquez sur « Demander un devis » : quantité, tailles, coloris et marquage, une minute suffit. Nous vous répondons sous 24 h.",
+      "bouton": "Comment ça marche"
     }
   },
 
@@ -176,7 +177,7 @@
       { "titre": "Production en 15 à 25 jours", "texte": "selon la quantité et la saison. Le délai est fixé noir sur blanc dans votre devis." },
       { "titre": "Livraison en France", "texte": "par la route et la mer, ou en express, jusqu'à votre boutique. Nous préparons la facture, la liste de colisage et le certificat d'origine." },
       { "titre": "Paiement en deux fois", "texte": "30 % à la validation de l'échantillon, le solde avant l'expédition, par virement bancaire." },
-      { "titre": "Vos modèles, vos couleurs", "texte": "Nous produisons nos modèles à votre marque, ou les vôtres à partir d'une photo ou d'une pièce type." }
+      { "titre": "Nos modèles, vos couleurs", "texte": "Chaque modèle de la collection se produit dans les coloris de votre choix, avec votre étiquette et votre marquage." }
     ]
   },
 
@@ -184,7 +185,7 @@
     "surtitre": "Comment ça se passe",
     "titre": "Quatre étapes, un seul interlocuteur.",
     "etapes": [
-      { "titre": "Vous nous écrivez", "texte": "Modèles, quantités, personnalisation : un message suffit. Réponse sous 24 h, en français." },
+      { "titre": "Vous choisissez vos modèles", "texte": "Une demande de devis par modèle, depuis sa fiche, en une minute. Réponse sous 24 h, en français." },
       { "titre": "Vous recevez votre échantillon", "texte": "Avec un devis détaillé : prix par pièce, délai, transport jusqu'en France." },
       { "titre": "Vous validez", "texte": "L'acompte lance la production. Nous vous tenons au courant à chaque étape, photos à l'appui." },
       { "titre": "Vous vendez", "texte": "Livraison en France, pièces pliées par taille. Il ne reste qu'à les mettre en rayon." }
@@ -217,7 +218,7 @@
       { "question": "Y a-t-il des droits de douane pour la France ?", "reponse": "Un vêtement d'origine tunisienne entre dans l'Union européenne sans droits de douane, grâce à l'accord d'association entre l'Union européenne et la Tunisie, à condition de respecter les règles d'origine et de fournir un certificat d'origine (EUR.1). Nous vous indiquons, pour chaque commande, si les tissus retenus le permettent. La TVA à l'importation reste due, comme pour tout achat hors de l'Union." },
       { "question": "Comment se passe la livraison en France ?", "reponse": "Par transporteur, de l'atelier jusqu'à votre adresse : par la route et la mer, ou en express pour les commandes urgentes. Nous préparons la facture, la liste de colisage et le certificat d'origine ; le transporteur ou votre transitaire se charge du dédouanement à l'arrivée." },
       { "question": "Pouvez-vous mettre ma marque sur les vêtements ?", "reponse": "Oui : étiquette tissée à votre nom, étiquette de taille, sérigraphie, broderie et emballage personnalisé. Envoyez-nous votre logo, nous vous proposons un rendu." },
-      { "question": "Pouvez-vous fabriquer mon propre modèle ?", "reponse": "Oui, à partir d'une pièce type, d'une photo ou d'un croquis. Nous réalisons le patron, un prototype, puis la série après votre validation." },
+      { "question": "Pouvez-vous fabriquer mon propre modèle ?", "reponse": "Nous produisons uniquement les modèles de notre collection : leurs coupes, leurs tissus et leurs finitions sont éprouvés, ce qui garantit une qualité constante et des délais tenus. Chacun se personnalise : coloris, étiquette, broderie, sérigraphie." },
       { "question": "Quels sont les délais ?", "reponse": "Comptez 15 à 25 jours de production après validation de l'échantillon, selon la quantité et la saison, puis quelques jours de transport jusqu'en France. Le délai exact figure dans votre devis." },
       { "question": "Comment se passe le paiement ?", "reponse": "30 % d'acompte à la validation de l'échantillon, le solde avant l'expédition, par virement bancaire." }
     ]
@@ -225,7 +226,7 @@
 
   "appelFinal": {
     "titre": "Parlons de votre *prochaine collection.*",
-    "texte": "Dites-nous ce que vous cherchez : nous revenons vers vous sous 24 h avec des conseils, des prix et un délai de livraison en France.",
+    "texte": "Choisissez vos modèles, dites-nous vos quantités : nous revenons vers vous sous 24 h avec un prix, un délai et le coût de livraison en France.",
     "boutonDevis": "Demander un devis",
     "boutonWhatsapp": "Écrire sur WhatsApp",
     "visite": "De passage en Tunisie ? Venez visiter l'atelier, sur rendez-vous."
@@ -236,14 +237,38 @@
     "mention": "Fabriqué en Tunisie, avec soin."
   },
 
+  "_devis": "La page /devis explique comment obtenir un devis ; la demande elle-même se fait modèle par modèle, depuis chaque fiche (bloc « formulaire »).",
   "devis": {
     "titre": "Demande de devis",
     "surtitre": "Devis gratuit · réponse sous 24 h",
-    "titrePage": "Parlons de votre *commande.*",
-    "texte": "Quelques informations, et votre demande part sur WhatsApp, déjà rédigée. Nous vous répondons sous 24 h avec un prix par pièce, un délai et le coût de livraison en France.",
-    "seoDescription": "Demandez un devis gratuit à l'atelier Yomna Fashion : prix par pièce, délai de production et livraison en France, réponse sous 24 h.",
-    "quantites": ["50 à 100 pièces", "100 à 300 pièces", "300 à 1 000 pièces", "Plus de 1 000 pièces", "Je ne sais pas encore"],
-    "confirmation": "Votre demande est prête dans WhatsApp : il ne reste qu'à l'envoyer. Si WhatsApp ne s'est pas ouvert, appelez-nous ou écrivez-nous par e-mail."
+    "titrePage": "Un devis en 24 h, *à partir de nos modèles.*",
+    "texte": "Nous produisons les {nombre} modèles de notre collection : des coupes éprouvées, cousues chaque jour à l'atelier, à votre marque. Choisissez celui qui vous plaît : depuis sa fiche, la demande de devis prend une minute.",
+    "seoDescription": "Devis gratuit pour nos t-shirts, sweats, vêtements enfants et femme : prix par pièce, délai et livraison en France, réponse sous 24 h.",
+    "bouton": "Choisir un modèle",
+    "etapes": [
+      { "titre": "Choisissez un modèle", "texte": "Parcourez la collection : chaque fiche indique le tissu, le grammage, les tailles et le minimum de commande." },
+      { "titre": "Précisez votre demande", "texte": "Quantité, tailles, coloris, marquage : une minute, et la demande part sur WhatsApp, déjà rédigée." },
+      { "titre": "Recevez votre devis", "texte": "Sous 24 h, en français : prix par pièce, délai de production et coût de livraison jusqu'à votre adresse." },
+      { "titre": "Validez l'échantillon", "texte": "Nous le préparons en 5 jours et vous l'envoyons en France. Vous validez, la production démarre." }
+    ],
+    "contenuTitre": "Ce que contient *votre devis.*",
+    "contenu": [
+      "Le prix par pièce, selon la quantité",
+      "Le coût de votre personnalisation : étiquette, broderie, sérigraphie",
+      "Le délai de production, écrit noir sur blanc",
+      "Le coût de la livraison jusqu'à votre adresse en France",
+      "Les conditions de paiement : 30 % à la validation de l'échantillon, le solde avant l'expédition"
+    ],
+    "plusieursTitre": "Plusieurs modèles ?",
+    "plusieurs": "Faites une demande par modèle : vos coordonnées sont retenues, la suivante ne prend que quelques secondes. Nous vous répondons avec un seul devis pour l'ensemble.",
+    "questionTitre": "Une question avant de choisir ?",
+    "question": "Écrivez-nous sur WhatsApp : nous vous aidons à trouver le modèle qui convient à votre boutique et à votre clientèle.",
+    "formulaire": {
+      "surtitre": "Devis gratuit · réponse sous 24 h",
+      "texte": "Une minute : votre demande part sur WhatsApp, déjà rédigée. Nous vous répondons sous 24 h avec un prix par pièce, un délai et le coût de livraison en France.",
+      "confirmation": "Votre demande est prête dans WhatsApp : il ne reste qu'à l'envoyer. Si WhatsApp ne s'est pas ouvert, appelez-nous ou écrivez-nous par e-mail.",
+      "autreModele": "Vos coordonnées sont retenues sur cet appareil : la demande suivante ne prend que quelques secondes. Nous vous répondrons avec un seul devis pour l'ensemble."
+    }
   },
 
   "pageAtelier": {
@@ -272,7 +297,7 @@
     "seoDescription": "Lancez votre marque de vêtements : t-shirts, sweats, enfants et femme fabriqués en Tunisie avec vos étiquettes, dès 50 pièces par modèle.",
     "surtitre": "Marque blanche",
     "titre": "Votre marque de vêtements, *fabriquée en Tunisie.*",
-    "intro": "Vous avez un nom, une idée, une clientèle. Nous avons l'atelier. Choisissez un modèle de notre collection ou apportez le vôtre : nous le produisons à votre marque, en petite ou grande série, et vos clients ne verront que votre nom.",
+    "intro": "Vous avez un nom, une idée, une clientèle. Nous avons l'atelier. Choisissez vos modèles dans notre collection : nous les produisons à votre marque, en petite ou grande série, et vos clients ne verront que votre nom.",
     "personnalisations": [
       { "titre": "Étiquette tissée", "texte": "Votre logo tissé, cousu au col ou en couture de côté. Écru, noir ou à vos couleurs." },
       { "titre": "Étiquette de taille et d'entretien", "texte": "La composition en fibres, obligatoire en Europe, avec la taille, les symboles d'entretien et l'origine." },
@@ -282,8 +307,8 @@
       { "titre": "Emballage", "texte": "Pliage, sachet, sticker ou boîte : la pièce arrive prête à être vendue ou expédiée." }
     ],
     "etapes": [
-      { "titre": "Votre projet", "texte": "Modèles, quantités, logo, budget : nous en parlons sur WhatsApp ou en visio." },
-      { "titre": "Le prototype", "texte": "Nous réalisons la pièce à votre marque : tissu, coupe, étiquettes, finitions." },
+      { "titre": "Vos modèles", "texte": "Choisissez-les dans la collection, puis indiquez quantités, coloris et logo : devis sous 24 h." },
+      { "titre": "L'échantillon", "texte": "Nous réalisons le modèle à votre marque : vos coloris, vos étiquettes, votre marquage." },
       { "titre": "La validation", "texte": "Vous recevez l'échantillon en France et le devis final. Vous ajustez, puis validez." },
       { "titre": "La série", "texte": "Production, contrôle pièce par pièce, emballage, puis livraison jusqu'à vous." }
     ],

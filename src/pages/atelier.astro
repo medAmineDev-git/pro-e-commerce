@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Couture from '../components/Couture.astro';
 import Icone from '../components/Icone.astro';
-import { image, lienTelephone, nombre, site, titre } from '../lib/contenu';
+import { image, lienTelephone, lienWhatsapp, nombre, site, titre } from '../lib/contenu';
 
 const page = site.pageAtelier;
 const { manifeste, processus, qualite, galerie } = site;
@@ -104,7 +104,15 @@ const { manifeste, processus, qualite, galerie } = site;
           <li><Icone nom="horloge" taille={18} /> {site.marque.horaires}</li>
           <li><Icone nom="telephone" taille={18} /> <a href={lienTelephone()}>{site.marque.telephone}</a></li>
         </ul>
-        <a class="bouton" href="/devis">Prendre rendez-vous <Icone nom="fleche" /></a>
+        <a
+          class="bouton bouton--whatsapp"
+          href={lienWhatsapp(`Bonjour ${site.marque.nom}, je souhaite visiter l'atelier. Quelles dates vous conviendraient ?`)}
+          target="_blank"
+          rel="noopener"
+          data-whatsapp
+        >
+          <Icone nom="whatsapp" /> Prendre rendez-vous
+        </a>
       </div>
     </div>
   </section>
