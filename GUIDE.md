@@ -14,6 +14,7 @@ vidéo, produits, puis comment le mettre en ligne.
 | Les photos                         | `src/assets/images/`                       |
 | La vidéo de la bannière            | `public/video/banniere.mp4`                |
 | L'adresse du site en ligne         | `astro.config.mjs` (ligne `ADRESSE_DU_SITE`) |
+| Le déploiement Cloudflare          | `wrangler.jsonc` (à ne pas supprimer)      |
 
 Vous n'avez besoin de rien d'autre.
 
@@ -154,16 +155,19 @@ Le site est fait de simples fichiers : aucun serveur, aucune base de données.
 
 1. Créez un compte [GitHub](https://github.com) et déposez-y ce projet.
 2. Créez un compte [Cloudflare](https://dash.cloudflare.com), puis
-   **Workers & Pages → Créer → Pages → Connecter à Git**, et choisissez le dépôt.
+   **Workers & Pages → Créer → Importer un dépôt**, et choisissez le dépôt.
 3. Réglages de construction :
-   - Framework : **Astro**
-   - Commande : `npm run build`
-   - Dossier de sortie : `dist`
-4. Cliquez sur **Enregistrer et déployer**. Le site est en ligne en une minute,
-   sur une adresse `….pages.dev`.
-5. **Votre adresse** : dans le projet Cloudflare, onglet **Domaines
-   personnalisés**, ajoutez `pro.yomna-fashion.com`, puis créez chez votre
-   registraire de domaine l'enregistrement CNAME indiqué par Cloudflare.
+   - Commande de construction : `npm run build`
+   - Commande de déploiement : `npx wrangler deploy`
+4. Enregistrez et déployez. Le site est en ligne en une minute, sur une adresse
+   `….workers.dev`.
+5. **Votre adresse** : dans le projet Cloudflare, onglet **Paramètres →
+   Domaines et routes**, ajoutez `pro.yomna-fashion.com`, puis suivez les
+   indications de Cloudflare pour le domaine.
+
+Le fichier `wrangler.jsonc` indique à Cloudflare que c'est un site statique :
+**ne le supprimez pas.** Sans lui, Cloudflare transforme le projet en site
+« avec serveur » et les photos ne s'affichent plus.
 
 Ensuite, **chaque modification déposée sur GitHub met le site à jour toute seule**,
 y compris depuis le site de GitHub : ouvrez un fichier, cliquez sur le crayon,

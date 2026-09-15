@@ -1,0 +1,17 @@
+// Déploiement sur Cloudflare Workers : un site statique, rien d'autre.
+//
+// Sans ce fichier, Cloudflare configure le projet lui-même au moment de la
+// construction et en fait un site « avec serveur » : les images passent alors
+// par un service de redimensionnement (/_image) que ce déploiement n'a pas, et
+// n'apparaissent pas. Ici, il sert simplement le dossier dist, où la
+// construction a déjà préparé chaque image en plusieurs tailles.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pro-e-commerce",
+  "compatibility_date": "2026-09-15",
+  "assets": {
+    "directory": "./dist",
+    // Une adresse inconnue affiche la page 404 du site, avec le bon code.
+    "not_found_handling": "404-page"
+  }
+}
