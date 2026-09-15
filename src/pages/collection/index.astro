@@ -1,0 +1,191 @@
+---
+import Base from '../../layouts/Base.astro';
+import CarteProduit from '../../components/CarteProduit.astro';
+import Icone from '../../components/Icone.astro';
+import { gammes, produits, produitsDe, site, titre } from '../../lib/contenu';
+
+const { collection } = site;
+---
+
+<Base
+  titre="La collection"
+  description={`${produits.length} modèles à produire en gros et à votre marque : T-shirts, sweats, vêtements enfants et prêt-à-porter femme, fabriqués à Moknine.`}
+>
+  <section class="tete conteneur">
+    <p class="surtitre">{collection.surtitre}</p>
+    <h1 set:html={titre(collection.titre)} />
+    <p class="chapeau">{collection.textePage}</p>
+
+    <div class="filtres" role="group" aria-label="Filtrer par gamme" data-filtres>
+      <button type="button" class="filtre" aria-pressed="true" data-filtre="">
+        Tout voir <span>{produits.length}</span>
+      </button>
+      {
+        gammes.map((gamme) => (
+          <button type="button" class="filtre" aria-pressed="false" data-filtre={gamme.id}>
+            {gamme.nom} <span>{produitsDe(gamme.id).length}</span>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="conteneur grille" aria-live="polite" data-grille>
+    {produits.map((produit, rang) => <CarteProduit produit={produit} rang={rang} />)}
+  </section>
+
+  <section class="conteneur sur-mesure">
+    <div class="sur-mesure__cadre">
+      <p class="surtitre">{collection.surMesure.surtitre}</p>
+      <h2 set:html={titre(collection.surMesure.titre)} />
+      <p class="chapeau">{collection.surMesure.texte}</p>
+      <a class="bouton" href="/devis">{collection.surMesure.bouton} <Icone nom="fleche" /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tete {
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tete .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 7vw, 5.75rem);
+    font-weight: 340;
+    max-width: 16ch;
+  }
+
+  .filtres {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 1rem 0 0.25rem;
+    margin-inline: calc(var(--marge) * -1);
+    padding-inline: var(--marge);
+    scrollbar-width: none;
+  }
+
+  .filtres::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filtre {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--encre);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .filtre span {
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .filtre[aria-pressed='true'] {
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--ecru);
+  }
+
+  .grille {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1rem;
+    padding-bottom: var(--section);
+  }
+
+  .grille :global(.carte[hidden]) {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .grille {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3.5rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .grille {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .sur-mesure {
+    padding-bottom: var(--section);
+  }
+
+  .sur-mesure__cadre {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    padding: clamp(2.5rem, 6vw, 5rem);
+    background: var(--nuit);
+    color: var(--ecru);
+    outline: 1px dashed rgba(245, 240, 230, 0.35);
+    outline-offset: -14px;
+  }
+
+  .sur-mesure__cadre .surtitre {
+    color: #e08a5f;
+    margin-bottom: -0.25rem;
+  }
+
+  .sur-mesure__cadre h2 {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    max-width: 18ch;
+  }
+
+  .sur-mesure__cadre h2 :global(em) {
+    color: #e08a5f;
+  }
+
+  .sur-mesure__cadre .chapeau {
+    color: #c9bfb1;
+  }
+</style>
+
+<script>
+  // Filtre par gamme, sans rechargement ; l'adresse garde la gamme choisie
+  // pour qu'un lien partagé ouvre la même sélection.
+  const boutons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filtre]'));
+  const cartes = Array.from(document.querySelectorAll<HTMLElement>('[data-grille] .carte'));
+
+  const filtrer = (gamme: string) => {
+    boutons.forEach((bouton) => bouton.setAttribute('aria-pressed', String(bouton.dataset.filtre === gamme)));
+    cartes.forEach((carte) => {
+      carte.hidden = !!gamme && carte.dataset.gamme !== gamme;
+      // Une carte qui réapparaît ne doit pas attendre d'être « révélée ».
+      carte.classList.add('est-visible');
+    });
+    const url = new URL(location.href);
+    if (gamme) url.searchParams.set('gamme', gamme);
+    else url.searchParams.delete('gamme');
+    history.replaceState(null, '', url);
+  };
+
+  boutons.forEach((bouton) => bouton.addEventListener('click', () => filtrer(bouton.dataset.filtre ?? '')));
+
+  const demandee = new URLSearchParams(location.search).get('gamme');
+  if (demandee && boutons.some((bouton) => bouton.dataset.filtre === demandee)) {
+    filtrer(demandee);
+  }
+</script>

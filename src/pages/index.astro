@@ -1,0 +1,2075 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icone from '../components/Icone.astro';
+import Couture from '../components/Couture.astro';
+import CarteProduit from '../components/CarteProduit.astro';
+import { gammes, image, lienTelephone, lienWhatsapp, nombre, produits, produitsDe, site, titre } from '../lib/contenu';
+
+const { accueil, manifeste, processus, marqueBlanche, qualite, collection, conditions, etapesCommande, galerie, temoignages, faq, appelFinal } = site;
+
+// Deux modèles de chaque gamme, pour que l'aperçu montre toute l'étendue.
+const apercu = gammes.flatMap((gamme) => produitsDe(gamme.id).slice(0, 2)).slice(0, 8);
+
+const messageWhatsapp = `Bonjour ${site.marque.nom}, je découvre votre atelier et je souhaite des informations pour une commande en gros.`;
+
+const faqDonnees = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.questions.map((q) => ({
+    '@type': 'Question',
+    name: q.question,
+    acceptedAnswer: { '@type': 'Answer', text: q.reponse },
+  })),
+};
+---
+
+<Base enteteSurImage donnees={faqDonnees}>
+  <!-- ============================================================ BANNIÈRE -->
+  <section class="banniere sur-image" aria-labelledby="titre-accueil">
+    <div class="banniere__media" aria-hidden="true">
+      <Image
+        src={image('banniere.jpg')}
+        alt=""
+        widths={[640, 1024, 1600, 2000]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="banniere__image"
+      />
+      <video class="banniere__video" muted loop playsinline preload="none" data-video="/video/banniere.mp4"></video>
+      <div class="banniere__voile"></div>
+    </div>
+
+    <div class="banniere__contenu conteneur">
+      <p class="surtitre banniere__surtitre">{accueil.surtitre}</p>
+      <h1 id="titre-accueil" class="banniere__titre">
+        {
+          accueil.titre.map((ligne, rang) => (
+            <>
+              <span class="banniere__ligne" style={`--rang:${rang}`} set:html={titre(ligne)} />{' '}
+            </>
+          ))
+        }
+      </h1>
+      <p class="banniere__texte">{accueil.sousTitre}</p>
+      <div class="banniere__boutons">
+        <a class="bouton" href="/devis">{accueil.boutonPrincipal} <Icone nom="fleche" /></a>
+        <a class="bouton bouton--contour" href="/collection">{accueil.boutonSecondaire}</a>
+      </div>
+    </div>
+
+    <!-- L'étiquette tissée qui se balance au bout de son fil. -->
+    <div class="etiquette-flottante" aria-hidden="true">
+      <span class="etiquette-flottante__fil"></span>
+      <span class="etiquette-flottante__corps">
+        <span class="etiquette-flottante__nom">Yomna</span>
+        <span class="etiquette-flottante__ligne">{accueil.etiquette}</span>
+        <span class="etiquette-flottante__ligne">100 % coton · 180 g</span>
+      </span>
+    </div>
+
+    <a class="banniere__defiler" href="#atelier">
+      <span>Découvrir l'atelier</span>
+      <span class="banniere__fil" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ============================================================ MATIÈRES -->
+  <div class="defile" aria-label="Nos matières et savoir-faire">
+    <div class="defile__piste">
+      {
+        [0, 1].map((copie) => (
+          <ul class="defile__liste" aria-hidden={copie === 1 ? 'true' : undefined}>
+            {site.matieres.map((matiere) => (
+              <li>{matiere}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- ============================================================ L'ATELIER -->
+  <section class="section manifeste" id="atelier">
+    <div class="conteneur manifeste__grille">
+      <div class="manifeste__texte">
+        <p class="surtitre" data-reveler>{manifeste.surtitre}</p>
+        <h2 data-reveler set:html={titre(manifeste.titre)} />
+        <p class="chapeau" data-reveler>{manifeste.texte}</p>
+      </div>
+
+      <div class="manifeste__collage" data-parallaxe>
+        <figure class="manifeste__photo manifeste__photo--grande" data-reveler>
+          <Image src={image('atelier-machines.jpg')} alt="L'atelier et ses machines à coudre" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 90vw" />
+        </figure>
+        <figure class="manifeste__photo manifeste__photo--petite" data-reveler style="--rang:2">
+          <Image src={image('atelier-fils.jpg')} alt="Bobines de fil et mètre ruban" widths={[320, 560]} sizes="(min-width: 60rem) 20vw, 45vw" />
+        </figure>
+        <span class="manifeste__tampon" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="cercle-tampon" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0" /></defs>
+            <text><textPath href="#cercle-tampon" textLength="272" lengthAdjust="spacing">Fabriqué en Tunisie · Made in Tunisia ·</textPath></text>
+          </svg>
+          <span class="manifeste__monogramme">Y</span>
+        </span>
+      </div>
+    </div>
+
+    <dl class="conteneur chiffres">
+      {
+        manifeste.chiffres.map((chiffre, rang) => (
+          <div class="chiffre" data-reveler style={`--rang:${rang}`}>
+            <dt class="chiffre__valeur" data-compteur={chiffre.valeur} data-suffixe={chiffre.suffixe}>
+              {nombre(chiffre.valeur)}{chiffre.suffixe}
+            </dt>
+            <dd>{chiffre.libelle}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <div class="conteneur"><Couture /></div>
+
+  <!-- ============================================================ GAMMES -->
+  <section class="section gammes" aria-labelledby="titre-gammes">
+    <div class="conteneur">
+      <header class="entete-section entete-section--duo">
+        <div>
+          <p class="surtitre" data-reveler>{site.gammes.surtitre}</p>
+          <h2 id="titre-gammes" data-reveler set:html={titre(site.gammes.titre)} />
+        </div>
+        <p class="chapeau" data-reveler>{site.gammes.texte}</p>
+      </header>
+
+      <div class="gammes__grille">
+        {
+          gammes.map((gamme, rang) => (
+            <a class="gamme" href={`/collection?gamme=${gamme.id}`} data-reveler style={`--rang:${rang}`}>
+              <Image src={image(gamme.image)} alt="" widths={[480, 720, 1000]} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" class="gamme__image" />
+              <span class="gamme__voile" />
+              <span class="gamme__numero">0{rang + 1}</span>
+              <span class="gamme__texte">
+                <span class="gamme__nom">{gamme.nom}</span>
+                <span class="gamme__accroche">{gamme.accroche}</span>
+                <span class="gamme__lien">
+                  {produitsDe(gamme.id).length} modèles <Icone nom="fleche" taille={18} />
+                </span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SAVOIR-FAIRE -->
+  <section class="section section--nuit processus" id="savoir-faire" aria-labelledby="titre-processus">
+    <div class="conteneur">
+      <header class="entete-section">
+        <p class="surtitre" data-reveler>{processus.surtitre}</p>
+        <h2 id="titre-processus" data-reveler set:html={titre(processus.titre)} />
+      </header>
+
+      <div class="processus__grille">
+        <!-- Sur grand écran, l'image suit l'étape lue et reste à l'écran. -->
+        <div class="processus__visuels" aria-hidden="true">
+          {
+            processus.etapes.map((etape, rang) => (
+              <Image
+                src={image(etape.image)}
+                alt=""
+                widths={[600, 900, 1200]}
+                sizes="45vw"
+                class:list={['processus__visuel', { 'est-active': rang === 0 }]}
+                data-visuel={rang}
+              />
+            ))
+          }
+          <span class="processus__compteur"><span data-etape-courante>01</span> / 0{processus.etapes.length}</span>
+        </div>
+
+        <ol class="processus__etapes">
+          {
+            processus.etapes.map((etape, rang) => (
+              <li class:list={['etape', { 'est-active': rang === 0 }]} data-etape={rang}>
+                <span class="etape__numero">0{rang + 1}</span>
+                <div>
+                  <h3>{etape.titre}</h3>
+                  <p>{etape.texte}</p>
+                  <Image src={image(etape.image)} alt="" widths={[480, 800]} sizes="90vw" class="etape__image" />
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ MARQUE BLANCHE -->
+  <section class="section section--sable marque" aria-labelledby="titre-marque">
+    <div class="conteneur marque__grille">
+      <div class="marque__texte">
+        <p class="surtitre" data-reveler>{marqueBlanche.surtitre}</p>
+        <h2 id="titre-marque" data-reveler set:html={titre(marqueBlanche.titre)} />
+        <p class="chapeau" data-reveler>{marqueBlanche.texte}</p>
+
+        <form class="essayeur" data-essayeur data-reveler action="/devis">
+          <label class="essayeur__champ">
+            <span>Votre marque</span>
+            <input type="text" name="marque" maxlength="22" autocomplete="organization" placeholder={marqueBlanche.placeholder} data-essayeur-nom />
+          </label>
+
+          <fieldset class="essayeur__choix">
+            <legend>Étiquette</legend>
+            <label><input type="radio" name="teinte" value="ecru" checked /><span class="pastille pastille--ecru"></span>Écru</label>
+            <label><input type="radio" name="teinte" value="noir" /><span class="pastille pastille--noir"></span>Noir</label>
+            <label><input type="radio" name="teinte" value="terracotta" /><span class="pastille pastille--terracotta"></span>Terracotta</label>
+          </fieldset>
+
+          <fieldset class="essayeur__choix">
+            <legend>Style</legend>
+            <label><input type="radio" name="style" value="serif" checked />Élégant</label>
+            <label><input type="radio" name="style" value="baton" />Moderne</label>
+            <label><input type="radio" name="style" value="script" />Signature</label>
+          </fieldset>
+
+          <ul class="essayeur__options">
+            {marqueBlanche.options.map((option) => <li><Icone nom="coche" taille={16} /> {option}</li>)}
+          </ul>
+
+          <button class="bouton" type="submit">{marqueBlanche.bouton} <Icone nom="fleche" /></button>
+        </form>
+      </div>
+
+      <!-- L'aperçu : l'étiquette tissée cousue au col, et l'étiquette volante. -->
+      <div class="apercu" aria-live="polite" data-apercu data-teinte="ecru" data-style="serif">
+        <div class="apercu__col">
+          <Image src={image('tshirt-01.jpg')} alt="" widths={[480, 800]} sizes="(min-width: 60rem) 40vw, 90vw" class="apercu__photo" />
+          <div class="tissee">
+            <span class="tissee__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
+            <span class="tissee__mention">Made in Tunisia</span>
+          </div>
+        </div>
+        <div class="volante">
+          <span class="volante__fil"></span>
+          <div class="volante__carton">
+            <span class="volante__oeillet"></span>
+            <span class="volante__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
+            <span class="volante__ligne">Collection permanente</span>
+            <span class="volante__ligne">100 % coton peigné</span>
+            <span class="volante__code" aria-hidden="true">||| || ||| | |||| ||</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ QUALITÉ -->
+  <section class="section qualite" aria-labelledby="titre-qualite">
+    <div class="conteneur qualite__grille">
+      <div>
+        <p class="surtitre" data-reveler>{qualite.surtitre}</p>
+        <h2 id="titre-qualite" data-reveler set:html={titre(qualite.titre)} />
+        <p class="chapeau" data-reveler>{qualite.texte}</p>
+        <ul class="qualite__points">
+          {
+            qualite.points.map((point, rang) => (
+              <li data-reveler style={`--rang:${rang}`}>
+                <span class="qualite__coche"><Icone nom="coche" taille={16} /></span>
+                {point}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="matieres">
+        {
+          qualite.matieres.map((matiere, rang) => (
+            <figure class="matiere" data-reveler style={`--rang:${rang + 1}`}>
+              <Image src={image(matiere.image)} alt={matiere.nom} widths={[400, 700]} sizes="(min-width: 60rem) 22vw, 45vw" />
+              <figcaption>
+                <strong>{matiere.nom}</strong>
+                <span>{matiere.detail}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ COLLECTION -->
+  <section class="section section--sable collection" aria-labelledby="titre-collection">
+    <div class="conteneur">
+      <header class="entete-section entete-section--duo">
+        <div>
+          <p class="surtitre" data-reveler>{collection.surtitre}</p>
+          <h2 id="titre-collection" data-reveler set:html={titre(collection.titre)} />
+        </div>
+        <p class="chapeau" data-reveler>{collection.texte}</p>
+      </header>
+    </div>
+
+    <div class="rail" tabindex="0" aria-label="Aperçu de la collection, faites défiler">
+      {apercu.map((produit, rang) => <div class="rail__element"><CarteProduit produit={produit} rang={rang} tailles="(min-width: 64rem) 22vw, 70vw" /></div>)}
+      <a class="rail__fin" href="/collection">
+        <span>Voir les {produits.length} modèles</span>
+        <Icone nom="fleche" taille={28} />
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================ CONDITIONS -->
+  <section class="section conditions" id="conditions" aria-labelledby="titre-conditions">
+    <div class="conteneur">
+      <header class="entete-section entete-section--duo">
+        <div>
+          <p class="surtitre" data-reveler>{conditions.surtitre}</p>
+          <h2 id="titre-conditions" data-reveler set:html={titre(conditions.titre)} />
+        </div>
+        <p class="chapeau" data-reveler>{conditions.texte}</p>
+      </header>
+
+      <div class="conditions__grille">
+        {
+          conditions.cartes.map((carte, rang) => (
+            <article class="fiche" data-reveler style={`--rang:${rang % 3}`}>
+              <span class="fiche__numero">N° 0{rang + 1}</span>
+              <h3>{carte.titre}</h3>
+              <p>{carte.texte}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="parcours">
+        <p class="surtitre" data-reveler>{etapesCommande.surtitre}</p>
+        <h3 class="parcours__titre" data-reveler>{etapesCommande.titre}</h3>
+        <ol class="parcours__etapes">
+          {
+            etapesCommande.etapes.map((etape, rang) => (
+              <li data-reveler style={`--rang:${rang}`}>
+                <span class="parcours__point">{rang + 1}</span>
+                <strong>{etape.titre}</strong>
+                <span>{etape.texte}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ GALERIE -->
+  <section class="section section--nuit galerie" aria-labelledby="titre-galerie">
+    <div class="conteneur">
+      <header class="entete-section entete-section--duo">
+        <div>
+          <p class="surtitre" data-reveler>{galerie.surtitre}</p>
+          <h2 id="titre-galerie" data-reveler set:html={titre(galerie.titre)} />
+        </div>
+        <p class="chapeau" data-reveler>{galerie.texte}</p>
+      </header>
+
+      <div class="galerie__mosaique">
+        {
+          galerie.images.map((nom, rang) => (
+            <figure class={`galerie__case galerie__case--${rang + 1}`} data-reveler style={`--rang:${rang % 3}`}>
+              <Image src={image(nom)} alt="" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 90vw" />
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ TÉMOIGNAGES -->
+  <section class="section temoignages" aria-labelledby="titre-temoignages">
+    <div class="conteneur">
+      <header class="entete-section">
+        <p class="surtitre" data-reveler>{temoignages.surtitre}</p>
+        <h2 id="titre-temoignages" data-reveler set:html={titre(temoignages.titre)} />
+      </header>
+
+      <div class="temoignages__grille">
+        {
+          temoignages.avis.map((avis, rang) => (
+            <figure class="avis" data-reveler style={`--rang:${rang}`}>
+              <span class="avis__guillemet" aria-hidden="true">“</span>
+              <blockquote>{avis.texte}</blockquote>
+              <figcaption>
+                <span class="avis__initiales" aria-hidden="true">
+                  {avis.nom.split(' ').map((mot) => mot[0]).join('')}
+                </span>
+                <span>
+                  <strong>{avis.nom}</strong>
+                  <span>{avis.boutique}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="conteneur"><Couture /></div>
+
+  <!-- ============================================================ FAQ -->
+  <section class="section faq" id="faq" aria-labelledby="titre-faq">
+    <div class="conteneur faq__grille">
+      <header>
+        <p class="surtitre" data-reveler>{faq.surtitre}</p>
+        <h2 id="titre-faq" data-reveler set:html={titre(faq.titre)} />
+        <p class="chapeau" data-reveler>
+          Une autre question ? <a class="lien-fleche" href={lienWhatsapp(messageWhatsapp)} target="_blank" rel="noopener" data-whatsapp>Écrivez-nous sur WhatsApp</a>
+        </p>
+      </header>
+
+      <div class="faq__liste">
+        {
+          faq.questions.map((q) => (
+            <details class="question">
+              <summary>
+                {q.question}
+                <span class="question__signe" aria-hidden="true"><Icone nom="plus" taille={18} /></span>
+              </summary>
+              <p>{q.reponse}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ APPEL FINAL -->
+  <section class="final sur-image" aria-labelledby="titre-final">
+    <Image src={image('atelier-tissus.jpg')} alt="" widths={[800, 1400, 2000]} sizes="100vw" class="final__fond" />
+    <div class="final__voile"></div>
+    <div class="conteneur final__contenu">
+      <h2 id="titre-final" data-reveler set:html={titre(appelFinal.titre)} />
+      <p class="final__texte" data-reveler>{appelFinal.texte}</p>
+      <div class="final__boutons" data-reveler>
+        <a class="bouton" href="/devis">{appelFinal.boutonDevis} <Icone nom="fleche" /></a>
+        <a class="bouton bouton--whatsapp" href={lienWhatsapp(messageWhatsapp)} target="_blank" rel="noopener" data-whatsapp>
+          <Icone nom="whatsapp" /> {appelFinal.boutonWhatsapp}
+        </a>
+      </div>
+      <p class="final__visite" data-reveler>
+        <Icone nom="lieu" taille={18} /> {appelFinal.visite}
+        <a href={lienTelephone()}>{site.marque.telephone}</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ============================================================ bannière */
+
+  .banniere {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    color: var(--ecru);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .banniere__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .banniere__media :global(.banniere__image),
+  .banniere__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: banniere-zoom 18s var(--doux) both;
+  }
+
+  .banniere__video {
+    opacity: 0;
+    transition: opacity 1.2s var(--doux);
+  }
+
+  .banniere__video.est-prete {
+    opacity: 1;
+  }
+
+  .banniere__voile {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(23, 20, 17, 0.55) 0%, rgba(23, 20, 17, 0) 28%),
+      linear-gradient(0deg, rgba(23, 20, 17, 0.88) 0%, rgba(23, 20, 17, 0.35) 55%, rgba(23, 20, 17, 0.15) 100%);
+  }
+
+  .banniere__contenu {
+    position: relative;
+    padding-top: calc(var(--entete) + 3rem);
+    padding-bottom: clamp(6rem, 12vh, 9rem);
+  }
+
+  .banniere__surtitre {
+    color: #f0b48f;
+    animation: apparition 1s var(--doux) 0.2s both;
+  }
+
+  .banniere__titre {
+    font-size: clamp(3.25rem, 10.5vw, 9.5rem);
+    font-weight: 330;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    max-width: 12ch;
+  }
+
+  /* Le titre vient du fichier de contenu : son italique n'hérite pas du style
+     de la page, d'où :global. */
+  .banniere__titre :global(em) {
+    color: #f0b48f;
+  }
+
+  .banniere__ligne {
+    display: block;
+    animation: ligne 1.2s var(--doux) both;
+    animation-delay: calc(0.35s + var(--rang) * 0.14s);
+  }
+
+  .banniere__texte {
+    max-width: 36rem;
+    margin-top: 2rem;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    color: #e7ddd0;
+    animation: apparition 1s var(--doux) 0.9s both;
+  }
+
+  .banniere__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    margin-top: 2.25rem;
+    animation: apparition 1s var(--doux) 1.05s both;
+  }
+
+  .banniere__defiler {
+    position: absolute;
+    right: var(--marge);
+    bottom: 2rem;
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    writing-mode: vertical-rl;
+  }
+
+  .banniere__fil {
+    width: 2px;
+    height: 4.5rem;
+    background: repeating-linear-gradient(180deg, currentColor 0 6px, transparent 6px 11px);
+    background-size: 2px 22px;
+    animation: fil-descend 1.4s linear infinite;
+  }
+
+  @media (min-width: 64rem) {
+    .banniere__defiler {
+      display: inline-flex;
+    }
+  }
+
+  /* L'étiquette tissée qui pend de son fil et se balance doucement. */
+  /* Pendue sous l'en-tête, à l'écart de son bouton. */
+  .etiquette-flottante {
+    position: absolute;
+    top: var(--entete);
+    right: clamp(8rem, 22vw, 20rem);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    animation: balancier 6s ease-in-out infinite;
+  }
+
+  .etiquette-flottante__fil {
+    width: 1px;
+    height: 22vh;
+    background: rgba(245, 240, 230, 0.7);
+  }
+
+  .etiquette-flottante__corps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 1.1rem 1.4rem 1.2rem;
+    background:
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.035) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 3px),
+      var(--ecru);
+    color: var(--encre);
+    outline: 1px dashed rgba(29, 26, 22, 0.35);
+    outline-offset: -6px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .etiquette-flottante__nom {
+    font-family: var(--titre);
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .etiquette-flottante__ligne {
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 64rem) {
+    .etiquette-flottante {
+      display: flex;
+    }
+  }
+
+  @keyframes banniere-zoom {
+    from {
+      transform: scale(1.12);
+    }
+  }
+
+  @keyframes ligne {
+    from {
+      opacity: 0;
+      transform: translateY(0.45em);
+      filter: blur(8px);
+    }
+  }
+
+  @keyframes apparition {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  @keyframes balancier {
+    0%,
+    100% {
+      rotate: -3deg;
+    }
+    50% {
+      rotate: 3deg;
+    }
+  }
+
+  @keyframes fil-descend {
+    to {
+      background-position: 0 22px;
+    }
+  }
+
+  /* ============================================================ matières */
+
+  .defile {
+    overflow: hidden;
+    background: var(--terracotta);
+    color: var(--ecru);
+    padding-block: 1.15rem;
+    border-block: 1px dashed rgba(245, 240, 230, 0.5);
+  }
+
+  .defile__piste {
+    display: flex;
+    width: max-content;
+    animation: defile 38s linear infinite;
+  }
+
+  .defile:hover .defile__piste {
+    animation-play-state: paused;
+  }
+
+  .defile__liste {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .defile__liste li {
+    display: flex;
+    align-items: center;
+    font-family: var(--titre);
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+    font-style: italic;
+    font-weight: 360;
+    white-space: nowrap;
+  }
+
+  /* Entre deux matières, un point de croix. */
+  .defile__liste li::after {
+    content: '✕';
+    font-family: var(--texte);
+    font-style: normal;
+    font-size: 0.8rem;
+    margin-inline: 2rem;
+    opacity: 0.7;
+  }
+
+  @keyframes defile {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ============================================================ l'atelier */
+
+  .manifeste__grille {
+    display: grid;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .manifeste__texte {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .manifeste__texte .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  .manifeste__collage {
+    position: relative;
+    padding: 0 12% 18% 0;
+  }
+
+  .manifeste__photo {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .manifeste__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .manifeste__photo--grande {
+    aspect-ratio: 4 / 3;
+  }
+
+  .manifeste__photo--petite {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 48%;
+    aspect-ratio: 1;
+    border: 0.6rem solid var(--ecru);
+    translate: 0 var(--decalage, 0px);
+  }
+
+  /* Le tampon « Fabriqué en Tunisie » tourne lentement sur le collage. */
+  .manifeste__tampon {
+    position: absolute;
+    left: -1rem;
+    bottom: 8%;
+    width: 7.5rem;
+    height: 7.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: var(--ecru);
+  }
+
+  .manifeste__tampon svg {
+    position: absolute;
+    inset: 0;
+    animation: tourne 22s linear infinite;
+  }
+
+  .manifeste__tampon text {
+    fill: currentColor;
+    font-family: var(--texte);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .manifeste__monogramme {
+    font-family: var(--titre);
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+
+  @keyframes tourne {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .manifeste__grille {
+      grid-template-columns: 1fr 1.05fr;
+      gap: 6rem;
+    }
+  }
+
+  .chiffres {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: clamp(4rem, 8vw, 6.5rem) auto 0;
+  }
+
+  .chiffre {
+    padding: 1.75rem 1.25rem 1.75rem 0;
+    border-top: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+  }
+
+  .chiffre__valeur {
+    font-family: var(--titre);
+    font-size: clamp(2.5rem, 6vw, 4.75rem);
+    font-weight: 330;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .chiffre dd {
+    margin: 0.75rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--encre-douce);
+    max-width: 14rem;
+  }
+
+  @media (min-width: 60rem) {
+    .chiffres {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ============================================================ gammes */
+
+  .gammes {
+    padding-top: calc(var(--section) * 0.6);
+  }
+
+  .gammes__grille {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .gamme {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 26rem;
+    overflow: hidden;
+    color: var(--ecru);
+    text-decoration: none;
+    isolation: isolate;
+  }
+
+  .gamme :global(.gamme__image) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 1.4s var(--doux);
+  }
+
+  .gamme__voile {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(23, 20, 17, 0.35) 0%, rgba(23, 20, 17, 0) 22%),
+      linear-gradient(0deg, rgba(23, 20, 17, 0.85) 0%, rgba(23, 20, 17, 0.1) 55%);
+    transition: background 0.6s var(--doux);
+  }
+
+  .gamme__numero {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+  }
+
+  .gamme__texte {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.5rem;
+  }
+
+  .gamme__nom {
+    font-family: var(--titre);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    line-height: 1;
+  }
+
+  .gamme__accroche {
+    font-size: 0.9375rem;
+    color: #e7ddd0;
+    max-width: 22rem;
+  }
+
+  .gamme__lien {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+
+  .gamme:hover :global(.gamme__image) {
+    transform: scale(1.06);
+  }
+
+  .gamme:hover .gamme__voile {
+    background: linear-gradient(0deg, rgba(143, 64, 31, 0.9) 0%, rgba(23, 20, 17, 0.15) 65%);
+  }
+
+  @media (min-width: 40rem) {
+    .gammes__grille {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .gammes__grille {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .gamme {
+      min-height: 34rem;
+    }
+
+    /* Les cartes en quinconce, comme des tissus posés sur une table. */
+    .gamme:nth-child(even) {
+      margin-top: 4rem;
+    }
+
+    .gamme__accroche {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s var(--doux), transform 0.5s var(--doux);
+    }
+
+    .gamme:hover .gamme__accroche,
+    .gamme:focus-visible .gamme__accroche {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ============================================================ savoir-faire */
+
+  .processus__grille {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .processus__visuels {
+    display: none;
+  }
+
+  .processus__etapes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 3.5rem;
+  }
+
+  .etape {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px dashed #4a433c;
+  }
+
+  .etape__numero {
+    font-family: var(--titre);
+    font-size: 1rem;
+    color: #e08a5f;
+    padding-top: 0.35rem;
+  }
+
+  .etape h3 {
+    margin-bottom: 1rem;
+  }
+
+  .etape p {
+    color: #c9bfb1;
+    max-width: 32rem;
+  }
+
+  .etape :global(.etape__image) {
+    margin-top: 1.5rem;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  @media (min-width: 60rem) {
+    .processus__grille {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .processus__visuels {
+      display: block;
+      position: sticky;
+      top: calc(var(--entete) + 2rem);
+      aspect-ratio: 4 / 5;
+      max-height: calc(100vh - var(--entete) - 4rem);
+      overflow: hidden;
+    }
+
+    .processus__visuels :global(.processus__visuel) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 0.9s var(--doux), transform 1.6s var(--doux);
+    }
+
+    .processus__visuels :global(.processus__visuel.est-active) {
+      opacity: 1;
+      transform: none;
+    }
+
+    .processus__compteur {
+      position: absolute;
+      left: 1.25rem;
+      bottom: 1.25rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--ecru);
+      color: var(--encre);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .processus__etapes {
+      gap: 0;
+    }
+
+    /* Une étape par hauteur d'écran : l'image à gauche change à la lecture. */
+    .etape {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      min-height: 62vh;
+      align-content: center;
+      border-top: none;
+      border-left: 2px dashed #4a433c;
+      padding: 0 0 0 2.5rem;
+      opacity: 0.35;
+      transition: opacity 0.6s var(--doux), border-color 0.6s var(--doux);
+    }
+
+    .etape.est-active {
+      opacity: 1;
+      border-left-color: #e08a5f;
+    }
+
+    .etape__numero {
+      font-size: 3.5rem;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .etape :global(.etape__image) {
+      display: none;
+    }
+  }
+
+  /* ============================================================ marque blanche */
+
+  .marque__grille {
+    display: grid;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .marque__texte {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .marque__texte .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  .essayeur {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .essayeur__champ {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .essayeur__champ input {
+    font-family: var(--titre);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 380;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0.25rem 0 0.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed var(--encre);
+    color: var(--encre);
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .essayeur__champ input:focus {
+    outline: none;
+    border-bottom-color: var(--terracotta);
+  }
+
+  .essayeur__champ input::placeholder {
+    color: color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .essayeur__choix {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .essayeur__choix legend {
+    float: left;
+    width: 6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .essayeur__choix label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .essayeur__choix input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .essayeur__choix label:has(input:checked) {
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--ecru);
+  }
+
+  .essayeur__choix label:has(input:focus-visible) {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+
+  .pastille {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .pastille--ecru {
+    background: #f2ebdd;
+  }
+
+  .pastille--noir {
+    background: #1d1a16;
+  }
+
+  .pastille--terracotta {
+    background: var(--terracotta);
+  }
+
+  .essayeur__options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .essayeur__options li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .essayeur__options :global(svg) {
+    color: var(--terracotta);
+  }
+
+  .essayeur .bouton {
+    justify-self: start;
+  }
+
+  /* L'aperçu : une photo de t-shirt, l'étiquette tissée cousue dessus, et
+     l'étiquette volante pendue à côté. */
+  .apercu {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .apercu__col {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    width: 82%;
+  }
+
+  .apercu__col :global(.apercu__photo) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tissee {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    translate: -50% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 11rem;
+    padding: 0.9rem 1.4rem 0.8rem;
+    background:
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px),
+      var(--fond-etiquette);
+    color: var(--encre-etiquette);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    outline: 1px dashed color-mix(in srgb, var(--encre-etiquette) 45%, transparent);
+    outline-offset: -5px;
+    transition: background-color 0.4s, color 0.4s;
+  }
+
+  .tissee__nom {
+    font-family: var(--police-etiquette);
+    font-size: 1.35rem;
+    line-height: 1.1;
+    letter-spacing: var(--espacement-etiquette);
+    text-align: center;
+    white-space: nowrap;
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tissee__mention {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .volante {
+    position: absolute;
+    right: 0;
+    top: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    animation: balancier 5s ease-in-out infinite;
+  }
+
+  .volante__fil {
+    width: 1px;
+    height: 5rem;
+    background: var(--encre);
+  }
+
+  .volante__carton {
+    position: relative;
+    width: 10.5rem;
+    padding: 2.2rem 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--fond-etiquette);
+    color: var(--encre-etiquette);
+    clip-path: polygon(22% 0, 78% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+    transition: background-color 0.4s, color 0.4s;
+  }
+
+  .volante {
+    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.18));
+  }
+
+  .volante__oeillet {
+    position: absolute;
+    top: 0.75rem;
+    left: 50%;
+    translate: -50% 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--sable);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
+  }
+
+  .volante__nom {
+    font-family: var(--police-etiquette);
+    font-size: 1.2rem;
+    line-height: 1.1;
+    letter-spacing: var(--espacement-etiquette);
+    text-align: center;
+    overflow-wrap: anywhere;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
+    margin-bottom: 0.3rem;
+  }
+
+  .volante__ligne {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .volante__code {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    letter-spacing: -0.05em;
+    opacity: 0.6;
+  }
+
+  .apercu[data-teinte='ecru'] {
+    --fond-etiquette: #f2ebdd;
+    --encre-etiquette: #1d1a16;
+  }
+
+  .apercu[data-teinte='noir'] {
+    --fond-etiquette: #1d1a16;
+    --encre-etiquette: #f2ebdd;
+  }
+
+  .apercu[data-teinte='terracotta'] {
+    --fond-etiquette: #b4532a;
+    --encre-etiquette: #f8efe2;
+  }
+
+  .apercu[data-style='serif'] {
+    --police-etiquette: var(--titre);
+    --espacement-etiquette: 0.02em;
+  }
+
+  .apercu[data-style='baton'] {
+    --police-etiquette: var(--texte);
+    --espacement-etiquette: 0.22em;
+  }
+
+  .apercu[data-style='baton'] .tissee__nom,
+  .apercu[data-style='baton'] .volante__nom {
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+  }
+
+  .apercu[data-style='script'] {
+    --police-etiquette: var(--titre);
+    --espacement-etiquette: 0;
+  }
+
+  .apercu[data-style='script'] .tissee__nom,
+  .apercu[data-style='script'] .volante__nom {
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-size: 1.55rem;
+  }
+
+  @media (min-width: 60rem) {
+    .marque__grille {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  /* ============================================================ qualité */
+
+  .qualite__grille {
+    display: grid;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .qualite__grille > div:first-child {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .qualite__grille .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  .qualite__points {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .qualite__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-weight: 600;
+  }
+
+  .qualite__coche {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px dashed var(--terracotta);
+    color: var(--terracotta);
+  }
+
+  .matieres {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .matiere {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .matiere:nth-child(2) {
+    margin-top: 3.5rem;
+  }
+
+  /* L'arche : la forme d'une bobine de tissu vue de face. */
+  .matiere :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 999px 999px 0 0;
+  }
+
+  .matiere figcaption {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .matiere strong {
+    font-family: var(--titre);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--encre);
+  }
+
+  @media (min-width: 60rem) {
+    .qualite__grille {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  /* ============================================================ collection */
+
+  .rail {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0.5rem var(--marge) 1.5rem;
+    scroll-padding-inline: var(--marge);
+    scrollbar-width: thin;
+    scrollbar-color: var(--terracotta) transparent;
+  }
+
+  @media (min-width: 82rem) {
+    .rail {
+      padding-inline: calc((100vw - var(--largeur)) / 2 + var(--marge));
+      scroll-padding-inline: calc((100vw - var(--largeur)) / 2 + var(--marge));
+    }
+  }
+
+  .rail__element {
+    flex: 0 0 min(70vw, 19rem);
+    scroll-snap-align: start;
+  }
+
+  .rail__fin {
+    flex: 0 0 min(60vw, 15rem);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    aspect-ratio: 4 / 5;
+    border: 1px dashed var(--encre);
+    font-family: var(--titre);
+    font-size: 1.75rem;
+    line-height: 1.1;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .rail__fin:hover {
+    background: var(--encre);
+    color: var(--ecru);
+  }
+
+  /* ============================================================ conditions */
+
+  .conditions__grille {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Chaque condition est une fiche d'atelier, bordée de points de couture. */
+  .fiche {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.9rem;
+    padding: 2rem 1.75rem 2.25rem;
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+    outline-offset: -10px;
+    transition: transform 0.5s var(--ressort), background 0.3s;
+  }
+
+  .fiche:hover {
+    transform: translateY(-6px) rotate(-0.4deg);
+    background: #efe5d4;
+  }
+
+  .fiche__numero {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--terracotta);
+  }
+
+  .fiche p {
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 40rem) {
+    .conditions__grille {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .conditions__grille {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .parcours {
+    margin-top: clamp(4.5rem, 9vw, 7rem);
+  }
+
+  .parcours__titre {
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    margin-bottom: 3rem;
+  }
+
+  .parcours__etapes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .parcours__etapes li {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 3.75rem;
+  }
+
+  .parcours__etapes li span:last-child {
+    color: var(--encre-douce);
+    font-size: 0.9375rem;
+  }
+
+  .parcours__etapes strong {
+    font-family: var(--titre);
+    font-size: 1.4rem;
+    font-weight: 420;
+    line-height: 1.2;
+  }
+
+  .parcours__point {
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--encre);
+    color: var(--ecru);
+    font-weight: 800;
+  }
+
+  @media (min-width: 64rem) {
+    .parcours__etapes {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5rem;
+    }
+
+    /* Le fil qui relie les quatre étapes. */
+    .parcours__etapes::before {
+      content: '';
+      position: absolute;
+      top: 1.3rem;
+      left: 1.3rem;
+      right: 10%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--terracotta) 0 8px, transparent 8px 14px);
+    }
+
+    .parcours__etapes li {
+      padding: 3.75rem 0 0;
+    }
+
+    .parcours__point {
+      top: 0;
+    }
+  }
+
+  /* ============================================================ galerie */
+
+  .galerie__mosaique {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .galerie__case {
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+
+  .galerie__case :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s var(--doux);
+  }
+
+  .galerie__case:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .galerie__case--1 {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+
+  @media (min-width: 60rem) {
+    /* « dense » : les petites photos comblent les trous laissés par les grandes. */
+    .galerie__mosaique {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 15rem;
+      grid-auto-flow: dense;
+      gap: 1rem;
+    }
+
+    .galerie__case,
+    .galerie__case--1 {
+      aspect-ratio: auto;
+    }
+
+    .galerie__case--1 {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .galerie__case--4 {
+      grid-row: span 2;
+    }
+
+    .galerie__case--5 {
+      grid-column: span 2;
+    }
+  }
+
+  /* ============================================================ témoignages */
+
+  .temoignages__grille {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .avis {
+    position: relative;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: 2.25rem 2rem 2rem;
+    background: #fbf8f2;
+    border: 1px solid color-mix(in srgb, var(--encre) 8%, transparent);
+  }
+
+  .avis__guillemet {
+    font-family: var(--titre);
+    font-size: 5rem;
+    line-height: 0.5;
+    color: var(--terracotta);
+    height: 2rem;
+  }
+
+  .avis blockquote {
+    margin: 0;
+    font-family: var(--titre);
+    font-size: 1.3rem;
+    font-weight: 360;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .avis figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .avis figcaption strong {
+    display: block;
+    color: var(--encre);
+  }
+
+  .avis__initiales {
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sable);
+    color: var(--terracotta);
+    font-weight: 800;
+    outline: 1px dashed var(--terracotta);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 60rem) {
+    .temoignages__grille {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .avis:nth-child(2) {
+      translate: 0 2.5rem;
+    }
+  }
+
+  /* ============================================================ FAQ */
+
+  .faq__grille {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .faq__grille header {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+
+  .faq__grille header .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  .question {
+    border-top: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .question:last-child {
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .question summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    font-family: var(--titre);
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .question summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .question__signe {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
+    transition: transform 0.4s var(--ressort), background 0.3s, color 0.3s;
+  }
+
+  .question[open] .question__signe {
+    transform: rotate(45deg);
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: var(--ecru);
+  }
+
+  .question p {
+    padding: 0 3.5rem 1.6rem 0;
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 60rem) {
+    .faq__grille {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 6rem;
+    }
+
+    .faq__grille header {
+      position: sticky;
+      top: calc(var(--entete) + 2rem);
+      align-self: start;
+    }
+  }
+
+  /* ============================================================ appel final */
+
+  .final {
+    position: relative;
+    isolation: isolate;
+    color: var(--ecru);
+    padding-block: clamp(7rem, 16vw, 12rem);
+    overflow: hidden;
+  }
+
+  .final :global(.final__fond) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .final__voile {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 30% 60%, rgba(23, 20, 17, 0.75), rgba(23, 20, 17, 0.92));
+  }
+
+  .final__contenu {
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+  }
+
+  .final h2 {
+    font-size: clamp(2.75rem, 7.5vw, 6.5rem);
+    font-weight: 330;
+    max-width: 14ch;
+  }
+
+  .final h2 :global(em) {
+    color: #f0b48f;
+  }
+
+  .final__texte {
+    max-width: 34rem;
+    font-size: 1.125rem;
+    color: #e7ddd0;
+  }
+
+  .final__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+  }
+
+  .final__visite {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #c9bfb1;
+  }
+
+  .final__visite a {
+    font-weight: 700;
+    color: var(--ecru);
+  }
+</style>
+
+<script>
+  // ------------------------------------------------ vidéo de la bannière
+
+  // La vidéo ne se charge que sur grand écran, sans économiseur de données ni
+  // préférence pour les animations réduites : sur téléphone, la photo suffit
+  // et épargne quelques mégaoctets au visiteur.
+  const video = document.querySelector<HTMLVideoElement>('video[data-video]');
+  const connexion = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  if (
+    video &&
+    matchMedia('(min-width: 64rem)').matches &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !connexion?.saveData
+  ) {
+    video.src = video.dataset.video ?? '';
+    video.addEventListener('canplay', () => video.classList.add('est-prete'), { once: true });
+    video.play().catch(() => {
+      // Lecture automatique refusée : la photo reste, rien n'est cassé.
+    });
+  }
+
+  // ------------------------------------------------ étapes du savoir-faire
+
+  const etapes = Array.from(document.querySelectorAll<HTMLElement>('[data-etape]'));
+  const visuels = Array.from(document.querySelectorAll<HTMLElement>('[data-visuel]'));
+  const compteur = document.querySelector<HTMLElement>('[data-etape-courante]');
+  const activer = (rang: number) => {
+    etapes.forEach((etape, i) => etape.classList.toggle('est-active', i === rang));
+    visuels.forEach((visuel, i) => visuel.classList.toggle('est-active', i === rang));
+    if (compteur) compteur.textContent = String(rang + 1).padStart(2, '0');
+  };
+  const lecture = new IntersectionObserver(
+    (entrees) => {
+      for (const entree of entrees) {
+        if (entree.isIntersecting) activer(Number((entree.target as HTMLElement).dataset.etape));
+      }
+    },
+    { rootMargin: '-45% 0px -45% 0px' },
+  );
+  etapes.forEach((etape) => lecture.observe(etape));
+
+  // ------------------------------------------------ essayeur d'étiquette
+
+  const essayeur = document.querySelector<HTMLFormElement>('[data-essayeur]');
+  const apercu = document.querySelector<HTMLElement>('[data-apercu]');
+  if (essayeur && apercu) {
+    const champ = essayeur.querySelector<HTMLInputElement>('[data-essayeur-nom]');
+    const noms = apercu.querySelectorAll<HTMLElement>('[data-apercu-nom]');
+    const exemple = noms[0]?.textContent ?? '';
+
+    const mettreAJour = () => {
+      const saisie = champ?.value.trim();
+      noms.forEach((nom) => (nom.textContent = saisie || exemple));
+      const donnees = new FormData(essayeur);
+      apercu.dataset.teinte = String(donnees.get('teinte') ?? 'ecru');
+      apercu.dataset.style = String(donnees.get('style') ?? 'serif');
+    };
+    essayeur.addEventListener('input', mettreAJour);
+    essayeur.addEventListener('change', mettreAJour);
+  }
+
+  // ------------------------------------------------ léger décalage du collage
+
+  const collage = document.querySelector<HTMLElement>('[data-parallaxe]');
+  const petite = collage?.querySelector<HTMLElement>('.manifeste__photo--petite');
+  if (collage && petite && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let enAttente = false;
+    const decaler = () => {
+      enAttente = false;
+      const boite = collage.getBoundingClientRect();
+      const progression = (innerHeight - boite.top) / (innerHeight + boite.height);
+      petite.style.setProperty('--decalage', `${Math.round((0.5 - progression) * 60)}px`);
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!enAttente) {
+          enAttente = true;
+          requestAnimationFrame(decaler);
+        }
+      },
+      { passive: true },
+    );
+    decaler();
+  }
+</script>

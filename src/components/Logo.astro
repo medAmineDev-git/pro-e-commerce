@@ -1,0 +1,43 @@
+---
+import { site } from '../lib/contenu';
+
+interface Props {
+  class?: string;
+}
+
+const { class: classe } = Astro.props;
+---
+
+<a href="/" class:list={['logo', classe]} aria-label={`${site.marque.nom}, accueil`}>
+  <span class="logo__nom">Yomna</span>
+  <span class="logo__signature">Fashion · Atelier</span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .logo__nom {
+    font-family: var(--titre);
+    font-size: 1.75rem;
+    font-weight: 420;
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    letter-spacing: -0.02em;
+  }
+
+  .logo__signature {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    padding-left: 0.1rem;
+    opacity: 0.8;
+  }
+</style>

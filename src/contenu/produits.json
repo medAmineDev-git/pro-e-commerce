@@ -1,0 +1,228 @@
+{
+  "_lisezMoi": "Une entrée par modèle. « images » : noms de fichiers du dossier src/assets/images, la première est la photo principale. « slug » : l'adresse de la fiche (minuscules, tirets, sans accent). Voir GUIDE.md.",
+
+  "gammes": [
+    {
+      "id": "t-shirts",
+      "nom": "T-shirts",
+      "accroche": "Du classique 160 g à l'oversize 240 g, en coton peigné.",
+      "image": "tshirt-04.jpg"
+    },
+    {
+      "id": "sweats",
+      "nom": "Sweats",
+      "accroche": "Hoodies, cols ronds, zippés et ensembles en molleton gratté.",
+      "image": "sweat-01.jpg"
+    },
+    {
+      "id": "enfants",
+      "nom": "Enfants",
+      "accroche": "Du bébé au 12 ans, des matières douces et des coutures qui tiennent.",
+      "image": "enfant-02-2.jpg"
+    },
+    {
+      "id": "femme",
+      "nom": "Prêt-à-porter femme",
+      "accroche": "Robes, chemises et pantalons, en lin, crêpe et viscose.",
+      "image": "femme-01.jpg"
+    }
+  ],
+
+  "produits": [
+    {
+      "slug": "t-shirt-classique",
+      "nom": "Le Classique",
+      "gamme": "t-shirts",
+      "resume": "Le t-shirt col rond qui se vend toute l'année.",
+      "description": "Coupe droite, col côtelé renforcé, bande de propreté à l'encolure. Le basique indispensable, que vos clients rachètent dans chaque couleur.",
+      "tissu": "Jersey 100 % coton peigné",
+      "grammage": "180 g/m²",
+      "minimum": 50,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée, sérigraphie, broderie",
+      "images": ["tshirt-01.jpg"]
+    },
+    {
+      "slug": "t-shirt-oversize-lourd",
+      "nom": "L'Oversize Lourd",
+      "gamme": "t-shirts",
+      "resume": "Épaules tombantes, tombé généreux, tissu épais.",
+      "description": "Le t-shirt oversize que réclame la clientèle streetwear : épaules tombantes, manches longues au coude, jersey dense qui garde sa forme lavage après lavage.",
+      "tissu": "Jersey 100 % coton peigné",
+      "grammage": "240 g/m²",
+      "minimum": 50,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée, sérigraphie, broderie",
+      "images": ["tshirt-02.jpg"]
+    },
+    {
+      "slug": "t-shirt-teint-piece",
+      "nom": "Le Teint en Pièce",
+      "gamme": "t-shirts",
+      "resume": "Couleur profonde et toucher délavé, teint après confection.",
+      "description": "Teint une fois cousu, il prend une couleur riche et un toucher doux, légèrement délavé. Terracotta, olive, sable, anthracite : les teintes qui font la différence en vitrine.",
+      "tissu": "Jersey 100 % coton",
+      "grammage": "200 g/m²",
+      "minimum": 60,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["tshirt-03.jpg"]
+    },
+    {
+      "slug": "t-shirt-boxy",
+      "nom": "Le Boxy",
+      "gamme": "t-shirts",
+      "resume": "Coupe carrée, courte et large, très actuelle.",
+      "description": "Une coupe carrée, un peu courte, qui tombe droit : le t-shirt tendance des boutiques femme et unisexe. Existe en version brodée poitrine.",
+      "tissu": "Jersey 100 % coton peigné",
+      "grammage": "220 g/m²",
+      "minimum": 50,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée, sérigraphie, broderie",
+      "images": ["tshirt-04.jpg", "tshirt-04-2.jpg"]
+    },
+    {
+      "slug": "hoodie-cocon",
+      "nom": "Le Hoodie Cocon",
+      "gamme": "sweats",
+      "resume": "Capuche doublée, poche kangourou, molleton gratté.",
+      "description": "Molleton épais à l'envers brossé, capuche doublée sans cordon, poignets et bas côtelés. Le sweat qu'on ne quitte plus de l'automne au printemps.",
+      "tissu": "Molleton gratté 80 % coton, 20 % polyester",
+      "grammage": "320 g/m²",
+      "minimum": 50,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, sérigraphie, broderie",
+      "images": ["sweat-01.jpg"]
+    },
+    {
+      "slug": "sweat-col-rond",
+      "nom": "Le Col Rond Signature",
+      "gamme": "sweats",
+      "resume": "Le sweat intemporel, doux et structuré.",
+      "description": "Col, poignets et bas en bord-côte, épaules légèrement descendues. Sobre à souhait, il met en valeur une broderie discrète à votre marque.",
+      "tissu": "Molleton gratté 80 % coton, 20 % polyester",
+      "grammage": "300 g/m²",
+      "minimum": 50,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["sweat-02.jpg"]
+    },
+    {
+      "slug": "veste-zippee",
+      "nom": "La Zippée Oversize",
+      "gamme": "sweats",
+      "resume": "Veste molleton à capuche, zip pleine longueur.",
+      "description": "Coupe ample, zip métal pleine longueur, poches plaquées. La pièce du vestiaire décontracté qui s'accorde avec tout.",
+      "tissu": "Molleton gratté 80 % coton, 20 % polyester",
+      "grammage": "340 g/m²",
+      "minimum": 40,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["sweat-03.jpg"]
+    },
+    {
+      "slug": "ensemble-jogging",
+      "nom": "L'Ensemble Jogging",
+      "gamme": "sweats",
+      "resume": "Hoodie et pantalon assortis, vendus ensemble.",
+      "description": "Le coordonné le plus demandé : hoodie et pantalon à cordon dans le même molleton, la même teinte. Un panier moyen plus élevé pour votre boutique.",
+      "tissu": "Molleton gratté 80 % coton, 20 % polyester",
+      "grammage": "320 g/m²",
+      "minimum": 40,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, sérigraphie, broderie",
+      "images": ["sweat-04.jpg", "sweat-04-2.jpg"]
+    },
+    {
+      "slug": "ensemble-volants",
+      "nom": "L'Ensemble Volants",
+      "gamme": "enfants",
+      "resume": "Blouse à volants et short assorti, en gaze de coton.",
+      "description": "Une double gaze de coton légère et respirante, des volants cousus main aux épaules. L'ensemble d'été des petites filles, du 2 au 8 ans.",
+      "tissu": "Double gaze 100 % coton",
+      "grammage": "120 g/m²",
+      "minimum": 40,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée, emballage",
+      "images": ["enfant-01.jpg"]
+    },
+    {
+      "slug": "pull-raye-enfant",
+      "nom": "Le Polo Rayé",
+      "gamme": "enfants",
+      "resume": "Maille rayée, col polo boutonné, allure rétro.",
+      "description": "Un pull-polo en maille douce, rayé à l'ancienne, avec un col boutonné qui facilite l'habillage. Du 12 mois au 6 ans.",
+      "tissu": "Maille 70 % coton, 30 % acrylique",
+      "grammage": "Maille jauge 12",
+      "minimum": 40,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["enfant-02.jpg", "enfant-02-2.jpg"]
+    },
+    {
+      "slug": "grenouillere-bebe",
+      "nom": "La Grenouillère Douce",
+      "gamme": "enfants",
+      "resume": "Interlock tout doux, pressions sur toute la longueur.",
+      "description": "Pour les tout-petits, du naissance au 18 mois : interlock de coton sans couture qui gratte, pressions nickel-free, pieds fermés.",
+      "tissu": "Interlock 100 % coton",
+      "grammage": "200 g/m²",
+      "minimum": 50,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée, emballage cadeau",
+      "images": ["enfant-03.jpg"]
+    },
+    {
+      "slug": "robe-fille",
+      "nom": "La Robe Petite Fleur",
+      "gamme": "enfants",
+      "resume": "Robe sans manches, jupe froncée, finition festonnée.",
+      "description": "Coton lavé, jupe froncée et bas festonné : la robe des fêtes et des beaux jours. Du 2 au 10 ans, en rose poudré, écru ou bleu ciel.",
+      "tissu": "Toile de coton lavé",
+      "grammage": "140 g/m²",
+      "minimum": 40,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["enfant-04.jpg"]
+    },
+    {
+      "slug": "robe-portefeuille",
+      "nom": "La Robe Portefeuille",
+      "gamme": "femme",
+      "resume": "Lin lavé, cache-cœur noué, manches courtes.",
+      "description": "Une robe cache-cœur en lin lavé, nouée à la taille, qui flatte toutes les silhouettes. Du 36 au 48, en couleurs vives ou naturelles.",
+      "tissu": "Lin lavé 100 %",
+      "grammage": "180 g/m²",
+      "minimum": 30,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée",
+      "images": ["femme-01.jpg", "femme-01-2.jpg"]
+    },
+    {
+      "slug": "chemise-lin",
+      "nom": "La Chemise Col Officier",
+      "gamme": "femme",
+      "resume": "Lin naturel, col officier, coupe ample.",
+      "description": "Une chemise en lin naturel au col officier, boutons nacrés, coupe ample et fraîche. Elle se porte ouverte, nouée ou rentrée.",
+      "tissu": "Lin lavé 100 %",
+      "grammage": "160 g/m²",
+      "minimum": 30,
+      "delai": "20 à 25 jours",
+      "personnalisation": "Étiquette tissée, broderie",
+      "images": ["femme-02.jpg", "femme-02-2.jpg"]
+    },
+    {
+      "slug": "pantalon-large",
+      "nom": "Le Pantalon Large Fluide",
+      "gamme": "femme",
+      "resume": "Taille haute, jambe large, crêpe fluide.",
+      "description": "Taille haute élastiquée au dos, plis devant, jambe large qui bouge à chaque pas. Le pantalon confortable et chic qui habille toute la semaine.",
+      "tissu": "Crêpe 100 % polyester",
+      "grammage": "190 g/m²",
+      "minimum": 30,
+      "delai": "15 à 20 jours",
+      "personnalisation": "Étiquette tissée",
+      "images": ["femme-03.jpg"]
+    }
+  ]
+}

@@ -1,0 +1,558 @@
+---
+import Base from '../layouts/Base.astro';
+import Icone from '../components/Icone.astro';
+import { gammes, lienTelephone, produitsDe, site, titre } from '../lib/contenu';
+
+const { devis, marqueBlanche, etapesCommande } = site;
+---
+
+<Base titre="Demande de devis" description={devis.texte} sansBarre>
+  <section class="devis conteneur">
+    <header class="devis__tete">
+      <p class="surtitre">{devis.surtitre}</p>
+      <h1 set:html={titre(devis.titrePage)} />
+      <p class="chapeau">{devis.texte}</p>
+    </header>
+
+    <div class="devis__grille">
+      <form
+        class="formulaire"
+        novalidate
+        data-formulaire
+        data-atelier={site.marque.nom}
+        data-numero={site.marque.whatsapp.replace(/\D/g, '')}
+        data-email={site.marque.email}
+      >
+        <fieldset>
+          <legend><span>1</span> Vous</legend>
+          <div class="champs">
+            <label class="champ">
+              <span>Nom et prénom *</span>
+              <input name="nom" type="text" autocomplete="name" required />
+            </label>
+            <label class="champ">
+              <span>Boutique ou marque *</span>
+              <input name="marque" type="text" autocomplete="organization" required />
+            </label>
+            <label class="champ">
+              <span>Ville *</span>
+              <input name="ville" type="text" autocomplete="address-level2" required />
+            </label>
+            <label class="champ">
+              <span>Téléphone *</span>
+              <input name="telephone" type="tel" autocomplete="tel" inputmode="tel" required />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>2</span> Les modèles</legend>
+          <p class="aide">Cochez ceux qui vous intéressent. Aucun ? Décrivez votre idée plus bas.</p>
+          <div class="modeles">
+            {
+              gammes.map((gamme) => (
+                <div class="modeles__gamme">
+                  <p class="modeles__titre">{gamme.nom}</p>
+                  {produitsDe(gamme.id).map((produit) => (
+                    <label class="case">
+                      <input type="checkbox" name="modeles" value={produit.nom} data-slug={produit.slug} />
+                      <span>{produit.nom}</span>
+                    </label>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>3</span> Votre projet</legend>
+          <label class="champ">
+            <span>Quantité envisagée, par modèle</span>
+            <select name="quantite">
+              {devis.quantites.map((quantite) => <option>{quantite}</option>)}
+            </select>
+          </label>
+
+          <p class="modeles__titre">Personnalisation</p>
+          <div class="options">
+            {
+              marqueBlanche.options.map((option) => (
+                <label class="case case--pastille">
+                  <input type="checkbox" name="personnalisation" value={option} />
+                  <span>{option}</span>
+                </label>
+              ))
+            }
+          </div>
+
+          <label class="champ">
+            <span>Votre message</span>
+            <textarea name="message" rows="4" placeholder="Couleurs, tailles, délai souhaité, modèle à reproduire…"></textarea>
+          </label>
+        </fieldset>
+
+        <p class="erreur" role="alert" hidden data-erreur>Indiquez votre nom, votre boutique, votre ville et votre téléphone.</p>
+
+        <button class="bouton bouton--whatsapp envoi" type="submit">
+          <Icone nom="whatsapp" /> Envoyer ma demande sur WhatsApp
+        </button>
+        <p class="mention">Votre demande s'ouvre dans WhatsApp, déjà rédigée : vous la relisez avant de l'envoyer.</p>
+      </form>
+
+      <!-- Après l'envoi : ce qui se passe, et d'autres moyens si WhatsApp n'a pas pu s'ouvrir. -->
+      <div class="confirmation" hidden tabindex="-1" data-confirmation>
+        <span class="confirmation__icone"><Icone nom="coche" taille={28} /></span>
+        <h2>Presque fini !</h2>
+        <p>{devis.confirmation}</p>
+        <div class="confirmation__actions">
+          <a class="bouton bouton--whatsapp" href="#" target="_blank" rel="noopener" data-rouvrir>
+            <Icone nom="whatsapp" /> Ouvrir WhatsApp
+          </a>
+          <a class="bouton bouton--contour" href="#" data-courriel><Icone nom="mail" /> Envoyer par e-mail</a>
+        </div>
+        <button type="button" class="lien-fleche confirmation__retour" data-modifier>Modifier ma demande</button>
+      </div>
+
+      <aside class="cote">
+        <div class="cote__bloc">
+          <p class="cote__titre">Et ensuite ?</p>
+          <ol>
+            {etapesCommande.etapes.map((etape) => <li><strong>{etape.titre}.</strong> {etape.texte}</li>)}
+          </ol>
+        </div>
+        <div class="cote__bloc">
+          <p class="cote__titre">Vous préférez parler ?</p>
+          <a class="cote__lien" href={lienTelephone()}><Icone nom="telephone" taille={18} /> {site.marque.telephone}</a>
+          <a class="cote__lien" href={`mailto:${site.marque.email}`}><Icone nom="mail" taille={18} /> {site.marque.email}</a>
+          <p class="cote__horaires"><Icone nom="horloge" taille={18} /> {site.marque.horaires}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .devis {
+    padding-top: clamp(3rem, 7vw, 5.5rem);
+    padding-bottom: var(--section);
+  }
+
+  .devis__tete {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .devis__tete .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    font-weight: 340;
+  }
+
+  .devis__grille {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .devis__grille {
+      grid-template-columns: 1.6fr 1fr;
+      gap: 5rem;
+    }
+
+    .cote {
+      position: sticky;
+      top: calc(var(--entete) + 2rem);
+    }
+  }
+
+  /* ------------------------------------------------ formulaire */
+
+  .formulaire,
+  .confirmation {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .formulaire[hidden],
+  .confirmation[hidden] {
+    display: none;
+  }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  legend {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 0;
+    font-family: var(--titre);
+    font-size: 1.75rem;
+  }
+
+  legend span {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: var(--ecru);
+    font-family: var(--texte);
+    font-size: 0.9375rem;
+    font-weight: 800;
+  }
+
+  .champs {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 40rem) {
+    .champs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .champ {
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  input[type='text'],
+  input[type='tel'],
+  select,
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    min-height: 3.1rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 22%, transparent);
+    border-radius: var(--rayon);
+    background: #fbf8f2;
+    color: var(--encre);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--terracotta);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--terracotta) 18%, transparent);
+  }
+
+  input[aria-invalid='true'] {
+    border-color: #b3261e;
+  }
+
+  .aide {
+    margin-top: -0.75rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .modeles {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 40rem) {
+    .modeles {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .modeles__gamme {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+
+  .modeles__titre {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .case {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 14%, transparent);
+    background: #fbf8f2;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .case input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--terracotta);
+  }
+
+  .case:has(input:checked) {
+    border-color: var(--terracotta);
+    background: color-mix(in srgb, var(--terracotta) 8%, #fbf8f2);
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: -0.5rem;
+  }
+
+  .case--pastille {
+    border-radius: 999px;
+    padding-inline: 1rem;
+  }
+
+  .erreur {
+    padding: 0.9rem 1rem;
+    border-left: 3px solid #b3261e;
+    background: #f8e5e2;
+    color: #8c1d17;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .erreur[hidden] {
+    display: none;
+  }
+
+  .envoi {
+    justify-self: start;
+    min-height: 3.6rem;
+    padding-inline: 2rem;
+    font-size: 1rem;
+  }
+
+  .mention {
+    margin-top: -1.75rem;
+    font-size: 0.8125rem;
+    color: var(--encre-douce);
+  }
+
+  /* ------------------------------------------------ confirmation */
+
+  .confirmation {
+    gap: 1.25rem;
+    justify-items: start;
+    padding: clamp(2rem, 5vw, 3rem);
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+    outline-offset: -10px;
+  }
+
+  .confirmation:focus {
+    outline-style: dashed;
+  }
+
+  .confirmation__icone {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #1f8a4c;
+    color: #fff;
+  }
+
+  .confirmation h2 {
+    font-size: 2.25rem;
+  }
+
+  .confirmation p {
+    color: var(--encre-douce);
+    max-width: 34rem;
+  }
+
+  .confirmation__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .confirmation__retour {
+    background: none;
+    border: none;
+    border-bottom: 1px solid currentColor;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--encre);
+  }
+
+  /* ------------------------------------------------ à côté */
+
+  .cote {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .cote__bloc {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.75rem;
+    background: var(--nuit);
+    color: #c9bfb1;
+  }
+
+  .cote__bloc + .cote__bloc {
+    background: var(--sable);
+    color: var(--encre);
+  }
+
+  .cote__titre {
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    color: inherit;
+  }
+
+  .cote__bloc:first-child .cote__titre {
+    color: var(--ecru);
+  }
+
+  .cote ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .cote ol strong {
+    color: var(--ecru);
+  }
+
+  .cote__lien,
+  .cote__horaires {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cote__horaires {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--encre-douce);
+  }
+
+  .cote__bloc :global(svg) {
+    color: var(--terracotta);
+    flex: none;
+  }
+</style>
+
+<script>
+  import { lireProvenance } from '../lib/provenance';
+
+  const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]');
+  const atelier = formulaire?.dataset.atelier ?? '';
+  const numero = formulaire?.dataset.numero ?? '';
+  const email = formulaire?.dataset.email ?? '';
+  const confirmation = document.querySelector<HTMLElement>('[data-confirmation]');
+  const erreur = document.querySelector<HTMLElement>('[data-erreur]');
+  const rouvrir = document.querySelector<HTMLAnchorElement>('[data-rouvrir]');
+  const courriel = document.querySelector<HTMLAnchorElement>('[data-courriel]');
+  const modifier = document.querySelector<HTMLButtonElement>('[data-modifier]');
+
+  // Arrivé depuis une fiche produit ou depuis l'essayeur d'étiquette : la
+  // demande est déjà à moitié remplie.
+  const parametres = new URLSearchParams(location.search);
+  const modele = parametres.get('modele');
+  if (modele) {
+    const caseModele = formulaire?.querySelector<HTMLInputElement>(`input[data-slug="${CSS.escape(modele)}"]`);
+    if (caseModele) caseModele.checked = true;
+  }
+  const marque = parametres.get('marque');
+  if (marque && formulaire) {
+    (formulaire.elements.namedItem('marque') as HTMLInputElement).value = marque;
+    formulaire.querySelector<HTMLInputElement>('input[value="Étiquette tissée"]')?.click();
+  }
+
+  const composer = (donnees: FormData): string => {
+    const lignes = [
+      `Bonjour ${atelier}, je souhaite un devis pour une commande en gros.`,
+      '',
+      `• Nom : ${donnees.get('nom')}`,
+      `• Boutique / marque : ${donnees.get('marque')}`,
+      `• Ville : ${donnees.get('ville')}`,
+      `• Téléphone : ${donnees.get('telephone')}`,
+    ];
+    const modeles = donnees.getAll('modeles');
+    if (modeles.length) lignes.push(`• Modèles : ${modeles.join(', ')}`);
+    lignes.push(`• Quantité par modèle : ${donnees.get('quantite')}`);
+    const personnalisation = donnees.getAll('personnalisation');
+    if (personnalisation.length) lignes.push(`• Personnalisation : ${personnalisation.join(', ')}`);
+    const message = String(donnees.get('message') ?? '').trim();
+    if (message) lignes.push('', message);
+    const provenance = lireProvenance();
+    if (provenance) lignes.push('', `(Réf. ${provenance})`);
+    return lignes.join('\n');
+  };
+
+  formulaire?.addEventListener('submit', (evenement) => {
+    evenement.preventDefault();
+
+    const obligatoires = Array.from(formulaire.querySelectorAll<HTMLInputElement>('input[required]'));
+    const manquants = obligatoires.filter((champ) => !champ.value.trim());
+    obligatoires.forEach((champ) => champ.setAttribute('aria-invalid', String(manquants.includes(champ))));
+    if (erreur) erreur.hidden = manquants.length === 0;
+    if (manquants.length) {
+      manquants[0].focus();
+      return;
+    }
+
+    const texte = composer(new FormData(formulaire));
+    const lienWhatsapp = `https://wa.me/${numero}?text=${encodeURIComponent(texte)}`;
+    if (rouvrir) rouvrir.href = lienWhatsapp;
+    if (courriel) {
+      courriel.href = `mailto:${email}?subject=${encodeURIComponent('Demande de devis')}&body=${encodeURIComponent(texte)}`;
+    }
+
+    window.open(lienWhatsapp, '_blank', 'noopener');
+
+    formulaire.hidden = true;
+    if (confirmation) {
+      confirmation.hidden = false;
+      confirmation.focus();
+      confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  modifier?.addEventListener('click', () => {
+    if (!formulaire || !confirmation) return;
+    confirmation.hidden = true;
+    formulaire.hidden = false;
+    formulaire.querySelector<HTMLInputElement>('input')?.focus();
+  });
+</script>

@@ -1,0 +1,420 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CarteProduit from '../../components/CarteProduit.astro';
+import Icone from '../../components/Icone.astro';
+import { gammeDe, image, lienWhatsapp, produits, site, type Produit } from '../../lib/contenu';
+
+export function getStaticPaths() {
+  return produits.map((produit) => ({ params: { slug: produit.slug }, props: { produit } }));
+}
+
+interface Props {
+  produit: Produit;
+}
+
+const { produit } = Astro.props;
+const gamme = gammeDe(produit);
+const voisins = produits.filter((p) => p.gamme === produit.gamme && p.slug !== produit.slug);
+const adresse = new URL(`/collection/${produit.slug}`, Astro.site).toString();
+const message = `Bonjour ${site.marque.nom}, je suis intéressé(e) par le modèle « ${produit.nom} » (${gamme.nom}) en gros.\n${adresse}`;
+
+const details = [
+  { terme: 'Tissu', valeur: produit.tissu },
+  { terme: 'Grammage', valeur: produit.grammage },
+  { terme: 'Tailles et coloris', valeur: 'Sur demande · panachage possible' },
+  { terme: 'Délai indicatif', valeur: produit.delai },
+  { terme: 'Personnalisation', valeur: produit.personnalisation },
+];
+
+const donnees = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: produit.nom,
+  description: produit.description,
+  category: gamme.nom,
+  brand: { '@type': 'Brand', name: site.marque.nom },
+  material: produit.tissu,
+  url: adresse,
+};
+---
+
+<Base titre={`${produit.nom} · ${gamme.nom}`} description={`${produit.resume} ${produit.tissu}, ${produit.grammage}. À partir de ${produit.minimum} pièces, à votre marque.`} apercu={image(produit.images[0])} donnees={donnees}>
+  <article class="fiche-produit conteneur">
+    <nav class="fil" aria-label="Fil d'Ariane">
+      <a href="/collection"><Icone nom="retour" taille={16} /> La collection</a>
+      <span aria-hidden="true">/</span>
+      <a href={`/collection?gamme=${gamme.id}`}>{gamme.nom}</a>
+    </nav>
+
+    <div class="fiche-produit__grille">
+      <div class="galerie" data-galerie>
+        <div class="galerie__principale">
+          {
+            produit.images.map((nom, rang) => (
+              <Image
+                src={image(nom)}
+                alt={rang === 0 ? produit.nom : `${produit.nom}, vue ${rang + 1}`}
+                widths={[480, 720, 1000, 1400]}
+                sizes="(min-width: 60rem) 50vw, 100vw"
+                loading={rang === 0 ? 'eager' : 'lazy'}
+                class:list={['galerie__image', { 'est-active': rang === 0 }]}
+                data-vue={rang}
+              />
+            ))
+          }
+          <span class="galerie__minimum">Dès {produit.minimum} pièces</span>
+        </div>
+
+        {
+          produit.images.length > 1 && (
+            <div class="galerie__vignettes" role="group" aria-label="Choisir une vue">
+              {produit.images.map((nom, rang) => (
+                <button type="button" class="vignette" aria-pressed={rang === 0 ? 'true' : 'false'} data-vignette={rang}>
+                  <span class="visuellement-cache">Vue {rang + 1}</span>
+                  <Image src={image(nom)} alt="" widths={[160]} sizes="5rem" />
+                </button>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <div class="infos">
+        <p class="infos__gamme">{gamme.nom}</p>
+        <h1>{produit.nom}</h1>
+        <p class="infos__resume">{produit.resume}</p>
+
+        <div class="infos__minimum">
+          <span class="infos__chiffre">{produit.minimum}</span>
+          <span>pièces minimum par modèle<br /><small>tailles et coloris panachés</small></span>
+        </div>
+
+        <dl class="infos__details">
+          {
+            details.map((detail) => (
+              <div>
+                <dt>{detail.terme}</dt>
+                <dd>{detail.valeur}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <div class="infos__actions">
+          <a class="bouton" href={`/devis?modele=${produit.slug}`}>Demander un devis pour ce modèle <Icone nom="fleche" /></a>
+          <a class="bouton bouton--contour" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
+            <Icone nom="whatsapp" /> Poser une question
+          </a>
+        </div>
+
+        <ul class="infos__garanties">
+          <li><Icone nom="coche" taille={16} /> Échantillon avant la série</li>
+          <li><Icone nom="coche" taille={16} /> Votre étiquette, votre marque</li>
+          <li><Icone nom="coche" taille={16} /> Livraison dans toute la Tunisie</li>
+        </ul>
+
+        <div class="infos__description">
+          <h2>Le modèle</h2>
+          <p>{produit.description}</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {
+    voisins.length > 0 && (
+      <section class="section section--sable voisins" aria-labelledby="titre-voisins">
+        <div class="conteneur">
+          <div class="voisins__tete">
+            <h2 id="titre-voisins">Dans la même gamme</h2>
+            <a class="lien-fleche" href={`/collection?gamme=${gamme.id}`}>
+              Toute la gamme {gamme.nom} <Icone nom="fleche" taille={16} />
+            </a>
+          </div>
+          <div class="voisins__grille">
+            {voisins.slice(0, 4).map((voisin, rang) => <CarteProduit produit={voisin} rang={rang} />)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .fiche-produit {
+    padding-top: 2rem;
+    padding-bottom: var(--section);
+  }
+
+  .fil {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--encre-douce);
+  }
+
+  .fil a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .fil a:hover {
+    color: var(--terracotta);
+  }
+
+  .fiche-produit__grille {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 60rem) {
+    .fiche-produit__grille {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .galerie {
+      position: sticky;
+      top: calc(var(--entete) + 1.5rem);
+    }
+  }
+
+  /* ------------------------------------------------ galerie */
+
+  .galerie__principale {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--sable);
+  }
+
+  .galerie__principale :global(.galerie__image) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.6s var(--doux);
+  }
+
+  .galerie__principale :global(.galerie__image.est-active) {
+    opacity: 1;
+  }
+
+  .galerie__minimum {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 0.45rem 0.85rem;
+    background: var(--ecru);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    outline: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+    outline-offset: -4px;
+  }
+
+  .galerie__vignettes {
+    display: flex;
+    gap: 0.625rem;
+    margin-top: 0.75rem;
+  }
+
+  .vignette {
+    width: 5rem;
+    aspect-ratio: 4 / 5;
+    padding: 0;
+    border: 2px solid transparent;
+    background: var(--sable);
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 0.6;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+
+  .vignette :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vignette[aria-pressed='true'] {
+    border-color: var(--terracotta);
+    opacity: 1;
+  }
+
+  /* ------------------------------------------------ infos */
+
+  .infos {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+
+  .infos__gamme {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: -0.75rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+    font-weight: 340;
+  }
+
+  .infos__resume {
+    font-size: 1.1875rem;
+    color: var(--encre-douce);
+  }
+
+  /* Le minimum de commande, mis en avant comme une étiquette de prix. */
+  .infos__minimum {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+    outline-offset: -8px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .infos__minimum small {
+    font-weight: 500;
+    color: var(--encre-douce);
+  }
+
+  .infos__chiffre {
+    font-family: var(--titre);
+    font-size: 3.25rem;
+    font-weight: 360;
+    line-height: 1;
+    color: var(--terracotta);
+  }
+
+  .infos__details {
+    margin: 0;
+    display: grid;
+  }
+
+  .infos__details div {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 25%, transparent);
+    font-size: 0.9375rem;
+  }
+
+  .infos__details dt {
+    color: var(--encre-douce);
+  }
+
+  .infos__details dd {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .infos__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 30rem) {
+    .infos__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  .infos__garanties {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .infos__garanties li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .infos__garanties :global(svg) {
+    color: var(--terracotta);
+  }
+
+  .infos__description {
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--encre) 12%, transparent);
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .infos__description h2 {
+    font-size: 1.5rem;
+  }
+
+  .infos__description p {
+    color: var(--encre-douce);
+    max-width: 36rem;
+  }
+
+  /* ------------------------------------------------ même gamme */
+
+  .voisins__tete {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .voisins__tete h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .voisins__grille {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .voisins__grille {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  const vues = Array.from(document.querySelectorAll<HTMLElement>('[data-vue]'));
+  const vignettes = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-vignette]'));
+
+  vignettes.forEach((vignette) =>
+    vignette.addEventListener('click', () => {
+      const rang = vignette.dataset.vignette;
+      vues.forEach((vue) => vue.classList.toggle('est-active', vue.dataset.vue === rang));
+      vignettes.forEach((autre) => autre.setAttribute('aria-pressed', String(autre === vignette)));
+    }),
+  );
+</script>

@@ -1,0 +1,215 @@
+{
+  "_lisezMoi": "Tous les textes du site sont ici. Modifiez les valeurs entre guillemets, jamais les noms à gauche des deux-points. Voir GUIDE.md.",
+
+  "modeDemo": true,
+  "bandeauDemo": "Démo : photos, chiffres et avis d'exemple, à remplacer avant de prospecter.",
+
+  "marque": {
+    "nom": "Yomna Fashion",
+    "signature": "Atelier de confection",
+    "ville": "Moknine",
+    "pays": "Tunisie",
+    "adresse": "Zone industrielle, Moknine, Monastir, Tunisie",
+    "telephone": "+216 99 670 988",
+    "whatsapp": "+21699670988",
+    "email": "contact@yomna-fashion.com",
+    "horaires": "Du lundi au samedi, de 8 h à 17 h",
+    "siteBoutique": "https://yomna-fashion.com",
+    "instagram": "",
+    "facebook": ""
+  },
+
+  "seo": {
+    "titre": "Yomna Fashion — Atelier de confection à Moknine, Tunisie",
+    "description": "Atelier de confection tunisien pour boutiques et marques : T-shirts, sweats, vêtements enfants et prêt-à-porter femme. À partir de 50 pièces par modèle, votre marque cousue dans chaque pièce."
+  },
+
+  "accueil": {
+    "surtitre": "Atelier de confection · Moknine, Tunisie",
+    "titre": ["Vos collections,", "*cousues*", "à Moknine."],
+    "sousTitre": "T-shirts, sweats, vêtements enfants et prêt-à-porter femme. Un atelier qui produit pour les boutiques et les marques, de 50 à 5 000 pièces par modèle — à votre marque, à vos couleurs.",
+    "boutonPrincipal": "Demander un devis",
+    "boutonSecondaire": "Découvrir la collection",
+    "etiquette": "Made in Tunisia"
+  },
+
+  "matieres": [
+    "Coton peigné 180 g",
+    "Molleton gratté 320 g",
+    "Jersey interlock",
+    "Lin lavé",
+    "Coutures surpiquées",
+    "Étiquettes à votre marque",
+    "Contrôle pièce par pièce",
+    "Livraison dans toute la Tunisie"
+  ],
+
+  "manifeste": {
+    "surtitre": "L'atelier",
+    "titre": "Un atelier, *pas un intermédiaire.*",
+    "texte": "Au cœur du Sahel textile tunisien, nos couturières transforment chaque jour le tissu en vêtements prêts à vendre. Vous parlez directement à ceux qui fabriquent : le prix est juste, les délais sont tenus, et la qualité ne dépend pas d'un sous-traitant que personne n'a jamais vu.",
+    "chiffres": [
+      { "valeur": 12, "suffixe": " ans", "libelle": "de savoir-faire en confection" },
+      { "valeur": 25000, "suffixe": "", "libelle": "pièces cousues chaque mois" },
+      { "valeur": 180, "suffixe": "+", "libelle": "boutiques et marques partenaires" },
+      { "valeur": 5, "suffixe": " jours", "libelle": "pour recevoir votre échantillon" }
+    ]
+  },
+
+  "gammes": {
+    "surtitre": "Nos métiers",
+    "titre": "Quatre savoir-faire *sous un même toit.*",
+    "texte": "Une seule équipe, un seul interlocuteur : composez votre commande en mêlant les gammes, nous organisons la production."
+  },
+
+  "processus": {
+    "surtitre": "Savoir-faire",
+    "titre": "Du fil *à votre boutique.*",
+    "etapes": [
+      {
+        "titre": "Le choix du tissu",
+        "texte": "Coton peigné, molleton gratté, lin, interlock : nous sélectionnons des tissus au grammage mesuré, et vous montrons les échantillons avant de lancer quoi que ce soit.",
+        "image": "atelier-tissus.jpg"
+      },
+      {
+        "titre": "Le patronage",
+        "texte": "Chaque modèle naît d'un patron gradué taille par taille. Vous avez une référence ? Nous la reproduisons, ou l'adaptons à votre clientèle.",
+        "image": "atelier-patronage.jpg"
+      },
+      {
+        "titre": "La coupe",
+        "texte": "Les pièces sont coupées dans le droit fil, en matelas, pour que la dixième ressemble à la première — et la millième aussi.",
+        "image": "atelier-coupe.jpg"
+      },
+      {
+        "titre": "La confection",
+        "texte": "Surjeteuses, recouvreuses, piqueuses plates : chaque couture a sa machine et sa couturière attitrée. Les finitions sont surpiquées, les coutures d'épaule renforcées.",
+        "image": "atelier-couture.jpg"
+      },
+      {
+        "titre": "Le contrôle et l'emballage",
+        "texte": "Mesures, coutures, fils, taches : chaque pièce est vérifiée, repassée, pliée et emballée à votre convenance, prête à passer du carton au portant.",
+        "image": "atelier-controle.jpg"
+      }
+    ]
+  },
+
+  "marqueBlanche": {
+    "surtitre": "Marque blanche",
+    "titre": "Votre marque, *cousue dans chaque pièce.*",
+    "texte": "Étiquette tissée, étiquette de taille, sérigraphie, broderie, étiquette volante : vos clients ne verront que votre nom. Essayez avec le vôtre.",
+    "placeholder": "Le nom de votre marque",
+    "exemple": "MAISON LÉA",
+    "options": ["Étiquette tissée", "Sérigraphie", "Broderie", "Emballage personnalisé"],
+    "bouton": "Je veux mes pièces à ma marque"
+  },
+
+  "qualite": {
+    "surtitre": "Qualité",
+    "titre": "La qualité se vérifie. *Pièce par pièce.*",
+    "texte": "Une pièce qui revient, c'est une cliente perdue pour votre boutique. Alors avant de quitter l'atelier, chaque vêtement passe entre les mains de notre équipe qualité.",
+    "points": [
+      "Mesures contrôlées à chaque taille",
+      "Coutures et surpiqûres vérifiées",
+      "Fils coupés, aucune tache",
+      "Tenue des couleurs au lavage testée",
+      "Repassage et pliage soignés",
+      "Emballage par taille, prêt à ranger"
+    ],
+    "matieres": [
+      { "nom": "Jersey coton peigné", "detail": "160 à 240 g/m² · doux, dense, ne se déforme pas", "image": "matiere-coton.jpg" },
+      { "nom": "Molleton gratté", "detail": "280 à 360 g/m² · envers brossé, chaud et durable", "image": "matiere-molleton.jpg" }
+    ]
+  },
+
+  "collection": {
+    "surtitre": "La collection",
+    "titre": "{nombre} modèles, *prêts à produire.*",
+    "texte": "Des bases qui se vendent toute l'année, à produire telles quelles ou à adapter : tissu, couleur, finitions, étiquette. Chaque modèle se commande dès quelques dizaines de pièces.",
+    "textePage": "Chaque modèle se produit tel quel ou s'adapte à votre boutique : tissu, coloris, finitions et étiquette à votre marque. Tailles et coloris panachables dans une même commande.",
+    "surMesure": {
+      "surtitre": "Sur mesure",
+      "titre": "Votre modèle n'est pas là ? *Nous le fabriquons.*",
+      "texte": "Envoyez-nous une photo, un croquis ou une pièce type : nous réalisons le patron, un prototype, puis la série après votre validation.",
+      "bouton": "Proposer mon modèle"
+    }
+  },
+
+  "conditions": {
+    "surtitre": "Conditions de gros",
+    "titre": "Travailler avec nous, *simplement.*",
+    "texte": "Des conditions claires, écrites noir sur blanc dans chaque devis. Pas de frais cachés, pas de surprise à la livraison.",
+    "cartes": [
+      { "titre": "À partir de 50 pièces", "texte": "par modèle, tailles et coloris panachés. Moins ? Parlons-en, surtout pour une première commande." },
+      { "titre": "Échantillon en 5 jours", "texte": "Vous validez la matière, la coupe et les finitions en main avant de lancer la série." },
+      { "titre": "Production en 15 à 25 jours", "texte": "selon la quantité et la saison. Le délai est fixé noir sur blanc dans votre devis." },
+      { "titre": "Livraison partout", "texte": "en 24 à 72 h dans toute la Tunisie. Export possible vers l'Europe et le Maghreb, sur devis." },
+      { "titre": "Paiement en deux fois", "texte": "30 % à la commande, le solde à la livraison. Virement ou espèces." },
+      { "titre": "Vos modèles, vos couleurs", "texte": "Nous produisons nos modèles à votre marque, ou les vôtres à partir d'une photo ou d'une pièce type." }
+    ]
+  },
+
+  "etapesCommande": {
+    "surtitre": "Comment ça se passe",
+    "titre": "Quatre étapes, un seul interlocuteur.",
+    "etapes": [
+      { "titre": "Vous nous écrivez", "texte": "Modèles, quantités, personnalisation : un message suffit. Réponse sous 24 h." },
+      { "titre": "Vous recevez votre échantillon", "texte": "Avec un devis détaillé : prix par pièce, délai, conditions." },
+      { "titre": "Vous validez", "texte": "L'acompte lance la production. Nous vous tenons au courant à chaque étape." },
+      { "titre": "Vous vendez", "texte": "Livraison contrôlée, pièces pliées par taille. Il ne reste qu'à les mettre en rayon." }
+    ]
+  },
+
+  "galerie": {
+    "surtitre": "Dans l'atelier",
+    "titre": "Venez voir *par vous-même.*",
+    "texte": "L'atelier se visite, sur rendez-vous. Rien ne remplace le toucher d'un tissu et le bruit des machines.",
+    "images": ["atelier-machines.jpg", "atelier-fils.jpg", "atelier-pile.jpg", "atelier-couture.jpg", "atelier-tissus.jpg", "atelier-controle.jpg"]
+  },
+
+  "temoignages": {
+    "surtitre": "Ils nous font confiance",
+    "titre": "Des boutiques *qui reviennent.*",
+    "avis": [
+      { "texte": "Les t-shirts oversize partent en une semaine. Surtout, la troisième commande est identique à la première : même tissu, même coupe. C'est rare.", "nom": "Sarra B.", "boutique": "Concept store, Tunis" },
+      { "texte": "J'ai lancé ma marque enfants avec 60 pièces par modèle. Ils ont pris le temps de me conseiller sur les tissus et les tailles.", "nom": "Amel K.", "boutique": "Marque enfants, Sousse" },
+      { "texte": "Délais tenus pendant le ramadan, ce n'était pas gagné. Les sweats à notre marque sont impeccables, les clients les redemandent.", "nom": "Mehdi T.", "boutique": "Boutique streetwear, Sfax" }
+    ]
+  },
+
+  "faq": {
+    "surtitre": "Questions fréquentes",
+    "titre": "Tout ce qu'on *nous demande.*",
+    "questions": [
+      { "question": "Quel est le minimum de commande ?", "reponse": "50 pièces par modèle en général, et vous pouvez panacher les tailles et les coloris. Pour une première commande ou un test, nous étudions volontiers des quantités plus petites." },
+      { "question": "Puis-je avoir un échantillon avant de commander ?", "reponse": "Oui. Nous vous envoyons un échantillon sous 5 jours ouvrés environ. Il est déduit de votre première commande." },
+      { "question": "Pouvez-vous mettre ma marque sur les vêtements ?", "reponse": "Oui : étiquette tissée à votre nom, étiquette de taille, sérigraphie, broderie et emballage personnalisé. Envoyez-nous votre logo, nous vous proposons un rendu." },
+      { "question": "Pouvez-vous fabriquer mon propre modèle ?", "reponse": "Oui, à partir d'une pièce type, d'une photo ou d'un croquis. Nous réalisons le patron, un prototype, puis la série après votre validation." },
+      { "question": "Quels sont les délais de production ?", "reponse": "De 15 à 25 jours après validation de l'échantillon, selon la quantité et la période. Le délai exact figure dans votre devis." },
+      { "question": "Livrez-vous hors de Tunisie ?", "reponse": "Oui, vers l'Europe et le Maghreb, sur devis. Nous préparons les documents d'expédition avec vous." },
+      { "question": "Comment se passe le paiement ?", "reponse": "30 % d'acompte à la validation, le solde à la livraison, par virement ou en espèces." }
+    ]
+  },
+
+  "appelFinal": {
+    "titre": "Parlons de votre *prochaine collection.*",
+    "texte": "Dites-nous ce que vous cherchez : nous revenons vers vous sous 24 h avec des conseils, des prix et un délai.",
+    "boutonDevis": "Demander un devis",
+    "boutonWhatsapp": "Écrire sur WhatsApp",
+    "visite": "Vous êtes dans le Sahel ? Venez visiter l'atelier, sur rendez-vous."
+  },
+
+  "pied": {
+    "devise": "Cousu *à Moknine*, vendu chez vous.",
+    "mention": "Fabriqué en Tunisie, avec soin."
+  },
+
+  "devis": {
+    "titre": "Demande de devis",
+    "surtitre": "Devis gratuit · réponse sous 24 h",
+    "titrePage": "Parlons de votre *commande.*",
+    "texte": "Quelques informations, et votre demande part sur WhatsApp, déjà rédigée. Nous vous répondons sous 24 h avec un prix par pièce et un délai.",
+    "quantites": ["50 à 100 pièces", "100 à 300 pièces", "300 à 1 000 pièces", "Plus de 1 000 pièces", "Je ne sais pas encore"],
+    "confirmation": "Votre demande est prête dans WhatsApp : il ne reste qu'à l'envoyer. Si WhatsApp ne s'est pas ouvert, appelez-nous ou écrivez-nous par e-mail."
+  }
+}

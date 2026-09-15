@@ -1,0 +1,325 @@
+/* ------------------------------------------------------------------
+   Yomna Fashion — atelier
+   Écru chaud, encre profonde, une pointe de terracotta : les couleurs
+   d'un atelier en lumière naturelle, et d'une étiquette tissée.
+   ------------------------------------------------------------------ */
+
+:root {
+  --ecru: #f5f0e6;
+  --sable: #ebe2d3;
+  --lin: #d8cab3;
+  --encre: #1d1a16;
+  --encre-douce: #4a443c;
+  --taupe: #857b6f;
+  --terracotta: #b4532a;
+  --terracotta-fonce: #8f401f;
+  --nuit: #171411;
+  --nuit-douce: #2a2521;
+
+  --titre: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --texte: 'Manrope Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --marge: clamp(1.25rem, 4vw, 3rem);
+  --largeur: 82rem;
+  --section: clamp(5rem, 11vw, 9.5rem);
+  --rayon: 2px;
+  --entete: 4.5rem;
+
+  --doux: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ressort: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--entete);
+}
+
+body {
+  margin: 0;
+  background: var(--ecru);
+  color: var(--encre);
+  font-family: var(--texte);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Un grain de papier, à peine perceptible : le fond cesse d'être un aplat
+   numérique. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--terracotta);
+  color: var(--ecru);
+}
+
+:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------- mise en page */
+
+.conteneur {
+  width: 100%;
+  max-width: var(--largeur);
+  margin-inline: auto;
+  padding-inline: var(--marge);
+}
+
+.section {
+  padding-block: var(--section);
+}
+
+.section--sable {
+  background: var(--sable);
+}
+
+.section--nuit {
+  background: var(--nuit);
+  color: var(--ecru);
+}
+
+/* ---------------------------------------------------------- typographie */
+
+h1,
+h2,
+h3 {
+  font-family: var(--titre);
+  font-weight: 380;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.1;
+}
+
+/* L'italique « souple » de Fraunces, en terracotta : la signature des titres. */
+h1 em,
+h2 em,
+h3 em {
+  font-style: italic;
+  font-variation-settings: 'SOFT' 100, 'WONK' 1;
+  color: var(--terracotta);
+}
+
+.section--nuit h2 em {
+  color: #e08a5f;
+}
+
+p {
+  margin: 0;
+}
+
+.surtitre {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+  margin-bottom: 1.5rem;
+}
+
+/* Trois points de couture devant chaque surtitre. */
+.surtitre::before {
+  content: '';
+  width: 2.25rem;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 10px);
+}
+
+.section--nuit .surtitre {
+  color: #e08a5f;
+}
+
+.chapeau {
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  color: var(--encre-douce);
+  max-width: 38rem;
+}
+
+.section--nuit .chapeau {
+  color: #c9bfb1;
+}
+
+.entete-section {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+@media (min-width: 60rem) {
+  .entete-section--duo {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: end;
+    gap: 4rem;
+  }
+}
+
+/* ---------------------------------------------------------- boutons */
+
+.bouton {
+  --fond: var(--terracotta);
+  --encre-bouton: var(--ecru);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--fond);
+  border-radius: 999px;
+  background: var(--fond);
+  color: var(--encre-bouton);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s var(--doux), color 0.25s var(--doux), border-color 0.25s var(--doux),
+    transform 0.25s var(--doux);
+}
+
+.bouton:hover {
+  --fond: var(--terracotta-fonce);
+}
+
+.bouton:active {
+  transform: scale(0.98);
+}
+
+.bouton svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform 0.3s var(--ressort);
+}
+
+.bouton:hover svg {
+  transform: translateX(4px);
+}
+
+.bouton--contour {
+  --fond: transparent;
+  --encre-bouton: currentColor;
+  border-color: currentColor;
+}
+
+.bouton--contour:hover {
+  --fond: var(--encre);
+  --encre-bouton: var(--ecru);
+  border-color: var(--encre);
+}
+
+.section--nuit .bouton--contour:hover,
+.sur-image .bouton--contour:hover {
+  --fond: var(--ecru);
+  --encre-bouton: var(--encre);
+  border-color: var(--ecru);
+}
+
+.bouton--whatsapp {
+  --fond: #1f8a4c;
+}
+
+.bouton--whatsapp:hover {
+  --fond: #17703d;
+}
+
+.lien-fleche {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.2rem;
+}
+
+/* ---------------------------------------------------------- apparitions */
+
+/* Les éléments n'attendent d'être révélés que si le script est là pour le
+   faire : sans JavaScript, tout reste visible. */
+.js [data-reveler] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s var(--doux), transform 0.9s var(--doux);
+  transition-delay: calc(var(--rang, 0) * 90ms);
+}
+
+.js [data-reveler].est-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .js [data-reveler] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

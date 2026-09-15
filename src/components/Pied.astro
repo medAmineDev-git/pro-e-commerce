@@ -1,0 +1,142 @@
+---
+import Icone from './Icone.astro';
+import { gammes, lienTelephone, lienWhatsapp, site, titre } from '../lib/contenu';
+
+const annee = new Date().getFullYear();
+const reseaux = [
+  { nom: 'Instagram', lien: site.marque.instagram },
+  { nom: 'Facebook', lien: site.marque.facebook },
+].filter((reseau) => reseau.lien);
+---
+
+<footer class="pied">
+  <div class="conteneur">
+    <p class="pied__devise" aria-hidden="true" set:html={titre(site.pied.devise)} />
+
+    <div class="pied__grille">
+      <div>
+        <p class="pied__titre">L'atelier</p>
+        <ul>
+          <li><Icone nom="lieu" taille={18} /> {site.marque.adresse}</li>
+          <li><Icone nom="horloge" taille={18} /> {site.marque.horaires}</li>
+          <li><Icone nom="telephone" taille={18} /> <a href={lienTelephone()}>{site.marque.telephone}</a></li>
+          <li><Icone nom="mail" taille={18} /> <a href={`mailto:${site.marque.email}`}>{site.marque.email}</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="pied__titre">La collection</p>
+        <ul>
+          {gammes.map((gamme) => <li><a href={`/collection?gamme=${gamme.id}`}>{gamme.nom}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <p class="pied__titre">Commander</p>
+        <ul>
+          <li><a href="/devis">Demander un devis</a></li>
+          <li><a href={lienWhatsapp(`Bonjour ${site.marque.nom}, je souhaite des informations pour une commande en gros.`)} target="_blank" rel="noopener" data-whatsapp>Écrire sur WhatsApp</a></li>
+          <li><a href="/#conditions">Conditions de gros</a></li>
+          <li><a href="/#faq">Questions fréquentes</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="pied__titre">Au détail</p>
+        <ul>
+          <li><a href={site.marque.siteBoutique} target="_blank" rel="noopener">Notre boutique en ligne</a></li>
+          {reseaux.map((reseau) => <li><a href={reseau.lien} target="_blank" rel="noopener">{reseau.nom}</a></li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="pied__bas">
+      <p>&copy; {annee} {site.marque.nom} · {site.marque.signature} · {site.marque.ville}, {site.marque.pays}</p>
+      <p>{site.pied.mention}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .pied {
+    background: var(--nuit);
+    color: #c9bfb1;
+    padding-block: clamp(4rem, 9vw, 7rem) 2rem;
+    font-size: 0.9375rem;
+  }
+
+  .pied__devise {
+    font-family: var(--titre);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 340;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ecru);
+    max-width: 13ch;
+    margin-bottom: clamp(3rem, 7vw, 5rem);
+  }
+
+  .pied__devise :global(em) {
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    color: #e08a5f;
+  }
+
+  .pied__grille {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    padding-block: 2.5rem;
+    border-top: 1px dashed #4a433c;
+  }
+
+  .pied__titre {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ecru);
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  li :global(svg) {
+    flex: none;
+    margin-top: 0.2rem;
+    color: #e08a5f;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--ecru);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .pied__bas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px dashed #4a433c;
+    font-size: 0.8125rem;
+    color: #8f857a;
+  }
+</style>

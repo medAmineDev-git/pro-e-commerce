@@ -1,0 +1,96 @@
+---
+/**
+ * Un fil cousu en pointillés, qui se dessine quand il entre à l'écran,
+ * terminé par une aiguille. La signature visuelle du site, entre deux parties.
+ */
+interface Props {
+  /** Couleur du fil ; par défaut la terracotta. */
+  couleur?: string;
+  class?: string;
+}
+
+const { couleur = 'var(--terracotta)', class: classe } = Astro.props;
+const id = `fil-${Math.random().toString(36).slice(2, 8)}`;
+const trace = 'M0 40 C 150 5, 300 75, 450 40 S 750 5, 900 40 S 1100 70, 1180 38';
+---
+
+<div class:list={['couture', classe]} data-couture aria-hidden="true" style={`--couleur-fil:${couleur}`}>
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none">
+    <defs>
+      <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="80">
+        <path class="couture__masque" d={trace} pathLength="1" />
+      </mask>
+    </defs>
+    <path class="couture__fil" d={trace} mask={`url(#${id})`} />
+  </svg>
+  <svg class="couture__aiguille" viewBox="0 0 40 12">
+    <path d="M1 6h30" />
+    <ellipse cx="34" cy="6" rx="4.5" ry="2" />
+  </svg>
+</div>
+
+<style>
+  .couture {
+    position: relative;
+    height: clamp(2.5rem, 5vw, 4.5rem);
+    color: var(--couleur-fil);
+  }
+
+  .couture svg:first-child {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .couture__fil {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 9 8;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .couture__masque {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 12;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 2.4s var(--doux);
+  }
+
+  .couture.est-visible .couture__masque,
+  :global(html:not(.js)) .couture__masque {
+    stroke-dashoffset: 0;
+  }
+
+  .couture__aiguille {
+    position: absolute;
+    right: -0.25rem;
+    top: 44%;
+    width: 2.5rem;
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    opacity: 0;
+    transform: translateX(-1rem) rotate(-8deg);
+    transition: opacity 0.6s var(--doux) 2s, transform 0.8s var(--ressort) 2s;
+  }
+
+  .couture.est-visible .couture__aiguille {
+    opacity: 1;
+    transform: rotate(-8deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .couture__masque {
+      stroke-dashoffset: 0;
+    }
+
+    .couture__aiguille {
+      opacity: 1;
+    }
+  }
+</style>

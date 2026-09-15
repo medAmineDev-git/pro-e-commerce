@@ -1,0 +1,323 @@
+---
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import Entete from '../components/Entete.astro';
+import Pied from '../components/Pied.astro';
+import Icone from '../components/Icone.astro';
+import { image, lienWhatsapp, site } from '../lib/contenu';
+
+interface Props {
+  titre?: string;
+  description?: string;
+  /** Image d'aperçu quand le lien est partagé (WhatsApp, Facebook…). */
+  apercu?: ImageMetadata;
+  /** L'en-tête flotte sur une bannière plein écran. */
+  enteteSurImage?: boolean;
+  /** Masque la barre d'action du bas, sur téléphone. */
+  sansBarre?: boolean;
+  /** Données structurées propres à la page. */
+  donnees?: Record<string, unknown>;
+}
+
+const {
+  titre,
+  description = site.seo.description,
+  apercu = image('banniere.jpg'),
+  enteteSurImage = false,
+  sansBarre = false,
+  donnees,
+} = Astro.props;
+
+const titreComplet = titre ? `${titre} · ${site.marque.nom}` : site.seo.titre;
+const canonique = new URL(Astro.url.pathname, Astro.site);
+const imageApercu = await getImage({ src: apercu, width: 1200, format: 'jpg', quality: 80 });
+const urlApercu = new URL(imageApercu.src, Astro.site);
+
+const organisation = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.marque.nom,
+  description: site.seo.description,
+  url: Astro.site?.toString(),
+  telephone: site.marque.telephone,
+  email: site.marque.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.marque.adresse,
+    addressLocality: site.marque.ville,
+    addressCountry: 'TN',
+  },
+};
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <title>{titreComplet}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#171411" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_TN" />
+    <meta property="og:site_name" content={site.marque.nom} />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:image" content={urlApercu} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organisation)} />
+    {donnees && <script is:inline type="application/ld+json" set:html={JSON.stringify(donnees)} />}
+  </head>
+
+  <body class:list={{ 'avec-barre': !sansBarre }}>
+    <a class="evitement" href="#contenu">Aller au contenu</a>
+    <Entete surImage={enteteSurImage} />
+
+    <main id="contenu">
+      <slot />
+    </main>
+
+    <Pied />
+
+    {
+      !sansBarre && (
+        <div class="barre-mobile" aria-label="Contact rapide">
+          <a class="bouton barre-mobile__devis" href="/devis">
+            Demander un devis
+          </a>
+          <a
+            class="barre-mobile__whatsapp"
+            href={lienWhatsapp(`Bonjour ${site.marque.nom}, je souhaite des informations pour une commande en gros.`)}
+            target="_blank"
+            rel="noopener"
+            aria-label="Écrire sur WhatsApp"
+            data-whatsapp
+          >
+            <Icone nom="whatsapp" taille={24} />
+          </a>
+        </div>
+      )
+    }
+
+    {
+      site.modeDemo && (
+        <aside class="demo" data-demo hidden>
+          <span class="demo__pastille">Démo</span>
+          <p>{site.bandeauDemo}</p>
+          <button type="button" data-fermer-demo aria-label="Masquer ce message">
+            <Icone nom="fermer" taille={16} />
+          </button>
+        </aside>
+      )
+    }
+
+    <style>
+      .evitement {
+        position: absolute;
+        left: -9999px;
+        z-index: 200;
+      }
+
+      .evitement:focus {
+        left: 1rem;
+        top: 1rem;
+        padding: 0.75rem 1rem;
+        background: var(--encre);
+        color: var(--ecru);
+      }
+
+      /* ---------------------------------------- barre d'action, téléphone */
+
+      .barre-mobile {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 40;
+        display: flex;
+        gap: 0.625rem;
+        padding: 0.625rem var(--marge) calc(0.625rem + env(safe-area-inset-bottom, 0px));
+        background: color-mix(in srgb, var(--ecru) 94%, transparent);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid color-mix(in srgb, var(--encre) 10%, transparent);
+      }
+
+      .barre-mobile__devis {
+        flex: 1;
+      }
+
+      .barre-mobile__whatsapp {
+        flex: none;
+        width: 3.25rem;
+        height: 3.25rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #1f8a4c;
+        color: #fff;
+      }
+
+      body.avec-barre {
+        padding-bottom: 5rem;
+      }
+
+      @media (min-width: 64rem) {
+        .barre-mobile {
+          display: none;
+        }
+
+        body.avec-barre {
+          padding-bottom: 0;
+        }
+      }
+
+      /* ---------------------------------------- avertissement de démo */
+
+      .demo {
+        position: fixed;
+        z-index: 45;
+        left: 1rem;
+        right: 1rem;
+        bottom: 5.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 0.75rem 0.625rem 0.625rem;
+        background: var(--encre);
+        color: var(--ecru);
+        border-radius: 0.75rem;
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .demo[hidden] {
+        display: none;
+      }
+
+      body:not(.avec-barre) .demo {
+        bottom: 1rem;
+      }
+
+      .demo__pastille {
+        flex: none;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        background: var(--terracotta);
+        font-size: 0.6875rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .demo button {
+        flex: none;
+        margin-left: auto;
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      @media (min-width: 64rem) {
+        .demo {
+          right: auto;
+          bottom: 1.25rem;
+          max-width: 30rem;
+        }
+      }
+    </style>
+
+    <script>
+      import { lireProvenance } from '../lib/provenance';
+
+      // ------------------------------------------ apparitions au défilement
+
+      const apparaitre = new IntersectionObserver(
+        (entrees) => {
+          for (const entree of entrees) {
+            if (!entree.isIntersecting) continue;
+            entree.target.classList.add('est-visible');
+            apparaitre.unobserve(entree.target);
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+      );
+      document.querySelectorAll('[data-reveler], [data-couture]').forEach((el) => apparaitre.observe(el));
+
+      // ------------------------------------------ chiffres qui défilent
+
+      const format = new Intl.NumberFormat('fr-FR');
+      const compter = (el: HTMLElement) => {
+        const cible = Number(el.dataset.compteur);
+        const suffixe = el.dataset.suffixe ?? '';
+        const debut = performance.now();
+        const duree = 1800;
+        const pas = (maintenant: number) => {
+          const t = Math.min((maintenant - debut) / duree, 1);
+          const adouci = 1 - Math.pow(1 - t, 4);
+          el.textContent = format.format(Math.round(cible * adouci)) + suffixe;
+          if (t < 1) requestAnimationFrame(pas);
+        };
+        requestAnimationFrame(pas);
+      };
+      const compteurs = new IntersectionObserver(
+        (entrees) => {
+          for (const entree of entrees) {
+            if (!entree.isIntersecting) continue;
+            compter(entree.target as HTMLElement);
+            compteurs.unobserve(entree.target);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll<HTMLElement>('[data-compteur]').forEach((el) => compteurs.observe(el));
+      }
+
+      // ------------------------------------------ provenance du visiteur
+
+      // Un lien de prospection porte ?ref=… : il est gardé, puis ajouté aux
+      // messages WhatsApp, pour savoir quelle démarche a porté ses fruits.
+      const provenance = lireProvenance();
+      if (provenance) {
+        document.querySelectorAll<HTMLAnchorElement>('a[data-whatsapp]').forEach((lien) => {
+          const url = new URL(lien.href);
+          url.searchParams.set('text', `${url.searchParams.get('text') ?? ''}\n\n(Réf. ${provenance})`);
+          lien.href = url.toString();
+        });
+      }
+
+      // ------------------------------------------ avertissement de démo
+
+      const demo = document.querySelector<HTMLElement>('[data-demo]');
+      if (demo) {
+        let masque = false;
+        try {
+          masque = sessionStorage.getItem('yomna-demo-masquee') === '1';
+        } catch {}
+        demo.hidden = masque;
+        demo.querySelector('[data-fermer-demo]')?.addEventListener('click', () => {
+          demo.hidden = true;
+          try {
+            sessionStorage.setItem('yomna-demo-masquee', '1');
+          } catch {}
+        });
+      }
+    </script>
+  </body>
+</html>

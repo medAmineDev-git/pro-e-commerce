@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Couture from '../components/Couture.astro';
+import Icone from '../components/Icone.astro';
+---
+
+<Base titre="Page introuvable">
+  <section class="introuvable conteneur">
+    <p class="surtitre">Erreur 404</p>
+    <h1>Ce fil ne mène <em>nulle part.</em></h1>
+    <p class="chapeau">La page demandée n'existe pas, ou plus. La collection, elle, vous attend.</p>
+    <div class="introuvable__boutons">
+      <a class="bouton" href="/collection">Voir la collection <Icone nom="fleche" /></a>
+      <a class="bouton bouton--contour" href="/">Retour à l'accueil</a>
+    </div>
+    <Couture />
+  </section>
+</Base>
+
+<style>
+  .introuvable {
+    min-height: 70vh;
+    display: grid;
+    align-content: center;
+    gap: 1.75rem;
+    padding-block: var(--section);
+  }
+
+  .introuvable .surtitre {
+    margin-bottom: -0.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 8vw, 6rem);
+    font-weight: 340;
+  }
+
+  .introuvable__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

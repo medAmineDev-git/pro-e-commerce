@@ -1,0 +1,288 @@
+---
+import Logo from './Logo.astro';
+import Icone from './Icone.astro';
+import { site } from '../lib/contenu';
+
+interface Props {
+  /** Posé sur la bannière de l'accueil : transparent jusqu'au premier défilement. */
+  surImage?: boolean;
+}
+
+const { surImage = false } = Astro.props;
+
+const liens = [
+  { href: '/#atelier', libelle: "L'atelier" },
+  { href: '/#savoir-faire', libelle: 'Savoir-faire' },
+  { href: '/collection', libelle: 'Collection' },
+  { href: '/#conditions', libelle: 'Conditions' },
+  { href: '/#faq', libelle: 'FAQ' },
+];
+---
+
+<header class:list={['entete', { 'entete--sur-image': surImage }]} data-entete>
+  <div class="entete__barre conteneur">
+    <Logo />
+
+    <nav class="entete__nav" aria-label="Navigation principale">
+      {liens.map((lien) => <a href={lien.href}>{lien.libelle}</a>)}
+    </nav>
+
+    <div class="entete__actions">
+      <a class="bouton entete__devis" href="/devis">
+        Demander un devis
+        <Icone nom="fleche" />
+      </a>
+      <button class="entete__menu" type="button" aria-expanded="false" aria-controls="menu-mobile" data-ouvrir-menu>
+        <span class="visuellement-cache">Ouvrir le menu</span>
+        <Icone nom="menu" taille={26} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu-mobile" hidden data-menu>
+  <div class="menu__haut conteneur">
+    <Logo />
+    <button class="entete__menu" type="button" data-fermer-menu>
+      <span class="visuellement-cache">Fermer le menu</span>
+      <Icone nom="fermer" taille={26} />
+    </button>
+  </div>
+  <nav class="menu__liens conteneur" aria-label="Menu">
+    {
+      liens.map((lien, rang) => (
+        <a href={lien.href} style={`--rang:${rang}`}>
+          <span class="menu__numero">0{rang + 1}</span>
+          {lien.libelle}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="menu__bas conteneur">
+    <a class="bouton" href="/devis">Demander un devis <Icone nom="fleche" /></a>
+    <a class="menu__contact" href={`tel:${site.marque.telephone.replace(/\s/g, '')}`}>
+      <Icone nom="telephone" taille={18} />
+      {site.marque.telephone}
+    </a>
+  </div>
+</div>
+
+<style>
+  .entete {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--entete);
+    background: color-mix(in srgb, var(--ecru) 90%, transparent);
+    backdrop-filter: blur(14px) saturate(160%);
+    border-bottom: 1px solid color-mix(in srgb, var(--encre) 8%, transparent);
+    transition: background 0.4s var(--doux), color 0.4s var(--doux), border-color 0.4s var(--doux);
+  }
+
+  /* Sur la bannière, l'en-tête flotte : il ne prend son fond qu'au défilement. */
+  .entete--sur-image {
+    position: fixed;
+    inset: 0 0 auto 0;
+    background: transparent;
+    backdrop-filter: none;
+    border-color: transparent;
+    color: var(--ecru);
+  }
+
+  .entete--sur-image.est-defile {
+    background: color-mix(in srgb, var(--ecru) 92%, transparent);
+    backdrop-filter: blur(14px) saturate(160%);
+    border-color: color-mix(in srgb, var(--encre) 8%, transparent);
+    color: var(--encre);
+  }
+
+  .entete__barre {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .entete__nav {
+    display: none;
+    gap: 2rem;
+    margin-inline: auto;
+  }
+
+  .entete__nav a {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding-block: 0.4rem;
+  }
+
+  /* Le soulignement se coud de gauche à droite, en pointillés. */
+  .entete__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 9px);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--doux);
+  }
+
+  .entete__nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .entete__actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .entete__devis {
+    display: none;
+    min-height: 2.75rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .entete__menu {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-grid;
+    place-items: center;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    margin-right: -0.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .entete__nav,
+    .entete__devis {
+      display: flex;
+    }
+
+    .entete__actions {
+      margin-left: 0;
+    }
+
+    .entete__menu {
+      display: none;
+    }
+  }
+
+  /* ------------------------------------------------ menu plein écran */
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background: var(--nuit);
+    color: var(--ecru);
+    animation: menu-entree 0.45s var(--doux);
+  }
+
+  .menu[hidden] {
+    display: none;
+  }
+
+  .menu__haut {
+    height: var(--entete);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu__liens {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .menu__liens a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-family: var(--titre);
+    font-size: clamp(2.25rem, 10vw, 3.5rem);
+    font-weight: 360;
+    line-height: 1.15;
+    text-decoration: none;
+    animation: menu-lien 0.6s var(--doux) both;
+    animation-delay: calc(0.08s + var(--rang) * 0.06s);
+  }
+
+  .menu__numero {
+    font-family: var(--texte);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #e08a5f;
+  }
+
+  .menu__bas {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .menu__contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: #c9bfb1;
+  }
+
+  @keyframes menu-entree {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes menu-lien {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+</style>
+
+<script>
+  const entete = document.querySelector<HTMLElement>('[data-entete]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const ouvrir = document.querySelector<HTMLButtonElement>('[data-ouvrir-menu]');
+  const fermer = document.querySelector<HTMLButtonElement>('[data-fermer-menu]');
+
+  // L'en-tête posé sur la bannière prend son fond dès qu'on défile.
+  const suivreDefilement = () => entete?.classList.toggle('est-defile', window.scrollY > 40);
+  suivreDefilement();
+  window.addEventListener('scroll', suivreDefilement, { passive: true });
+
+  const basculerMenu = (ouvert: boolean) => {
+    if (!menu || !ouvrir) return;
+    menu.hidden = !ouvert;
+    ouvrir.setAttribute('aria-expanded', String(ouvert));
+    document.documentElement.style.overflow = ouvert ? 'hidden' : '';
+    if (ouvert) fermer?.focus();
+    else ouvrir.focus();
+  };
+
+  ouvrir?.addEventListener('click', () => basculerMenu(true));
+  fermer?.addEventListener('click', () => basculerMenu(false));
+  // Un lien du menu mène ailleurs sur la page : le menu se referme.
+  menu?.querySelectorAll('a').forEach((lien) => lien.addEventListener('click', () => basculerMenu(false)));
+  document.addEventListener('keydown', (evenement) => {
+    if (evenement.key === 'Escape' && menu && !menu.hidden) basculerMenu(false);
+  });
+</script>
