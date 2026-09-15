@@ -1,0 +1,396 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Couture from '../components/Couture.astro';
+import Icone from '../components/Icone.astro';
+import { image, lienTelephone, nombre, site, titre } from '../lib/contenu';
+
+const page = site.pageAtelier;
+const { manifeste, processus, qualite, galerie } = site;
+---
+
+<Base
+  titre={page.seoTitre}
+  description={page.seoDescription}
+  apercu={image('atelier-machines.jpg')}
+  ariane={[{ nom: "L'atelier", chemin: '/atelier' }]}
+>
+  <section class="tete conteneur">
+    <div class="tete__texte">
+      <p class="surtitre">{page.surtitre}</p>
+      <h1 set:html={titre(page.titre)} />
+      <p class="chapeau">{page.intro}</p>
+    </div>
+    <figure class="tete__visuel">
+      <Image src={image('atelier-machines.jpg')} alt="L'atelier de confection et ses machines" widths={[640, 1000, 1600]} sizes="(min-width: 60rem) 50vw, 100vw" loading="eager" />
+    </figure>
+  </section>
+
+  <dl class="conteneur chiffres">
+    {
+      manifeste.chiffres.map((chiffre, rang) => (
+        <div class="chiffre" data-reveler style={`--rang:${rang}`}>
+          <dt data-compteur={chiffre.valeur} data-suffixe={chiffre.suffixe}>{nombre(chiffre.valeur)}{chiffre.suffixe}</dt>
+          <dd>{chiffre.libelle}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <section class="section conteneur histoire" aria-labelledby="titre-histoire">
+    <h2 id="titre-histoire">Notre histoire</h2>
+    <div class="histoire__texte">
+      {page.histoire.map((paragraphe) => <p data-reveler>{paragraphe}</p>)}
+    </div>
+  </section>
+
+  <div class="conteneur"><Couture /></div>
+
+  <section class="section conteneur methode" aria-labelledby="titre-methode">
+    <p class="surtitre">{processus.surtitre}</p>
+    <h2 id="titre-methode" set:html={titre(processus.titre)} />
+    <ol class="methode__etapes">
+      {
+        processus.etapes.map((etape, rang) => (
+          <li class="methode__etape" data-reveler style={`--rang:${rang % 3}`}>
+            <Image src={image(etape.image)} alt={etape.titre} widths={[400, 720]} sizes="(min-width: 64rem) 30vw, 90vw" />
+            <span class="methode__numero">0{rang + 1}</span>
+            <h3>{etape.titre}</h3>
+            <p>{etape.texte}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section section--nuit" aria-labelledby="titre-equipement">
+    <div class="conteneur equipement">
+      <div>
+        <p class="surtitre">L'équipement</p>
+        <h2 id="titre-equipement">Chaque étape <em>a sa machine.</em></h2>
+      </div>
+      <ul>
+        {page.equipements.map((equipement) => <li><Icone nom="coche" taille={18} /> {equipement}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section conteneur qualite-atelier" aria-labelledby="titre-qualite-atelier">
+    <div>
+      <p class="surtitre">{qualite.surtitre}</p>
+      <h2 id="titre-qualite-atelier" set:html={titre(qualite.titre)} />
+      <p class="chapeau">{qualite.texte}</p>
+    </div>
+    <ul class="qualite-atelier__points">
+      {qualite.points.map((point) => <li><span><Icone nom="coche" taille={16} /></span> {point}</li>)}
+    </ul>
+  </section>
+
+  <section class="section section--sable" aria-labelledby="titre-visite">
+    <div class="conteneur visite">
+      <div class="visite__mosaique">
+        {
+          galerie.images.slice(1, 5).map((nom) => (
+            <Image src={image(nom)} alt="" widths={[360, 640]} sizes="(min-width: 60rem) 22vw, 45vw" />
+          ))
+        }
+      </div>
+      <div class="visite__texte">
+        <p class="surtitre">Visiter l'atelier</p>
+        <h2 id="titre-visite">Venez voir <em>par vous-même.</em></h2>
+        <p class="chapeau">{page.visite}</p>
+        <ul class="visite__infos">
+          <li><Icone nom="lieu" taille={18} /> {site.marque.adresse}</li>
+          <li><Icone nom="horloge" taille={18} /> {site.marque.horaires}</li>
+          <li><Icone nom="telephone" taille={18} /> <a href={lienTelephone()}>{site.marque.telephone}</a></li>
+        </ul>
+        <a class="bouton" href="/devis">Prendre rendez-vous <Icone nom="fleche" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tete {
+    display: grid;
+    gap: 2.5rem;
+    padding-top: clamp(3rem, 7vw, 5rem);
+    align-items: center;
+  }
+
+  .tete__texte {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tete__texte .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5.5vw, 4.75rem);
+    font-weight: 340;
+  }
+
+  .tete__visuel {
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .tete__visuel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 60rem) {
+    .tete {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  .chiffres {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .chiffre {
+    padding: 1.5rem 1rem 1.5rem 0;
+    border-top: 1px dashed color-mix(in srgb, var(--encre) 30%, transparent);
+  }
+
+  .chiffre dt {
+    font-family: var(--titre);
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 330;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .chiffre dd {
+    margin: 0.6rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 60rem) {
+    .chiffres {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .section--nuit h2 :global(em),
+  .section--nuit .surtitre {
+    color: #e08a5f;
+  }
+
+  /* ------------------------------------------------ histoire */
+
+  .histoire {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .histoire__texte {
+    display: grid;
+    gap: 1.25rem;
+    font-size: 1.125rem;
+    color: var(--encre-douce);
+    max-width: 44rem;
+  }
+
+  @media (min-width: 60rem) {
+    .histoire {
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+    }
+  }
+
+  /* ------------------------------------------------ méthode */
+
+  .methode__etapes {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 2.5rem 1.5rem;
+  }
+
+  .methode__etape {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  .methode__etape :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+  }
+
+  .methode__numero {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--terracotta);
+  }
+
+  .methode__etape p {
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 40rem) {
+    .methode__etapes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .methode__etapes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------ équipement */
+
+  .equipement {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .equipement ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .equipement li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-bottom: 1px dashed #4a433c;
+    font-size: 1.0625rem;
+  }
+
+  .equipement li :global(svg) {
+    color: #e08a5f;
+    flex: none;
+  }
+
+  @media (min-width: 60rem) {
+    .equipement {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: center;
+    }
+  }
+
+  /* ------------------------------------------------ qualité */
+
+  .qualite-atelier {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .qualite-atelier__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .qualite-atelier__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-weight: 600;
+  }
+
+  .qualite-atelier__points span {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px dashed var(--terracotta);
+    color: var(--terracotta);
+  }
+
+  @media (min-width: 60rem) {
+    .qualite-atelier {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  /* ------------------------------------------------ visite */
+
+  .visite {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .visite__mosaique {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .visite__mosaique :global(img) {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .visite__texte {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+
+  .visite__texte h2 {
+    margin-bottom: 0;
+  }
+
+  .visite__infos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--encre-douce);
+  }
+
+  .visite__infos li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .visite__infos :global(svg) {
+    flex: none;
+    margin-top: 0.2rem;
+    color: var(--terracotta);
+  }
+
+  @media (min-width: 60rem) {
+    .visite {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+</style>

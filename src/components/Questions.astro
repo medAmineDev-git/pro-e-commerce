@@ -1,0 +1,76 @@
+---
+import Icone from './Icone.astro';
+import { insecables } from '../lib/contenu';
+
+/** Questions fréquentes en accordéon : chaque réponse s'ouvre d'un clic. */
+interface Props {
+  questions: { question: string; reponse: string }[];
+}
+
+const { questions } = Astro.props;
+---
+
+<div class="questions">
+  {
+    questions.map((q) => (
+      <details class="question">
+        <summary>
+          {insecables(q.question)}
+          <span class="question__signe" aria-hidden="true">
+            <Icone nom="plus" taille={18} />
+          </span>
+        </summary>
+        <p>{insecables(q.reponse)}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .question {
+    border-top: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .question:last-child {
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .question summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.3rem 0;
+    font-family: var(--titre);
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .question summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .question__signe {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
+    transition: transform 0.4s var(--ressort), background 0.3s, color 0.3s;
+  }
+
+  .question[open] .question__signe {
+    transform: rotate(45deg);
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: var(--ecru);
+  }
+
+  .question p {
+    padding: 0 3.5rem 1.6rem 0;
+    color: var(--encre-douce);
+  }
+</style>

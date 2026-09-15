@@ -22,6 +22,11 @@ export function produitsDe(gammeId: string): Produit[] {
   return produits.filter((p) => p.gamme === gammeId);
 }
 
+/** La page du métier : /fabrication-t-shirts-tunisie… */
+export function lienGamme(gamme: Gamme): string {
+  return `/${gamme.page.slug}`;
+}
+
 /*
  * Les images sont désignées par leur nom de fichier dans les fichiers de
  * contenu. Elles vivent dans src/assets/images : Astro les optimise à la
@@ -61,10 +66,29 @@ export function lienTelephone(): string {
  * Le reste est échappé : aucun balisage saisi ne passe tel quel.
  */
 export function titre(texte: string): string {
-  const echappe = texte
+  const echappe = insecables(texte)
     .replaceAll('{nombre}', String(produits.length))
     .replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
-  return echappe.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  return (
+    echappe
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // « t-shirts », « prêt-à-porter » : un mot composé ne se coupe pas à son
+      // trait d'union en fin de ligne, dans les grands titres.
+      .replace(/([\p{L}\d]+(?:-[\p{L}\d]+)+)/gu, '<span class="insecable">$1</span>')
+  );
+}
+
+/**
+ * Typographie française : l'espace avant « ? ! : ; » devient insécable, pour
+ * que le signe ne passe jamais seul à la ligne.
+ */
+export function insecables(texte: string): string {
+  return texte.replace(/ ([?!:;»])/g, ' $1').replace(/« /g, '« ');
+}
+
+/** Le même texte, sans mise en forme : pour les titres de page et les descriptions lus par Google. */
+export function texteBrut(texte: string): string {
+  return texte.replaceAll('{nombre}', String(produits.length)).replace(/\*/g, '');
 }
 
 /** 25000 → « 25 000 », à la française. */

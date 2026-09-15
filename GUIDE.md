@@ -11,12 +11,33 @@ vidéo, produits, puis comment le mettre en ligne.
 | ---------------------------------- | ------------------------------------------ |
 | Tous les textes, chiffres, contact | `src/contenu/site.json`                    |
 | Les 15 produits et les 4 gammes    | `src/contenu/produits.json`                |
+| Les textes des 4 pages métier      | `src/contenu/produits.json` (bloc `"page"` de chaque gamme) |
+| Les articles de la rubrique Guides | `src/contenu/guides/` (un fichier par article) |
 | Les photos                         | `src/assets/images/`                       |
 | La vidéo de la bannière            | `public/video/banniere.mp4`                |
 | L'adresse du site en ligne         | `astro.config.mjs` (ligne `ADRESSE_DU_SITE`) |
 | Le déploiement Cloudflare          | `wrangler.jsonc` (à ne pas supprimer)      |
 
 Vous n'avez besoin de rien d'autre.
+
+**Les pages du site :**
+
+| Adresse                                   | Page                                   |
+| ----------------------------------------- | -------------------------------------- |
+| `/`                                       | Accueil                                |
+| `/atelier`                                | L'atelier, l'équipe, la méthode        |
+| `/collection` et `/collection/…`          | Les 15 modèles et leurs fiches         |
+| `/marque-blanche`                         | Fabriquer pour une marque              |
+| `/fabrication-t-shirts-tunisie`           | Page métier T-shirts                   |
+| `/fabrication-sweats-hoodies-tunisie`     | Page métier Sweats                     |
+| `/confection-vetements-enfants-tunisie`   | Page métier Enfants                    |
+| `/confection-pret-a-porter-femme-tunisie` | Page métier Femme                      |
+| `/guides` et `/guides/…`                  | Les articles de conseil                |
+| `/devis`                                  | La demande de devis                    |
+
+Les pages métier répondent à ce que tapent les acheteurs sur Google
+(« fabrication t-shirt Tunisie », « atelier confection enfant »…) : c'est par
+elles que la plupart des visiteurs arriveront.
 
 ---
 
@@ -96,9 +117,67 @@ Dans `src/contenu/produits.json`, chaque produit est un bloc entre `{ }`.
 - **Retirer :** supprimez le bloc, et la virgule qui le suit.
 - `"gamme"` doit être l'une de : `t-shirts`, `sweats`, `enfants`, `femme`.
 
+**Les pages métier** se règlent dans le bloc `"page"` de chaque gamme : titre
+affiché, introduction, 4 arguments et questions fréquentes. `"seoTitre"` (60
+caractères au plus) et `"seoDescription"` (160 au plus) sont ce que Google
+affiche dans ses résultats.
+
+Ne changez pas le `"slug"` d'une page métier (ni celui d'un produit) une fois le
+site référencé : l'ancienne adresse, déjà connue de Google, ne mènerait plus
+nulle part.
+
 ---
 
-## 6. Avant de prospecter : passer du mode démo au vrai site
+## 6. Écrire un guide
+
+Les guides sont des articles de conseil : ils attirent les marques qui
+cherchent comment produire, et montrent que vous connaissez votre métier. Un
+article tous les mois ou deux suffit.
+
+Chaque article est un fichier texte dans `src/contenu/guides/`. Le nom du
+fichier devient l'adresse : `mon-article.md` → `/guides/mon-article`
+(minuscules, tirets, sans accent). Le plus simple est de copier un article
+existant et d'en changer le contenu.
+
+Le fichier commence par une fiche entre deux lignes `---` :
+
+```markdown
+---
+titre: "Faire fabriquer ses vêtements en Tunisie : le guide complet"
+titreCourt: "Faire fabriquer ses vêtements en Tunisie"
+description: "Coûts, délais, douane, TVA : tout ce qu'il faut savoir avant de produire en Tunisie."
+date: 2026-09-15
+image: atelier-machines.jpg
+brouillon: false
+---
+
+Le texte de l'article commence ici.
+
+## Un intertitre
+
+Un paragraphe, une **expression en gras**, un [lien](/devis).
+
+- une liste
+- à puces
+```
+
+- `titre` : le titre affiché en haut de l'article.
+- `titreCourt` (facultatif) : la version courte pour Google, 60 caractères au plus.
+- `description` : le résumé affiché sous le titre et dans Google, 160 caractères au plus.
+- `date` : la date de publication, au format année-mois-jour. Ajoutez
+  `miseAJour: 2027-01-10` si vous révisez l'article.
+- `image` : le nom d'une photo de `src/assets/images/`.
+- `brouillon: true` : l'article n'est pas publié tant que vous ne repassez pas à `false`.
+
+Si une information manque ou dépasse la longueur permise, la construction du site
+s'arrête et indique quoi corriger.
+
+Les chiffres de douane et de TVA des guides sont des repères généraux : faites-les
+relire par votre transitaire.
+
+---
+
+## 7. Avant de prospecter : passer du mode démo au vrai site
 
 Le site est livré en **mode démonstration** : un petit message l'indique en bas
 de l'écran. Avant d'envoyer le lien à des prospects, remplacez :
@@ -116,11 +195,49 @@ de l'écran. Avant d'envoyer le lien à des prospects, remplacez :
 - [ ] Le **minimum et le délai** de chaque produit dans `produits.json`.
 
 Puis, dans `site.json`, passez `"modeDemo": true` à `"modeDemo": false` : le
-message de démonstration disparaît.
+message de démonstration disparaît, **et Google est autorisé à référencer le
+site** (voir la partie 8).
 
 ---
 
-## 7. Suivre vos prospects
+## 8. Être trouvé sur Google
+
+Tout le nécessaire est déjà en place : titres et descriptions de chaque page,
+plan du site pour Google (`/sitemap-index.xml`), fichier `/robots.txt`, fiches
+d'information lisibles par Google (atelier, fil d'Ariane, questions fréquentes,
+articles), aperçus soignés quand un lien est partagé sur WhatsApp ou LinkedIn.
+
+**Tant que `"modeDemo"` vaut `true`, le site demande à Google de ne pas le
+référencer**, pour que les photos et avis d'exemple n'apparaissent jamais dans
+les résultats. Passer à `false` suffit à tout ouvrir.
+
+Le jour où votre adresse `pro.yomna-fashion.com` est branchée :
+
+1. Dans `astro.config.mjs`, remplacez l'adresse `ADRESSE_DU_SITE` par
+   `https://pro.yomna-fashion.com`. Elle sert aux liens envoyés à Google et aux
+   aperçus de lien.
+2. Déclarez le site dans [Google Search Console](https://search.google.com/search-console),
+   puis envoyez-y l'adresse du plan du site :
+   `https://pro.yomna-fashion.com/sitemap-index.xml`.
+3. Créez votre fiche [Google Business Profile](https://business.google.com)
+   (« Fabricant de vêtements »), avec la même adresse et le même téléphone que
+   sur le site.
+
+**Mesurer les visites.** Le site peut compter ses visiteurs avec Cloudflare Web
+Analytics, gratuit, sans cookie et donc sans bandeau de consentement :
+
+1. Dans Cloudflare : **Analytics & Logs → Web Analytics → Ajouter un site**,
+   saisissez l'adresse du site.
+2. Cloudflare affiche un petit code contenant `"token": "…"`. Copiez la suite de
+   lettres et de chiffres entre les guillemets.
+3. Collez-la dans `site.json`, bloc `"analytics"` : `"jetonCloudflare": "votre-jeton"`.
+
+Vous verrez alors, dans Cloudflare, le nombre de visiteurs, les pages lues, les
+pays et les sites d'où ils viennent.
+
+---
+
+## 9. Suivre vos prospects
 
 Ajoutez `?ref=` suivi d'un nom à la fin du lien que vous envoyez :
 
@@ -135,7 +252,7 @@ Le nom est retenu même s'il visite plusieurs pages avant d'écrire.
 
 ---
 
-## 8. Voir le site sur votre ordinateur
+## 10. Voir le site sur votre ordinateur
 
 Il faut [Node.js](https://nodejs.org) (version 22 ou plus). Dans le dossier du
 projet :
@@ -149,7 +266,7 @@ Chaque modification enregistrée s'affiche aussitôt dans le navigateur.
 
 ---
 
-## 9. Mettre le site en ligne (gratuit)
+## 11. Mettre le site en ligne (gratuit)
 
 Le site est fait de simples fichiers : aucun serveur, aucune base de données.
 
@@ -175,11 +292,12 @@ modifiez, validez. Pour une photo : **Add file → Upload files** dans
 `src/assets/images/`, avec le même nom que celle à remplacer.
 
 Si vous publiez sous une autre adresse, changez `ADRESSE_DU_SITE` dans
-`astro.config.mjs` : elle sert aux aperçus de lien sur WhatsApp et Facebook.
+`astro.config.mjs` : elle sert à Google et aux aperçus de lien sur WhatsApp et
+Facebook.
 
 ---
 
-## 10. Crédits des photos de démonstration
+## 12. Crédits des photos de démonstration
 
 Les photos et la vidéo de démonstration viennent de Pexels et d'Unsplash, sous
 licence libre (usage commercial autorisé, attribution non obligatoire). La liste

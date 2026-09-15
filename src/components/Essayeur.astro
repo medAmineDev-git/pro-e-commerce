@@ -1,0 +1,429 @@
+---
+import { Image } from 'astro:assets';
+import Icone from './Icone.astro';
+import { image, site } from '../lib/contenu';
+
+/**
+ * L'essayeur d'étiquette : le visiteur tape le nom de sa marque, et la voit
+ * aussitôt tissée au col et imprimée sur l'étiquette volante. Le texte qui
+ * l'introduit (surtitre, titre, chapeau) est passé en contenu.
+ */
+const { marqueBlanche } = site;
+---
+
+<div class="essayeur-bloc conteneur">
+  <div class="essayeur-bloc__texte">
+    <slot />
+
+    <form class="essayeur" data-essayeur data-reveler action="/devis">
+      <label class="essayeur__champ">
+        <span>Votre marque</span>
+        <input type="text" name="marque" maxlength="22" autocomplete="organization" placeholder={marqueBlanche.placeholder} data-essayeur-nom />
+      </label>
+
+      <fieldset class="essayeur__choix">
+        <legend>Étiquette</legend>
+        <label><input type="radio" name="teinte" value="ecru" checked /><span class="pastille pastille--ecru"></span>Écru</label>
+        <label><input type="radio" name="teinte" value="noir" /><span class="pastille pastille--noir"></span>Noir</label>
+        <label><input type="radio" name="teinte" value="terracotta" /><span class="pastille pastille--terracotta"></span>Terracotta</label>
+      </fieldset>
+
+      <fieldset class="essayeur__choix">
+        <legend>Style</legend>
+        <label><input type="radio" name="style" value="serif" checked />Élégant</label>
+        <label><input type="radio" name="style" value="baton" />Moderne</label>
+        <label><input type="radio" name="style" value="script" />Signature</label>
+      </fieldset>
+
+      <ul class="essayeur__options">
+        {marqueBlanche.options.map((option) => <li><Icone nom="coche" taille={16} /> {option}</li>)}
+      </ul>
+
+      <button class="bouton" type="submit">{marqueBlanche.bouton} <Icone nom="fleche" /></button>
+    </form>
+  </div>
+
+  <!-- L'aperçu : l'étiquette tissée cousue au col, et l'étiquette volante. -->
+  <div class="apercu" aria-live="polite" data-apercu data-teinte="ecru" data-style="serif">
+    <div class="apercu__col">
+      <Image src={image('tshirt-01.jpg')} alt="" widths={[480, 800]} sizes="(min-width: 60rem) 40vw, 90vw" class="apercu__photo" />
+      <div class="tissee">
+        <span class="tissee__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
+        <span class="tissee__mention">Made in Tunisia</span>
+      </div>
+    </div>
+    <div class="volante">
+      <span class="volante__fil"></span>
+      <div class="volante__carton">
+        <span class="volante__oeillet"></span>
+        <span class="volante__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
+        <span class="volante__ligne">Collection permanente</span>
+        <span class="volante__ligne">100 % coton peigné</span>
+        <span class="volante__code" aria-hidden="true">||| || ||| | |||| ||</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .essayeur-bloc {
+    display: grid;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .essayeur-bloc__texte {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .essayeur-bloc__texte :global(.surtitre) {
+    margin-bottom: -0.25rem;
+  }
+
+  @media (min-width: 60rem) {
+    .essayeur-bloc {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  .essayeur {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .essayeur__champ {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .essayeur__champ input {
+    font-family: var(--titre);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 380;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0.25rem 0 0.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed var(--encre);
+    color: var(--encre);
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .essayeur__champ input:focus {
+    outline: none;
+    border-bottom-color: var(--terracotta);
+  }
+
+  .essayeur__champ input::placeholder {
+    color: color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .essayeur__choix {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .essayeur__choix legend {
+    float: left;
+    width: 6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .essayeur__choix label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .essayeur__choix input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .essayeur__choix label:has(input:checked) {
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--ecru);
+  }
+
+  .essayeur__choix label:has(input:focus-visible) {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+
+  .pastille {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .pastille--ecru {
+    background: #f2ebdd;
+  }
+
+  .pastille--noir {
+    background: #1d1a16;
+  }
+
+  .pastille--terracotta {
+    background: var(--terracotta);
+  }
+
+  .essayeur__options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .essayeur__options li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .essayeur__options :global(svg) {
+    color: var(--terracotta);
+  }
+
+  .essayeur .bouton {
+    justify-self: start;
+  }
+
+  /* L'aperçu : une photo de t-shirt, l'étiquette tissée cousue dessus, et
+     l'étiquette volante pendue à côté. */
+  .apercu {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .apercu__col {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    width: 82%;
+  }
+
+  .apercu__col :global(.apercu__photo) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tissee {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    translate: -50% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 11rem;
+    padding: 0.9rem 1.4rem 0.8rem;
+    background:
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px),
+      var(--fond-etiquette);
+    color: var(--encre-etiquette);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    outline: 1px dashed color-mix(in srgb, var(--encre-etiquette) 45%, transparent);
+    outline-offset: -5px;
+    transition: background-color 0.4s, color 0.4s;
+  }
+
+  .tissee__nom {
+    font-family: var(--police-etiquette);
+    font-size: 1.35rem;
+    line-height: 1.1;
+    letter-spacing: var(--espacement-etiquette);
+    text-align: center;
+    white-space: nowrap;
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tissee__mention {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .volante {
+    position: absolute;
+    right: 0;
+    top: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.18));
+    animation: balancier 5s ease-in-out infinite;
+  }
+
+  .volante__fil {
+    width: 1px;
+    height: 5rem;
+    background: var(--encre);
+  }
+
+  .volante__carton {
+    position: relative;
+    width: 10.5rem;
+    padding: 2.2rem 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--fond-etiquette);
+    color: var(--encre-etiquette);
+    clip-path: polygon(22% 0, 78% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+    transition: background-color 0.4s, color 0.4s;
+  }
+
+  .volante__oeillet {
+    position: absolute;
+    top: 0.75rem;
+    left: 50%;
+    translate: -50% 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--sable);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
+  }
+
+  .volante__nom {
+    font-family: var(--police-etiquette);
+    font-size: 1.2rem;
+    line-height: 1.1;
+    letter-spacing: var(--espacement-etiquette);
+    text-align: center;
+    overflow-wrap: anywhere;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
+    margin-bottom: 0.3rem;
+  }
+
+  .volante__ligne {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .volante__code {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    letter-spacing: -0.05em;
+    opacity: 0.6;
+  }
+
+  .apercu[data-teinte='ecru'] {
+    --fond-etiquette: #f2ebdd;
+    --encre-etiquette: #1d1a16;
+  }
+
+  .apercu[data-teinte='noir'] {
+    --fond-etiquette: #1d1a16;
+    --encre-etiquette: #f2ebdd;
+  }
+
+  .apercu[data-teinte='terracotta'] {
+    --fond-etiquette: #b4532a;
+    --encre-etiquette: #f8efe2;
+  }
+
+  .apercu[data-style='serif'] {
+    --police-etiquette: var(--titre);
+    --espacement-etiquette: 0.02em;
+  }
+
+  .apercu[data-style='baton'] {
+    --police-etiquette: var(--texte);
+    --espacement-etiquette: 0.22em;
+  }
+
+  .apercu[data-style='baton'] .tissee__nom,
+  .apercu[data-style='baton'] .volante__nom {
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+  }
+
+  .apercu[data-style='script'] {
+    --police-etiquette: var(--titre);
+    --espacement-etiquette: 0;
+  }
+
+  .apercu[data-style='script'] .tissee__nom,
+  .apercu[data-style='script'] .volante__nom {
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-size: 1.55rem;
+  }
+
+  @keyframes balancier {
+    0%,
+    100% {
+      rotate: -3deg;
+    }
+    50% {
+      rotate: 3deg;
+    }
+  }
+</style>
+
+<script>
+  const essayeur = document.querySelector<HTMLFormElement>('[data-essayeur]');
+  const apercu = document.querySelector<HTMLElement>('[data-apercu]');
+  if (essayeur && apercu) {
+    const champ = essayeur.querySelector<HTMLInputElement>('[data-essayeur-nom]');
+    const noms = apercu.querySelectorAll<HTMLElement>('[data-apercu-nom]');
+    const exemple = noms[0]?.textContent ?? '';
+
+    const mettreAJour = () => {
+      const saisie = champ?.value.trim();
+      noms.forEach((nom) => (nom.textContent = saisie || exemple));
+      const donnees = new FormData(essayeur);
+      apercu.dataset.teinte = String(donnees.get('teinte') ?? 'ecru');
+      apercu.dataset.style = String(donnees.get('style') ?? 'serif');
+    };
+    essayeur.addEventListener('input', mettreAJour);
+    essayeur.addEventListener('change', mettreAJour);
+  }
+</script>

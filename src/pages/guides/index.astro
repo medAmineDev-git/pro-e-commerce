@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icone from '../../components/Icone.astro';
+import { image, site, titre } from '../../lib/contenu';
+import { dateLongue, guidesPublies, tempsDeLecture } from '../../lib/guides';
+
+const page = site.pageGuides;
+const guides = await guidesPublies();
+---
+
+<Base titre={page.seoTitre} description={page.seoDescription} ariane={[{ nom: 'Guides', chemin: '/guides' }]}>
+  <section class="tete conteneur">
+    <p class="surtitre">{page.surtitre}</p>
+    <h1 set:html={titre(page.titre)} />
+    <p class="chapeau">{page.intro}</p>
+  </section>
+
+  <section class="conteneur liste" aria-label="Tous les guides">
+    {
+      guides.map((guide, rang) => (
+        <a class:list={['guide', { 'guide--une': rang === 0 }]} href={`/guides/${guide.id}`} data-reveler>
+          <span class="guide__visuel">
+            <Image
+              src={image(guide.data.image)}
+              alt=""
+              widths={[480, 800, 1200]}
+              sizes={rang === 0 ? '(min-width: 60rem) 55vw, 100vw' : '(min-width: 60rem) 30vw, 100vw'}
+              loading={rang === 0 ? 'eager' : 'lazy'}
+            />
+          </span>
+          <span class="guide__texte">
+            <span class="guide__meta">
+              {dateLongue(guide.data.date)} · {tempsDeLecture(guide)} min de lecture
+            </span>
+            <span class="guide__titre">{guide.data.titre}</span>
+            <span class="guide__resume">{guide.data.description}</span>
+            <span class="guide__lire">
+              Lire le guide <Icone nom="fleche" taille={18} />
+            </span>
+          </span>
+        </a>
+      ))
+    }
+  </section>
+</Base>
+
+<style>
+  .tete {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: 3rem;
+  }
+
+  .tete .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    font-weight: 340;
+    max-width: 16ch;
+  }
+
+  .liste {
+    display: grid;
+    gap: 3rem 1.5rem;
+    padding-bottom: var(--section);
+  }
+
+  .guide {
+    display: grid;
+    gap: 1.25rem;
+    text-decoration: none;
+  }
+
+  .guide__visuel {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--sable);
+  }
+
+  .guide__visuel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--doux);
+  }
+
+  .guide:hover .guide__visuel :global(img) {
+    transform: scale(1.04);
+  }
+
+  .guide__texte {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .guide__meta {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--terracotta);
+  }
+
+  .guide__titre {
+    font-family: var(--titre);
+    font-size: 1.6rem;
+    line-height: 1.15;
+  }
+
+  .guide__resume {
+    color: var(--encre-douce);
+  }
+
+  .guide__lire {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .liste {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .guide--une {
+      grid-column: 1 / -1;
+      grid-template-columns: 1.3fr 1fr;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .guide--une .guide__titre {
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+    }
+  }
+</style>

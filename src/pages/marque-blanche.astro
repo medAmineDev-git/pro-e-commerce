@@ -1,0 +1,333 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Essayeur from '../components/Essayeur.astro';
+import Icone from '../components/Icone.astro';
+import Questions from '../components/Questions.astro';
+import { gammes, image, lienGamme, lienWhatsapp, site, titre } from '../lib/contenu';
+
+const page = site.pageMarqueBlanche;
+const message = `Bonjour ${site.marque.nom}, je souhaite lancer ou développer ma marque de vêtements avec votre atelier.`;
+
+const faqDonnees = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: page.faq.map((q) => ({
+    '@type': 'Question',
+    name: q.question,
+    acceptedAnswer: { '@type': 'Answer', text: q.reponse },
+  })),
+};
+---
+
+<Base
+  titre={page.seoTitre}
+  description={page.seoDescription}
+  apercu={image('tshirt-01.jpg')}
+  donnees={faqDonnees}
+  ariane={[{ nom: 'Marque blanche', chemin: '/marque-blanche' }]}
+>
+  <section class="tete conteneur">
+    <div class="tete__texte">
+      <p class="surtitre">{page.surtitre}</p>
+      <h1 set:html={titre(page.titre)} />
+      <p class="chapeau">{page.intro}</p>
+      <div class="tete__boutons">
+        <a class="bouton" href="/devis">Parler de ma marque <Icone nom="fleche" /></a>
+        <a class="bouton bouton--contour" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
+          <Icone nom="whatsapp" /> WhatsApp
+        </a>
+      </div>
+    </div>
+    <figure class="tete__visuel">
+      <Image src={image('femme-02.jpg')} alt="Chemise en lin sur cintre, prête à recevoir l'étiquette d'une marque" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 100vw" loading="eager" />
+    </figure>
+  </section>
+
+  <section class="section section--sable" aria-label="Essayez avec votre marque">
+    <Essayeur>
+      <p class="surtitre">Essayez</p>
+      <h2>Voyez votre nom <em>cousu sur la pièce.</em></h2>
+      <p class="chapeau">Tapez le nom de votre marque, choisissez la couleur et le style de l'étiquette : l'aperçu se met à jour.</p>
+    </Essayeur>
+  </section>
+
+  <section class="section conteneur" aria-labelledby="titre-perso">
+    <h2 id="titre-perso" class="bloc-titre">Tout ce que nous personnalisons</h2>
+    <ul class="perso">
+      {
+        page.personnalisations.map((perso, rang) => (
+          <li class="perso__carte" data-reveler style={`--rang:${rang % 3}`}>
+            <span class="perso__numero">0{rang + 1}</span>
+            <h3>{perso.titre}</h3>
+            <p>{perso.texte}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section section--nuit" aria-labelledby="titre-etapes">
+    <div class="conteneur">
+      <p class="surtitre">De l'idée à la boutique</p>
+      <h2 id="titre-etapes" class="bloc-titre">Votre collection <em>en quatre étapes.</em></h2>
+      <ol class="etapes">
+        {
+          page.etapes.map((etape, rang) => (
+            <li data-reveler style={`--rang:${rang}`}>
+              <span class="etapes__point">{rang + 1}</span>
+              <strong>{etape.titre}</strong>
+              <span>{etape.texte}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section conteneur" aria-labelledby="titre-bases">
+    <h2 id="titre-bases" class="bloc-titre">Partez d'une de nos bases</h2>
+    <div class="bases">
+      {
+        gammes.map((gamme) => (
+          <a class="base" href={lienGamme(gamme)}>
+            <Image src={image(gamme.image)} alt="" widths={[360, 640]} sizes="(min-width: 60rem) 24vw, 45vw" />
+            <strong>{gamme.nom}</strong>
+            <span>{gamme.accroche}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section--sable" aria-labelledby="titre-faq-mb">
+    <div class="conteneur faq-mb">
+      <h2 id="titre-faq-mb" class="bloc-titre">Questions fréquentes</h2>
+      <div>
+        <Questions questions={page.faq} />
+        <a class="bouton faq-mb__bouton" href="/devis">Demander un devis <Icone nom="fleche" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tete {
+    display: grid;
+    gap: 2.5rem;
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: var(--section);
+    align-items: center;
+  }
+
+  .tete__texte {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tete__texte .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  .tete__visuel {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 999px 999px 0 0;
+  }
+
+  .tete__visuel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 60rem) {
+    .tete {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 5rem;
+    }
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    font-weight: 340;
+    max-width: 15ch;
+  }
+
+  .tete__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .bloc-titre {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .section--nuit .surtitre,
+  .section--nuit .bloc-titre :global(em) {
+    color: #e08a5f;
+  }
+
+  /* ------------------------------------------------ personnalisations */
+
+  .perso {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .perso__carte {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    background: var(--sable);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 28%, transparent);
+    outline-offset: -8px;
+  }
+
+  .perso__numero {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--terracotta);
+  }
+
+  .perso__carte p {
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 40rem) {
+    .perso {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .perso {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------ étapes */
+
+  .etapes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .etapes li {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 3.75rem;
+    color: #c9bfb1;
+  }
+
+  .etapes strong {
+    font-family: var(--titre);
+    font-size: 1.4rem;
+    font-weight: 420;
+    line-height: 1.2;
+    color: var(--ecru);
+  }
+
+  .etapes__point {
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: var(--ecru);
+    font-weight: 800;
+  }
+
+  @media (min-width: 64rem) {
+    .etapes {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5rem;
+    }
+
+    .etapes li {
+      padding: 3.75rem 0 0;
+    }
+
+    .etapes__point {
+      top: 0;
+    }
+  }
+
+  /* ------------------------------------------------ bases */
+
+  .bases {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+
+  .base {
+    display: grid;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .base :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    transition: transform 1s var(--doux);
+  }
+
+  .base:hover :global(img) {
+    transform: scale(1.03);
+  }
+
+  .base strong {
+    font-family: var(--titre);
+    font-size: 1.35rem;
+    font-weight: 400;
+  }
+
+  .base span {
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 60rem) {
+    .bases {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  /* ------------------------------------------------ FAQ */
+
+  .faq-mb {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .faq-mb {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+    }
+  }
+
+  .faq-mb__bouton {
+    margin-top: 2rem;
+  }
+</style>

@@ -1,30 +1,99 @@
 {
   "_lisezMoi": "Une entrée par modèle. « images » : noms de fichiers du dossier src/assets/images, la première est la photo principale. « slug » : l'adresse de la fiche (minuscules, tirets, sans accent). Voir GUIDE.md.",
 
+  "_gammes": "Chaque gamme a sa page (adresse « page.slug ») : titre et description pour Google, texte d'introduction, arguments et questions fréquentes propres au métier.",
   "gammes": [
     {
       "id": "t-shirts",
       "nom": "T-shirts",
       "accroche": "Du classique 160 g à l'oversize 240 g, en coton peigné.",
-      "image": "tshirt-04.jpg"
+      "image": "tshirt-04.jpg",
+      "page": {
+        "slug": "fabrication-t-shirts-tunisie",
+        "seoTitre": "Fabricant de t-shirts en Tunisie, à votre marque",
+        "seoDescription": "T-shirts fabriqués en Tunisie pour les marques françaises : coton peigné 160 à 240 g, coupe classique, oversize ou boxy, à votre marque dès 50 pièces.",
+        "titre": "Fabrication de t-shirts en Tunisie, *à votre marque.*",
+        "intro": "Le t-shirt est la pièce qui fait revenir vos clients, à condition qu'il tienne au lavage. Nous le coupons dans un jersey de coton peigné au grammage mesuré, en coupe classique, oversize ou boxy, et nous le produisons à votre marque dès 50 pièces par modèle.",
+        "arguments": [
+          { "titre": "Le grammage qui convient", "texte": "160 g pour l'été et le prix, 180 g pour le quotidien, 220 à 240 g pour l'oversize qui tombe bien." },
+          { "titre": "Une encolure qui tient", "texte": "Bord-côte renforcé et bande de propreté : le col ne se déforme pas au fil des lavages." },
+          { "titre": "Teinture et finitions", "texte": "Coloris unis, teints en pièce ou délavés, et finitions surpiquées sur toutes les coutures." },
+          { "titre": "Votre signature", "texte": "Étiquette tissée, sérigraphie ou broderie poitrine : le t-shirt devient une pièce de votre marque." }
+        ],
+        "faq": [
+          { "question": "Quel grammage choisir pour un t-shirt ?", "reponse": "160 g/m² pour un t-shirt léger et économique, 180 g/m² pour un basique durable, 220 à 240 g/m² pour un t-shirt épais qui garde sa forme, idéal en coupe oversize." },
+          { "question": "Peut-on imprimer ou broder les t-shirts ?", "reponse": "Oui : sérigraphie pour les grands visuels, broderie pour un logo discret, étiquette tissée au col dans tous les cas." }
+        ]
+      }
     },
     {
       "id": "sweats",
       "nom": "Sweats",
       "accroche": "Hoodies, cols ronds, zippés et ensembles en molleton gratté.",
-      "image": "sweat-01.jpg"
+      "image": "sweat-01.jpg",
+      "page": {
+        "slug": "fabrication-sweats-hoodies-tunisie",
+        "seoTitre": "Fabricant de sweats et hoodies en Tunisie",
+        "seoDescription": "Sweats, hoodies, zippés et ensembles jogging fabriqués en Tunisie : molleton gratté 280 à 360 g, brodés à votre marque, dès 40 pièces par modèle.",
+        "titre": "Sweats et hoodies fabriqués en Tunisie, *pour durer.*",
+        "intro": "Un bon sweat se juge au molleton : épais, doux à l'intérieur, stable au lavage. Hoodies, cols ronds, zippés et ensembles jogging : nous les produisons dans un molleton gratté au grammage choisi, avec vos broderies et vos étiquettes.",
+        "arguments": [
+          { "titre": "Un molleton choisi", "texte": "Envers gratté, 280 à 360 g/m² selon la saison et le tombé recherché." },
+          { "titre": "Des détails soignés", "texte": "Capuche doublée, poches kangourou, bord-côte ajusté, zip métal pleine longueur." },
+          { "titre": "Le coordonné", "texte": "Hoodie et pantalon dans le même molleton et la même teinte : un panier moyen plus élevé." },
+          { "titre": "Brodé à votre marque", "texte": "Broderie poitrine ou dos, étiquette tissée, étiquette volante et emballage." }
+        ],
+        "faq": [
+          { "question": "Quel grammage pour un hoodie ?", "reponse": "Autour de 300 à 320 g/m² pour un sweat de toutes saisons, 340 à 360 g/m² pour un hoodie épais et structuré." },
+          { "question": "Peut-on faire des ensembles assortis ?", "reponse": "Oui : le haut et le bas sont coupés dans le même lot de molleton, pour une teinte identique." }
+        ]
+      }
     },
     {
       "id": "enfants",
       "nom": "Enfants",
       "accroche": "Du bébé au 12 ans, des matières douces et des coutures qui tiennent.",
-      "image": "enfant-02-2.jpg"
+      "image": "enfant-02-2.jpg",
+      "page": {
+        "slug": "confection-vetements-enfants-tunisie",
+        "seoTitre": "Confection de vêtements pour enfants en Tunisie",
+        "seoDescription": "Vêtements pour bébés et enfants confectionnés en Tunisie : matières douces, finitions sans irritation, du naissance au 12 ans, dès 40 pièces.",
+        "titre": "Vêtements pour enfants, *cousus avec douceur.*",
+        "intro": "Les vêtements d'enfants se lavent souvent, se portent fort et touchent une peau sensible. Nous les confectionnons dans des matières douces, avec des finitions qui ne grattent pas, du naissance au 12 ans, pour les marques et les boutiques qui en font leur métier.",
+        "arguments": [
+          { "titre": "Des matières douces", "texte": "Interlock, double gaze, coton lavé et mailles souples, choisis pour la peau des enfants." },
+          { "titre": "Des finitions sans irritation", "texte": "Coutures plates, étiquettes placées pour ne pas gratter, pressions sans nickel." },
+          { "titre": "Un gradué précis", "texte": "Du naissance au 12 ans, selon les tailles en usage en France." },
+          { "titre": "Pensé pour la vente", "texte": "Ensembles, coffrets naissance et emballages cadeaux à votre marque." }
+        ],
+        "faq": [
+          { "question": "Respectez-vous les exigences de sécurité des vêtements pour enfants ?", "reponse": "Nous suivons les bonnes pratiques de sécurité : pas de cordons au col des plus petits, pressions solidement fixées, petites pièces cousues et contrôlées. Dites-nous les normes que votre marque applique : nous les intégrons au cahier des charges." },
+          { "question": "Peut-on panacher les tailles ?", "reponse": "Oui : le minimum s'entend par modèle, toutes tailles confondues." }
+        ]
+      }
     },
     {
       "id": "femme",
       "nom": "Prêt-à-porter femme",
       "accroche": "Robes, chemises et pantalons, en lin, crêpe et viscose.",
-      "image": "femme-01.jpg"
+      "image": "femme-01.jpg",
+      "page": {
+        "slug": "confection-pret-a-porter-femme-tunisie",
+        "seoTitre": "Confection de prêt-à-porter femme en Tunisie",
+        "seoDescription": "Robes, chemises et pantalons pour femme confectionnés en Tunisie : lin, crêpe, viscose, en petites séries dès 30 pièces par modèle.",
+        "titre": "Prêt-à-porter femme, *en petites séries.*",
+        "intro": "Robes, chemises, pantalons : le prêt-à-porter femme demande du tombé et des séries courtes, pour renouveler souvent. Nous travaillons le lin, le crêpe et la viscose, et produisons dès 30 pièces par modèle pour les boutiques qui changent de collection au fil des saisons.",
+        "arguments": [
+          { "titre": "Des séries courtes", "texte": "Dès 30 pièces par modèle : de quoi tester, puis relancer ce qui plaît." },
+          { "titre": "Des matières qui tombent", "texte": "Lin lavé, crêpe fluide, viscose imprimée : choisis pour le mouvement et le confort." },
+          { "titre": "Vos patrons", "texte": "Nous reproduisons un modèle à partir d'une pièce ou d'un croquis, et le gradons du 34 au 48." },
+          { "titre": "Au fil des saisons", "texte": "Réassorts rapides, pour suivre les ventes plutôt que les deviner." }
+        ],
+        "faq": [
+          { "question": "Pouvez-vous reproduire un modèle de ma boutique ?", "reponse": "Oui, à partir d'une pièce, d'une photo ou d'un croquis. Nous réalisons le patron et un prototype, que vous validez avant la série." },
+          { "question": "Quelles tailles proposez-vous ?", "reponse": "Nous gradons du 34 au 48, et au-delà sur demande, selon les tailles françaises." }
+        ]
+      }
     }
   ],
 

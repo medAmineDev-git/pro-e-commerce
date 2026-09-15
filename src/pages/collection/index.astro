@@ -2,14 +2,15 @@
 import Base from '../../layouts/Base.astro';
 import CarteProduit from '../../components/CarteProduit.astro';
 import Icone from '../../components/Icone.astro';
-import { gammes, produits, produitsDe, site, titre } from '../../lib/contenu';
+import { gammes, lienGamme, produits, produitsDe, site, texteBrut, titre } from '../../lib/contenu';
 
 const { collection } = site;
 ---
 
 <Base
-  titre="La collection"
-  description={`${produits.length} modèles à produire en gros et à votre marque : T-shirts, sweats, vêtements enfants et prêt-à-porter femme, fabriqués à Moknine.`}
+  titre={texteBrut(collection.seoTitre)}
+  description={texteBrut(collection.seoDescription)}
+  ariane={[{ nom: 'Collection', chemin: '/collection' }]}
 >
   <section class="tete conteneur">
     <p class="surtitre">{collection.surtitre}</p>
@@ -33,6 +34,14 @@ const { collection } = site;
   <section class="conteneur grille" aria-live="polite" data-grille>
     {produits.map((produit, rang) => <CarteProduit produit={produit} rang={rang} />)}
   </section>
+
+  <!-- Chaque métier a sa page, avec son savoir-faire et ses questions. -->
+  <nav class="conteneur metiers" aria-label="Nos métiers">
+    <p class="surtitre">Par métier</p>
+    <ul>
+      {gammes.map((gamme) => <li><a href={lienGamme(gamme)}>{texteBrut(gamme.page.seoTitre)} <Icone nom="fleche" taille={16} /></a></li>)}
+    </ul>
+  </nav>
 
   <section class="conteneur sur-mesure">
     <div class="sur-mesure__cadre">
@@ -126,6 +135,39 @@ const { collection } = site;
   @media (min-width: 72rem) {
     .grille {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .metiers {
+    padding-bottom: 4rem;
+  }
+
+  .metiers ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem 2rem;
+  }
+
+  .metiers a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
+  }
+
+  .metiers a:hover {
+    color: var(--terracotta);
+    border-bottom-color: var(--terracotta);
+  }
+
+  @media (min-width: 48rem) {
+    .metiers ul {
+      grid-template-columns: 1fr 1fr;
     }
   }
 

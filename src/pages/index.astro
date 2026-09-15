@@ -2,11 +2,13 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icone from '../components/Icone.astro';
+import Questions from '../components/Questions.astro';
 import Couture from '../components/Couture.astro';
 import CarteProduit from '../components/CarteProduit.astro';
-import { gammes, image, lienTelephone, lienWhatsapp, nombre, produits, produitsDe, site, titre } from '../lib/contenu';
+import Essayeur from '../components/Essayeur.astro';
+import { gammes, image, lienGamme, lienTelephone, lienWhatsapp, nombre, produits, produitsDe, site, titre } from '../lib/contenu';
 
-const { accueil, manifeste, processus, marqueBlanche, qualite, collection, conditions, etapesCommande, galerie, temoignages, faq, appelFinal } = site;
+const { accueil, manifeste, tunisie, processus, marqueBlanche, qualite, collection, conditions, etapesCommande, galerie, temoignages, faq, appelFinal } = site;
 
 // Deux modèles de chaque gamme, pour que l'aperçu montre toute l'étendue.
 const apercu = gammes.flatMap((gamme) => produitsDe(gamme.id).slice(0, 2)).slice(0, 8);
@@ -130,6 +132,31 @@ const faqDonnees = {
     </dl>
   </section>
 
+  <!-- ============================================================ POURQUOI LA TUNISIE -->
+  <section class="section section--sable tunisie" aria-labelledby="titre-tunisie">
+    <div class="conteneur">
+      <header class="entete-section entete-section--duo">
+        <div>
+          <p class="surtitre" data-reveler>{tunisie.surtitre}</p>
+          <h2 id="titre-tunisie" data-reveler set:html={titre(tunisie.titre)} />
+        </div>
+        <p class="chapeau" data-reveler>{tunisie.texte}</p>
+      </header>
+
+      <ol class="raisons">
+        {
+          tunisie.raisons.map((raison, rang) => (
+            <li class="raison" data-reveler style={`--rang:${rang}`}>
+              <span class="raison__numero">0{rang + 1}</span>
+              <h3>{raison.titre}</h3>
+              <p>{raison.texte}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
   <div class="conteneur"><Couture /></div>
 
   <!-- ============================================================ GAMMES -->
@@ -146,7 +173,7 @@ const faqDonnees = {
       <div class="gammes__grille">
         {
           gammes.map((gamme, rang) => (
-            <a class="gamme" href={`/collection?gamme=${gamme.id}`} data-reveler style={`--rang:${rang}`}>
+            <a class="gamme" href={lienGamme(gamme)} data-reveler style={`--rang:${rang}`}>
               <Image src={image(gamme.image)} alt="" widths={[480, 720, 1000]} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" class="gamme__image" />
               <span class="gamme__voile" />
               <span class="gamme__numero">0{rang + 1}</span>
@@ -210,61 +237,11 @@ const faqDonnees = {
 
   <!-- ============================================================ MARQUE BLANCHE -->
   <section class="section section--sable marque" aria-labelledby="titre-marque">
-    <div class="conteneur marque__grille">
-      <div class="marque__texte">
-        <p class="surtitre" data-reveler>{marqueBlanche.surtitre}</p>
-        <h2 id="titre-marque" data-reveler set:html={titre(marqueBlanche.titre)} />
-        <p class="chapeau" data-reveler>{marqueBlanche.texte}</p>
-
-        <form class="essayeur" data-essayeur data-reveler action="/devis">
-          <label class="essayeur__champ">
-            <span>Votre marque</span>
-            <input type="text" name="marque" maxlength="22" autocomplete="organization" placeholder={marqueBlanche.placeholder} data-essayeur-nom />
-          </label>
-
-          <fieldset class="essayeur__choix">
-            <legend>Étiquette</legend>
-            <label><input type="radio" name="teinte" value="ecru" checked /><span class="pastille pastille--ecru"></span>Écru</label>
-            <label><input type="radio" name="teinte" value="noir" /><span class="pastille pastille--noir"></span>Noir</label>
-            <label><input type="radio" name="teinte" value="terracotta" /><span class="pastille pastille--terracotta"></span>Terracotta</label>
-          </fieldset>
-
-          <fieldset class="essayeur__choix">
-            <legend>Style</legend>
-            <label><input type="radio" name="style" value="serif" checked />Élégant</label>
-            <label><input type="radio" name="style" value="baton" />Moderne</label>
-            <label><input type="radio" name="style" value="script" />Signature</label>
-          </fieldset>
-
-          <ul class="essayeur__options">
-            {marqueBlanche.options.map((option) => <li><Icone nom="coche" taille={16} /> {option}</li>)}
-          </ul>
-
-          <button class="bouton" type="submit">{marqueBlanche.bouton} <Icone nom="fleche" /></button>
-        </form>
-      </div>
-
-      <!-- L'aperçu : l'étiquette tissée cousue au col, et l'étiquette volante. -->
-      <div class="apercu" aria-live="polite" data-apercu data-teinte="ecru" data-style="serif">
-        <div class="apercu__col">
-          <Image src={image('tshirt-01.jpg')} alt="" widths={[480, 800]} sizes="(min-width: 60rem) 40vw, 90vw" class="apercu__photo" />
-          <div class="tissee">
-            <span class="tissee__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
-            <span class="tissee__mention">Made in Tunisia</span>
-          </div>
-        </div>
-        <div class="volante">
-          <span class="volante__fil"></span>
-          <div class="volante__carton">
-            <span class="volante__oeillet"></span>
-            <span class="volante__nom" data-apercu-nom>{marqueBlanche.exemple}</span>
-            <span class="volante__ligne">Collection permanente</span>
-            <span class="volante__ligne">100 % coton peigné</span>
-            <span class="volante__code" aria-hidden="true">||| || ||| | |||| ||</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Essayeur>
+      <p class="surtitre" data-reveler>{marqueBlanche.surtitre}</p>
+      <h2 id="titre-marque" data-reveler set:html={titre(marqueBlanche.titre)} />
+      <p class="chapeau" data-reveler>{marqueBlanche.texte}</p>
+    </Essayeur>
   </section>
 
   <!-- ============================================================ QUALITÉ -->
@@ -431,17 +408,7 @@ const faqDonnees = {
       </header>
 
       <div class="faq__liste">
-        {
-          faq.questions.map((q) => (
-            <details class="question">
-              <summary>
-                {q.question}
-                <span class="question__signe" aria-hidden="true"><Icone nom="plus" taille={18} /></span>
-              </summary>
-              <p>{q.reponse}</p>
-            </details>
-          ))
-        }
+        <Questions questions={faq.questions} />
       </div>
     </div>
   </section>
@@ -865,6 +832,55 @@ const faqDonnees = {
     }
   }
 
+  /* ============================================================ pourquoi la Tunisie */
+
+  .raisons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    background: color-mix(in srgb, var(--encre) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--encre) 18%, transparent);
+  }
+
+  .raison {
+    display: grid;
+    align-content: start;
+    gap: 0.9rem;
+    padding: 2rem 1.75rem 2.25rem;
+    background: var(--sable);
+    transition: background 0.3s;
+  }
+
+  .raison:hover {
+    background: #efe5d4;
+  }
+
+  .raison__numero {
+    font-family: var(--titre);
+    font-size: 2.75rem;
+    font-weight: 330;
+    line-height: 1;
+    color: var(--terracotta);
+  }
+
+  .raison p {
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 40rem) {
+    .raisons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .raisons {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   /* ============================================================ gammes */
 
   .gammes {
@@ -1111,342 +1127,6 @@ const faqDonnees = {
 
     .etape :global(.etape__image) {
       display: none;
-    }
-  }
-
-  /* ============================================================ marque blanche */
-
-  .marque__grille {
-    display: grid;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .marque__texte {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .marque__texte .surtitre {
-    margin-bottom: -0.25rem;
-  }
-
-  .essayeur {
-    display: grid;
-    gap: 1.5rem;
-    margin-top: 1rem;
-  }
-
-  .essayeur__champ {
-    display: grid;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .essayeur__champ input {
-    font-family: var(--titre);
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: 380;
-    letter-spacing: 0;
-    text-transform: none;
-    padding: 0.25rem 0 0.5rem;
-    background: transparent;
-    border: none;
-    border-bottom: 2px dashed var(--encre);
-    color: var(--encre);
-    border-radius: 0;
-    width: 100%;
-  }
-
-  .essayeur__champ input:focus {
-    outline: none;
-    border-bottom-color: var(--terracotta);
-  }
-
-  .essayeur__champ input::placeholder {
-    color: color-mix(in srgb, var(--encre) 35%, transparent);
-  }
-
-  .essayeur__choix {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .essayeur__choix legend {
-    float: left;
-    width: 6rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .essayeur__choix label {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.9rem;
-    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
-    border-radius: 999px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-  }
-
-  .essayeur__choix input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .essayeur__choix label:has(input:checked) {
-    background: var(--encre);
-    border-color: var(--encre);
-    color: var(--ecru);
-  }
-
-  .essayeur__choix label:has(input:focus-visible) {
-    outline: 2px solid var(--terracotta);
-    outline-offset: 2px;
-  }
-
-  .pastille {
-    width: 0.9rem;
-    height: 0.9rem;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-  }
-
-  .pastille--ecru {
-    background: #f2ebdd;
-  }
-
-  .pastille--noir {
-    background: #1d1a16;
-  }
-
-  .pastille--terracotta {
-    background: var(--terracotta);
-  }
-
-  .essayeur__options {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.25rem;
-    font-size: 0.875rem;
-    color: var(--encre-douce);
-  }
-
-  .essayeur__options li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .essayeur__options :global(svg) {
-    color: var(--terracotta);
-  }
-
-  .essayeur .bouton {
-    justify-self: start;
-  }
-
-  /* L'aperçu : une photo de t-shirt, l'étiquette tissée cousue dessus, et
-     l'étiquette volante pendue à côté. */
-  .apercu {
-    position: relative;
-    padding-bottom: 4rem;
-  }
-
-  .apercu__col {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    width: 82%;
-  }
-
-  .apercu__col :global(.apercu__photo) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .tissee {
-    position: absolute;
-    left: 50%;
-    top: 22%;
-    translate: -50% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
-    min-width: 11rem;
-    padding: 0.9rem 1.4rem 0.8rem;
-    background:
-      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px),
-      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px),
-      var(--fond-etiquette);
-    color: var(--encre-etiquette);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-    outline: 1px dashed color-mix(in srgb, var(--encre-etiquette) 45%, transparent);
-    outline-offset: -5px;
-    transition: background-color 0.4s, color 0.4s;
-  }
-
-  .tissee__nom {
-    font-family: var(--police-etiquette);
-    font-size: 1.35rem;
-    line-height: 1.1;
-    letter-spacing: var(--espacement-etiquette);
-    text-align: center;
-    white-space: nowrap;
-    max-width: 16rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .tissee__mention {
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    opacity: 0.8;
-  }
-
-  .volante {
-    position: absolute;
-    right: 0;
-    top: 12%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform-origin: top center;
-    animation: balancier 5s ease-in-out infinite;
-  }
-
-  .volante__fil {
-    width: 1px;
-    height: 5rem;
-    background: var(--encre);
-  }
-
-  .volante__carton {
-    position: relative;
-    width: 10.5rem;
-    padding: 2.2rem 1.1rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    background: var(--fond-etiquette);
-    color: var(--encre-etiquette);
-    clip-path: polygon(22% 0, 78% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
-    transition: background-color 0.4s, color 0.4s;
-  }
-
-  .volante {
-    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.18));
-  }
-
-  .volante__oeillet {
-    position: absolute;
-    top: 0.75rem;
-    left: 50%;
-    translate: -50% 0;
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background: var(--sable);
-    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
-  }
-
-  .volante__nom {
-    font-family: var(--police-etiquette);
-    font-size: 1.2rem;
-    line-height: 1.1;
-    letter-spacing: var(--espacement-etiquette);
-    text-align: center;
-    overflow-wrap: anywhere;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed color-mix(in srgb, var(--encre-etiquette) 40%, transparent);
-    margin-bottom: 0.3rem;
-  }
-
-  .volante__ligne {
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.85;
-  }
-
-  .volante__code {
-    margin-top: 0.6rem;
-    font-size: 0.9rem;
-    letter-spacing: -0.05em;
-    opacity: 0.6;
-  }
-
-  .apercu[data-teinte='ecru'] {
-    --fond-etiquette: #f2ebdd;
-    --encre-etiquette: #1d1a16;
-  }
-
-  .apercu[data-teinte='noir'] {
-    --fond-etiquette: #1d1a16;
-    --encre-etiquette: #f2ebdd;
-  }
-
-  .apercu[data-teinte='terracotta'] {
-    --fond-etiquette: #b4532a;
-    --encre-etiquette: #f8efe2;
-  }
-
-  .apercu[data-style='serif'] {
-    --police-etiquette: var(--titre);
-    --espacement-etiquette: 0.02em;
-  }
-
-  .apercu[data-style='baton'] {
-    --police-etiquette: var(--texte);
-    --espacement-etiquette: 0.22em;
-  }
-
-  .apercu[data-style='baton'] .tissee__nom,
-  .apercu[data-style='baton'] .volante__nom {
-    font-weight: 800;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-  }
-
-  .apercu[data-style='script'] {
-    --police-etiquette: var(--titre);
-    --espacement-etiquette: 0;
-  }
-
-  .apercu[data-style='script'] .tissee__nom,
-  .apercu[data-style='script'] .volante__nom {
-    font-style: italic;
-    font-variation-settings: 'SOFT' 100, 'WONK' 1;
-    font-size: 1.55rem;
-  }
-
-  @media (min-width: 60rem) {
-    .marque__grille {
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
     }
   }
 
@@ -1858,53 +1538,6 @@ const faqDonnees = {
     margin-bottom: -0.25rem;
   }
 
-  .question {
-    border-top: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
-  }
-
-  .question:last-child {
-    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 35%, transparent);
-  }
-
-  .question summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.4rem 0;
-    font-family: var(--titre);
-    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .question summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .question__signe {
-    flex: none;
-    width: 2.25rem;
-    height: 2.25rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    border: 1px solid color-mix(in srgb, var(--encre) 25%, transparent);
-    transition: transform 0.4s var(--ressort), background 0.3s, color 0.3s;
-  }
-
-  .question[open] .question__signe {
-    transform: rotate(45deg);
-    background: var(--terracotta);
-    border-color: var(--terracotta);
-    color: var(--ecru);
-  }
-
-  .question p {
-    padding: 0 3.5rem 1.6rem 0;
-    color: var(--encre-douce);
-  }
-
   @media (min-width: 60rem) {
     .faq__grille {
       grid-template-columns: 1fr 1.4fr;
@@ -2027,26 +1660,6 @@ const faqDonnees = {
     { rootMargin: '-45% 0px -45% 0px' },
   );
   etapes.forEach((etape) => lecture.observe(etape));
-
-  // ------------------------------------------------ essayeur d'étiquette
-
-  const essayeur = document.querySelector<HTMLFormElement>('[data-essayeur]');
-  const apercu = document.querySelector<HTMLElement>('[data-apercu]');
-  if (essayeur && apercu) {
-    const champ = essayeur.querySelector<HTMLInputElement>('[data-essayeur-nom]');
-    const noms = apercu.querySelectorAll<HTMLElement>('[data-apercu-nom]');
-    const exemple = noms[0]?.textContent ?? '';
-
-    const mettreAJour = () => {
-      const saisie = champ?.value.trim();
-      noms.forEach((nom) => (nom.textContent = saisie || exemple));
-      const donnees = new FormData(essayeur);
-      apercu.dataset.teinte = String(donnees.get('teinte') ?? 'ecru');
-      apercu.dataset.style = String(donnees.get('style') ?? 'serif');
-    };
-    essayeur.addEventListener('input', mettreAJour);
-    essayeur.addEventListener('change', mettreAJour);
-  }
 
   // ------------------------------------------------ léger décalage du collage
 

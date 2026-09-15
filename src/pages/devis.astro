@@ -6,7 +6,7 @@ import { gammes, lienTelephone, produitsDe, site, titre } from '../lib/contenu';
 const { devis, marqueBlanche, etapesCommande } = site;
 ---
 
-<Base titre="Demande de devis" description={devis.texte} sansBarre>
+<Base titre="Demande de devis" description={devis.seoDescription} sansBarre ariane={[{ nom: "Demande de devis", chemin: "/devis" }]}>
   <section class="devis conteneur">
     <header class="devis__tete">
       <p class="surtitre">{devis.surtitre}</p>
@@ -35,7 +35,7 @@ const { devis, marqueBlanche, etapesCommande } = site;
               <input name="marque" type="text" autocomplete="organization" required />
             </label>
             <label class="champ">
-              <span>Ville *</span>
+              <span>Ville et pays *</span>
               <input name="ville" type="text" autocomplete="address-level2" required />
             </label>
             <label class="champ">
@@ -505,7 +505,7 @@ const { devis, marqueBlanche, etapesCommande } = site;
       '',
       `• Nom : ${donnees.get('nom')}`,
       `• Boutique / marque : ${donnees.get('marque')}`,
-      `• Ville : ${donnees.get('ville')}`,
+      `• Ville et pays : ${donnees.get('ville')}`,
       `• Téléphone : ${donnees.get('telephone')}`,
     ];
     const modeles = donnees.getAll('modeles');

@@ -1,0 +1,10 @@
+# En-têtes HTTP servis par Cloudflare.
+
+# Les fichiers de /_astro changent de nom dès que leur contenu change : le
+# navigateur peut les garder un an sans jamais servir une version périmée.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# La vidéo garde son nom quand on la remplace : une semaine suffit.
+/video/*
+  Cache-Control: public, max-age=604800

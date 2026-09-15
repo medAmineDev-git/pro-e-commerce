@@ -1,0 +1,404 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import CarteProduit from '../components/CarteProduit.astro';
+import Icone from '../components/Icone.astro';
+import Questions from '../components/Questions.astro';
+import { gammes, image, lienGamme, lienWhatsapp, produitsDe, site, titre, type Gamme } from '../lib/contenu';
+
+/**
+ * Une page par métier (t-shirts, sweats, enfants, femme), écrite pour les
+ * recherches d'un acheteur : « fabricant de t-shirts en Tunisie »… Elle
+ * présente le savoir-faire propre à la gamme et ses modèles.
+ */
+export function getStaticPaths() {
+  return gammes.map((gamme) => ({ params: { metier: gamme.page.slug }, props: { gamme } }));
+}
+
+interface Props {
+  gamme: Gamme;
+}
+
+const { gamme } = Astro.props;
+const { page } = gamme;
+const modeles = produitsDe(gamme.id);
+const minimum = Math.min(...modeles.map((m) => m.minimum));
+const autres = gammes.filter((g) => g.id !== gamme.id);
+const message = `Bonjour ${site.marque.nom}, je souhaite faire fabriquer des ${gamme.nom.toLowerCase()} à ma marque.`;
+
+const faqDonnees = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: page.faq.map((q) => ({
+    '@type': 'Question',
+    name: q.question,
+    acceptedAnswer: { '@type': 'Answer', text: q.reponse },
+  })),
+};
+---
+
+<Base
+  titre={page.seoTitre}
+  description={page.seoDescription}
+  apercu={image(gamme.image)}
+  donnees={faqDonnees}
+  ariane={[{ nom: gamme.nom, chemin: lienGamme(gamme) }]}
+>
+  <section class="tete conteneur">
+    <div class="tete__texte">
+      <nav class="fil" aria-label="Fil d'Ariane">
+        <a href="/">Accueil</a>
+        <span aria-hidden="true">/</span>
+        <span>{gamme.nom}</span>
+      </nav>
+      <p class="surtitre">{gamme.nom} · dès {minimum} pièces par modèle</p>
+      <h1 set:html={titre(page.titre)} />
+      <p class="chapeau">{page.intro}</p>
+      <div class="tete__boutons">
+        <a class="bouton" href="/devis">Demander un devis <Icone nom="fleche" /></a>
+        <a class="bouton bouton--contour" href={lienWhatsapp(message)} target="_blank" rel="noopener" data-whatsapp>
+          <Icone nom="whatsapp" /> En parler sur WhatsApp
+        </a>
+      </div>
+    </div>
+    <figure class="tete__visuel">
+      <Image src={image(gamme.image)} alt={`${gamme.nom} fabriqués dans l'atelier`} widths={[480, 800, 1200]} sizes="(min-width: 60rem) 42vw, 100vw" loading="eager" />
+    </figure>
+  </section>
+
+  <section class="section section--sable" aria-labelledby="titre-arguments">
+    <div class="conteneur">
+      <h2 id="titre-arguments" class="bloc-titre">Ce qui fait <em>la différence.</em></h2>
+      <ul class="arguments">
+        {
+          page.arguments.map((argument, rang) => (
+            <li class="argument" data-reveler style={`--rang:${rang}`}>
+              <span class="argument__numero">0{rang + 1}</span>
+              <h3>{argument.titre}</h3>
+              <p>{argument.texte}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section conteneur" aria-labelledby="titre-modeles">
+    <div class="modeles__tete">
+      <h2 id="titre-modeles" class="bloc-titre">Nos modèles de {gamme.nom.toLowerCase()}</h2>
+      <p class="chapeau">
+        À produire tels quels ou à adapter : tissu, coloris, finitions et étiquette à votre marque. Tailles et coloris
+        panachables dans une même commande.
+      </p>
+    </div>
+    <div class="modeles">
+      {modeles.map((produit, rang) => <CarteProduit produit={produit} rang={rang} />)}
+    </div>
+  </section>
+
+  <section class="section section--nuit" aria-labelledby="titre-conditions-metier">
+    <div class="conteneur conditions-metier">
+      <div>
+        <p class="surtitre">Pour la France</p>
+        <h2 id="titre-conditions-metier" class="bloc-titre">De l'échantillon <em>à votre boutique.</em></h2>
+      </div>
+      <dl class="reperes">
+        <div><dt>Minimum</dt><dd>dès {minimum} pièces par modèle, tailles panachées</dd></div>
+        <div><dt>Échantillon</dt><dd>préparé en 5 jours environ, envoyé en France</dd></div>
+        <div><dt>Production</dt><dd>15 à 25 jours après validation</dd></div>
+        <div><dt>Livraison</dt><dd>jusqu'à votre adresse en France, documents d'origine fournis</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section conteneur faq-metier" aria-labelledby="titre-faq-metier">
+    <h2 id="titre-faq-metier" class="bloc-titre">Questions fréquentes</h2>
+    <div>
+      <Questions questions={page.faq} />
+      <p class="faq-metier__plus">
+        Et aussi : <a href="/#faq">minimum, douane, paiement, délais</a> · <a href="/marque-blanche">la marque blanche</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--sable autres" aria-labelledby="titre-autres">
+    <div class="conteneur">
+      <h2 id="titre-autres" class="bloc-titre">Nos autres métiers</h2>
+      <div class="autres__liens">
+        {
+          autres.map((autre) => (
+            <a class="autre" href={lienGamme(autre)}>
+              <Image src={image(autre.image)} alt="" widths={[320, 560]} sizes="(min-width: 60rem) 26vw, 90vw" />
+              <span>
+                <strong>{autre.nom}</strong>
+                <span>{autre.accroche}</span>
+              </span>
+              <Icone nom="fleche" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tete {
+    display: grid;
+    gap: 2.5rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+    padding-bottom: var(--section);
+    align-items: center;
+  }
+
+  .tete__texte {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tete__texte .surtitre {
+    margin-bottom: -0.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 340;
+  }
+
+  .tete__boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tete__visuel {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 999px 999px 0 0;
+  }
+
+  .tete__visuel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 60rem) {
+    .tete {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 5rem;
+    }
+  }
+
+  .fil {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--encre-douce);
+  }
+
+  .fil a {
+    text-decoration: none;
+  }
+
+  .fil a:hover {
+    color: var(--terracotta);
+  }
+
+  .bloc-titre {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .section--nuit .bloc-titre :global(em) {
+    color: #e08a5f;
+  }
+
+  /* ------------------------------------------------ arguments */
+
+  .arguments {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .argument {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    background: var(--ecru);
+    outline: 1px dashed color-mix(in srgb, var(--encre) 28%, transparent);
+    outline-offset: -8px;
+  }
+
+  .argument__numero {
+    font-family: var(--titre);
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--terracotta);
+  }
+
+  .argument p {
+    color: var(--encre-douce);
+  }
+
+  @media (min-width: 40rem) {
+    .arguments {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .arguments {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------ modèles */
+
+  .modeles__tete {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .modeles__tete .bloc-titre {
+    margin-bottom: 0;
+  }
+
+  .modeles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .modeles {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  /* ------------------------------------------------ conditions */
+
+  .conditions-metier {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .conditions-metier .surtitre {
+    color: #e08a5f;
+  }
+
+  .reperes {
+    margin: 0;
+    display: grid;
+  }
+
+  .reperes div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px dashed #4a433c;
+  }
+
+  .reperes dt {
+    font-weight: 700;
+    color: var(--ecru);
+  }
+
+  .reperes dd {
+    margin: 0;
+    color: #c9bfb1;
+  }
+
+  @media (min-width: 60rem) {
+    .conditions-metier {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: center;
+    }
+  }
+
+  /* ------------------------------------------------ FAQ */
+
+  .faq-metier {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .faq-metier {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+    }
+  }
+
+  .faq-metier__plus {
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--encre-douce);
+  }
+
+  .faq-metier__plus a {
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+
+  /* ------------------------------------------------ autres métiers */
+
+  .autres__liens {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .autre {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.75rem 1.25rem 0.75rem 0.75rem;
+    background: var(--ecru);
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .autre :global(img) {
+    width: 5.5rem;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .autre strong {
+    display: block;
+    font-family: var(--titre);
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+
+  .autre span span {
+    font-size: 0.875rem;
+    color: var(--encre-douce);
+  }
+
+  .autre:hover {
+    background: var(--encre);
+    color: var(--ecru);
+  }
+
+  .autre:hover span span {
+    color: #c9bfb1;
+  }
+
+  @media (min-width: 64rem) {
+    .autres__liens {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

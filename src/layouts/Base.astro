@@ -22,6 +22,10 @@ interface Props {
   sansBarre?: boolean;
   /** Données structurées propres à la page. */
   donnees?: Record<string, unknown>;
+  /** Fil d'Ariane, du plus général au plus précis (l'accueil est ajouté d'office). */
+  ariane?: { nom: string; chemin: string }[];
+  /** false : la page ne doit jamais être référencée (page d'erreur…). */
+  indexable?: boolean;
 }
 
 const {
@@ -31,19 +35,36 @@ const {
   enteteSurImage = false,
   sansBarre = false,
   donnees,
+  ariane,
+  indexable = true,
 } = Astro.props;
 
 const titreComplet = titre ? `${titre} · ${site.marque.nom}` : site.seo.titre;
-const canonique = new URL(Astro.url.pathname, Astro.site);
-const imageApercu = await getImage({ src: apercu, width: 1200, format: 'jpg', quality: 80 });
-const urlApercu = new URL(imageApercu.src, Astro.site);
 
+/*
+ * L'adresse canonique est celle du plan du site : /collection, et non
+ * /collection.html que la construction produit sur le disque. Deux adresses
+ * différentes pour une même page brouillent le référencement.
+ */
+const chemin = Astro.url.pathname.replace(/\/index(\.html)?$/, '/').replace(/\.html$/, '') || '/';
+const canonique = new URL(chemin, Astro.site).toString();
+
+/*
+ * En démonstration, le site ne doit pas être référencé : photos, chiffres et
+ * avis y sont des exemples. La balise disparaît d'elle-même avec modeDemo.
+ */
+const referencee = indexable && !site.modeDemo;
+
+const imageApercu = await getImage({ src: apercu, width: 1200, format: 'jpg', quality: 80 });
+const urlApercu = new URL(imageApercu.src, Astro.site).toString();
+
+const reseaux = [site.marque.instagram, site.marque.facebook].filter(Boolean);
 const organisation = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: site.marque.nom,
   description: site.seo.description,
-  url: Astro.site?.toString(),
+  url: new URL('/', Astro.site).toString(),
   telephone: site.marque.telephone,
   email: site.marque.email,
   address: {
@@ -52,7 +73,25 @@ const organisation = {
     addressLocality: site.marque.ville,
     addressCountry: 'TN',
   },
+  areaServed: [{ '@type': 'Country', name: 'France' }, { '@type': 'Country', name: 'Tunisie' }],
+  knowsLanguage: ['fr', 'ar'],
+  ...(reseaux.length ? { sameAs: reseaux } : {}),
 };
+
+const filAriane = ariane?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ nom: 'Accueil', chemin: '/' }, ...ariane].map((etape, rang) => ({
+        '@type': 'ListItem',
+        position: rang + 1,
+        name: etape.nom,
+        item: new URL(etape.chemin, Astro.site).toString(),
+      })),
+    }
+  : null;
+
+const jetonAudience = site.analytics.jetonCloudflare.trim();
 ---
 
 <!doctype html>
@@ -64,21 +103,36 @@ const organisation = {
 
     <title>{titreComplet}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonique} />
+    {referencee ? <link rel="canonical" href={canonique} /> : <meta name="robots" content="noindex, follow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#171411" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="fr_TN" />
+    <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content={site.marque.nom} />
     <meta property="og:title" content={titreComplet} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
     <meta property="og:image" content={urlApercu} />
+    {imageApercu.attributes.width && <meta property="og:image:width" content={String(imageApercu.attributes.width)} />}
+    {imageApercu.attributes.height && <meta property="og:image:height" content={String(imageApercu.attributes.height)} />}
     <meta name="twitter:card" content="summary_large_image" />
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organisation)} />
+    {filAriane && <script is:inline type="application/ld+json" set:html={JSON.stringify(filAriane)} />}
     {donnees && <script is:inline type="application/ld+json" set:html={JSON.stringify(donnees)} />}
+
+    {
+      jetonAudience && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: jetonAudience })}
+        />
+      )
+    }
   </head>
 
   <body class:list={{ 'avec-barre': !sansBarre }}>

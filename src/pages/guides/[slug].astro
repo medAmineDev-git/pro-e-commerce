@@ -1,0 +1,322 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icone from '../../components/Icone.astro';
+import { image, lienWhatsapp, site } from '../../lib/contenu';
+import { dateLongue, guidesPublies, tempsDeLecture, type Guide } from '../../lib/guides';
+
+export async function getStaticPaths() {
+  const guides = await guidesPublies();
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide, guides } }));
+}
+
+interface Props {
+  guide: Guide;
+  guides: Guide[];
+}
+
+const { guide, guides } = Astro.props;
+const { Content } = await render(guide);
+const { titre, description, date, miseAJour } = guide.data;
+const autres = guides.filter((autre) => autre.id !== guide.id).slice(0, 2);
+const adresse = new URL(`/guides/${guide.id}`, Astro.site).toString();
+const couverture = image(guide.data.image);
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: titre,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: (miseAJour ?? date).toISOString(),
+  inLanguage: 'fr-FR',
+  mainEntityOfPage: adresse,
+  author: { '@type': 'Organization', name: site.marque.nom },
+  publisher: { '@type': 'Organization', name: site.marque.nom },
+};
+---
+
+<Base
+  titre={guide.data.titreCourt ?? titre}
+  description={description}
+  apercu={couverture}
+  donnees={article}
+  ariane={[
+    { nom: 'Guides', chemin: '/guides' },
+    { nom: titre, chemin: `/guides/${guide.id}` },
+  ]}
+>
+  <article class="article">
+    <header class="article__tete conteneur">
+      <nav class="fil" aria-label="Fil d'Ariane">
+        <a href="/guides"><Icone nom="retour" taille={16} /> Tous les guides</a>
+      </nav>
+      <h1>{titre}</h1>
+      <p class="chapeau">{description}</p>
+      <p class="article__meta">
+        Par l'atelier {site.marque.nom} · {dateLongue(date)}
+        {miseAJour && <> · mis à jour le {dateLongue(miseAJour)}</>} · {tempsDeLecture(guide)} min de lecture
+      </p>
+    </header>
+
+    <figure class="article__visuel conteneur">
+      <Image src={couverture} alt="" widths={[640, 1000, 1600]} sizes="(min-width: 72rem) 70rem, 100vw" loading="eager" />
+    </figure>
+
+    <div class="article__corps conteneur">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <aside class="encart">
+        <p class="encart__titre">Un projet de collection&#8239;?</p>
+        <p>Nous vous répondons sous 24 h, en français, avec un prix, un délai et le coût de livraison en France.</p>
+        <a class="bouton" href="/devis">Demander un devis <Icone nom="fleche" /></a>
+        <a
+          class="encart__whatsapp"
+          href={lienWhatsapp(`Bonjour ${site.marque.nom}, j'ai lu votre guide « ${titre} » et j'ai une question.`)}
+          target="_blank"
+          rel="noopener"
+          data-whatsapp
+        >
+          <Icone nom="whatsapp" taille={18} /> Poser une question sur WhatsApp
+        </a>
+      </aside>
+    </div>
+  </article>
+
+  {
+    autres.length > 0 && (
+      <section class="section section--sable" aria-labelledby="titre-autres-guides">
+        <div class="conteneur">
+          <h2 id="titre-autres-guides" class="autres__titre">À lire aussi</h2>
+          <div class="autres">
+            {autres.map((autre) => (
+              <a class="autre" href={`/guides/${autre.id}`}>
+                <Image src={image(autre.data.image)} alt="" widths={[360, 640]} sizes="(min-width: 48rem) 20rem, 90vw" />
+                <span>
+                  <strong>{autre.data.titre}</strong>
+                  <span>{tempsDeLecture(autre)} min de lecture</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .article__tete {
+    display: grid;
+    gap: 1.25rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+    padding-bottom: 2.5rem;
+    max-width: 58rem;
+  }
+
+  .fil a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--encre-douce);
+  }
+
+  .fil a:hover {
+    color: var(--terracotta);
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 360;
+  }
+
+  .article__meta {
+    font-size: 0.875rem;
+    color: var(--taupe);
+  }
+
+  .article__visuel {
+    margin: 0 auto 3rem;
+  }
+
+  .article__visuel :global(img) {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+  }
+
+  .article__corps {
+    display: grid;
+    gap: 3rem;
+    padding-bottom: var(--section);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .article__corps {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: 5rem;
+    }
+
+    .encart {
+      position: sticky;
+      top: calc(var(--entete) + 2rem);
+    }
+  }
+
+  /* ------------------------------------------------ texte de l'article */
+
+  .prose {
+    max-width: 44rem;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--encre-douce);
+  }
+
+  .prose :global(h2) {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    color: var(--encre);
+    margin: 2.75rem 0 1rem;
+  }
+
+  .prose :global(h3) {
+    color: var(--encre);
+    margin: 2rem 0 0.75rem;
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol),
+  .prose :global(table) {
+    margin: 0 0 1.25rem;
+  }
+
+  .prose :global(strong) {
+    color: var(--encre);
+  }
+
+  .prose :global(a) {
+    color: var(--terracotta);
+    font-weight: 600;
+    text-underline-offset: 0.2em;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose :global(li::marker) {
+    color: var(--terracotta);
+  }
+
+  /* Les cases à cocher de Markdown, en listes de vérification. */
+  .prose :global(.contains-task-list) {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .prose :global(input[type='checkbox']) {
+    accent-color: var(--terracotta);
+    margin-right: 0.5rem;
+  }
+
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    padding: 0.75rem 1rem 0.75rem 0;
+    border-bottom: 1px dashed color-mix(in srgb, var(--encre) 25%, transparent);
+    vertical-align: top;
+  }
+
+  .prose :global(th) {
+    color: var(--encre);
+    font-weight: 700;
+  }
+
+  /* ------------------------------------------------ encart */
+
+  .encart {
+    display: grid;
+    gap: 1rem;
+    padding: 1.75rem;
+    background: var(--nuit);
+    color: #c9bfb1;
+  }
+
+  .encart__titre {
+    font-family: var(--titre);
+    font-size: 1.5rem;
+    color: var(--ecru);
+  }
+
+  .encart__whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ecru);
+  }
+
+  /* ------------------------------------------------ à lire aussi */
+
+  .autres__titre {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    margin-bottom: 2rem;
+  }
+
+  .autres {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .autre {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--ecru);
+    text-decoration: none;
+  }
+
+  .autre :global(img) {
+    width: 7rem;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .autre strong {
+    display: block;
+    font-family: var(--titre);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+
+  .autre span span {
+    font-size: 0.8125rem;
+    color: var(--taupe);
+  }
+
+  @media (min-width: 48rem) {
+    .autres {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

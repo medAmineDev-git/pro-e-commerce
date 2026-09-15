@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CarteProduit from '../../components/CarteProduit.astro';
 import Icone from '../../components/Icone.astro';
-import { gammeDe, image, lienWhatsapp, produits, site, type Produit } from '../../lib/contenu';
+import { gammeDe, image, lienGamme, lienWhatsapp, produits, site, type Produit } from '../../lib/contenu';
 
 export function getStaticPaths() {
   return produits.map((produit) => ({ params: { slug: produit.slug }, props: { produit } }));
@@ -27,24 +27,24 @@ const details = [
   { terme: 'Personnalisation', valeur: produit.personnalisation },
 ];
 
-const donnees = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: produit.nom,
-  description: produit.description,
-  category: gamme.nom,
-  brand: { '@type': 'Brand', name: site.marque.nom },
-  material: produit.tissu,
-  url: adresse,
-};
+// Pas de données « Product » : sans prix affiché, Google les jugerait
+// incomplètes. Le fil d'Ariane suffit à situer la fiche dans le site.
 ---
 
-<Base titre={`${produit.nom} · ${gamme.nom}`} description={`${produit.resume} ${produit.tissu}, ${produit.grammage}. À partir de ${produit.minimum} pièces, à votre marque.`} apercu={image(produit.images[0])} donnees={donnees}>
+<Base
+  titre={`${produit.nom} · Fabriqué en Tunisie`}
+  description={`${produit.resume} ${produit.tissu}, ${produit.grammage}, à votre marque dès ${produit.minimum} pièces.`}
+  apercu={image(produit.images[0])}
+  ariane={[
+    { nom: gamme.nom, chemin: lienGamme(gamme) },
+    { nom: produit.nom, chemin: `/collection/${produit.slug}` },
+  ]}
+>
   <article class="fiche-produit conteneur">
     <nav class="fil" aria-label="Fil d'Ariane">
       <a href="/collection"><Icone nom="retour" taille={16} /> La collection</a>
       <span aria-hidden="true">/</span>
-      <a href={`/collection?gamme=${gamme.id}`}>{gamme.nom}</a>
+      <a href={lienGamme(gamme)}>{gamme.nom}</a>
     </nav>
 
     <div class="fiche-produit__grille">
@@ -111,7 +111,7 @@ const donnees = {
         <ul class="infos__garanties">
           <li><Icone nom="coche" taille={16} /> Échantillon avant la série</li>
           <li><Icone nom="coche" taille={16} /> Votre étiquette, votre marque</li>
-          <li><Icone nom="coche" taille={16} /> Livraison dans toute la Tunisie</li>
+          <li><Icone nom="coche" taille={16} /> Livraison en France</li>
         </ul>
 
         <div class="infos__description">
@@ -128,7 +128,7 @@ const donnees = {
         <div class="conteneur">
           <div class="voisins__tete">
             <h2 id="titre-voisins">Dans la même gamme</h2>
-            <a class="lien-fleche" href={`/collection?gamme=${gamme.id}`}>
+            <a class="lien-fleche" href={lienGamme(gamme)}>
               Toute la gamme {gamme.nom} <Icone nom="fleche" taille={16} />
             </a>
           </div>

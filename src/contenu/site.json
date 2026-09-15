@@ -1,5 +1,5 @@
 {
-  "_lisezMoi": "Tous les textes du site sont ici. Modifiez les valeurs entre guillemets, jamais les noms à gauche des deux-points. Voir GUIDE.md.",
+  "_lisezMoi": "Tous les textes du site sont ici. Modifiez les valeurs entre guillemets, jamais les noms à gauche des deux-points. Les mots entre *astérisques* s'affichent en italique terracotta. Voir GUIDE.md.",
 
   "modeDemo": true,
   "bandeauDemo": "Démo : photos, chiffres et avis d'exemple, à remplacer avant de prospecter.",
@@ -13,21 +13,26 @@
     "telephone": "+216 99 670 988",
     "whatsapp": "+21699670988",
     "email": "contact@yomna-fashion.com",
-    "horaires": "Du lundi au samedi, de 8 h à 17 h",
+    "horaires": "Du lundi au samedi, de 8 h à 17 h (heure de Tunis)",
     "siteBoutique": "https://yomna-fashion.com",
     "instagram": "",
     "facebook": ""
   },
 
+  "_analytics": "Jeton Cloudflare Web Analytics (voir GUIDE.md, partie 9). Vide : aucune mesure d'audience.",
+  "analytics": {
+    "jetonCloudflare": ""
+  },
+
   "seo": {
-    "titre": "Yomna Fashion — Atelier de confection à Moknine, Tunisie",
-    "description": "Atelier de confection tunisien pour boutiques et marques : T-shirts, sweats, vêtements enfants et prêt-à-porter femme. À partir de 50 pièces par modèle, votre marque cousue dans chaque pièce."
+    "titre": "Atelier de confection en Tunisie pour marques françaises · Yomna Fashion",
+    "description": "Atelier de confection en Tunisie : t-shirts, sweats, vêtements enfants et prêt-à-porter femme à votre marque, dès 50 pièces. Livraison en France."
   },
 
   "accueil": {
-    "surtitre": "Atelier de confection · Moknine, Tunisie",
+    "surtitre": "Atelier de confection en Tunisie · pour les marques françaises",
     "titre": ["Vos collections,", "*cousues*", "à Moknine."],
-    "sousTitre": "T-shirts, sweats, vêtements enfants et prêt-à-porter femme. Un atelier qui produit pour les boutiques et les marques, de 50 à 5 000 pièces par modèle — à votre marque, à vos couleurs.",
+    "sousTitre": "T-shirts, sweats, vêtements enfants et prêt-à-porter femme, fabriqués à votre marque. Un atelier tunisien au service des boutiques et des marques françaises, dès 50 pièces par modèle — à deux heures de vol de Paris.",
     "boutonPrincipal": "Demander un devis",
     "boutonSecondaire": "Découvrir la collection",
     "etiquette": "Made in Tunisia"
@@ -41,18 +46,42 @@
     "Coutures surpiquées",
     "Étiquettes à votre marque",
     "Contrôle pièce par pièce",
-    "Livraison dans toute la Tunisie"
+    "Livraison en France"
   ],
 
   "manifeste": {
     "surtitre": "L'atelier",
     "titre": "Un atelier, *pas un intermédiaire.*",
-    "texte": "Au cœur du Sahel textile tunisien, nos couturières transforment chaque jour le tissu en vêtements prêts à vendre. Vous parlez directement à ceux qui fabriquent : le prix est juste, les délais sont tenus, et la qualité ne dépend pas d'un sous-traitant que personne n'a jamais vu.",
+    "texte": "Au cœur du Sahel tunisien, bassin historique de la confection, nos couturières transforment chaque jour le tissu en vêtements prêts à vendre. Vous parlez directement, et en français, à ceux qui fabriquent : le prix est juste, les délais sont tenus, et la qualité ne dépend pas d'un sous-traitant que personne n'a jamais vu.",
     "chiffres": [
       { "valeur": 12, "suffixe": " ans", "libelle": "de savoir-faire en confection" },
       { "valeur": 25000, "suffixe": "", "libelle": "pièces cousues chaque mois" },
-      { "valeur": 180, "suffixe": "+", "libelle": "boutiques et marques partenaires" },
-      { "valeur": 5, "suffixe": " jours", "libelle": "pour recevoir votre échantillon" }
+      { "valeur": 180, "suffixe": "+", "libelle": "boutiques et marques clientes" },
+      { "valeur": 5, "suffixe": " jours", "libelle": "pour préparer votre échantillon" }
+    ]
+  },
+
+  "tunisie": {
+    "surtitre": "Pourquoi la Tunisie",
+    "titre": "Produire tout près, *sans compromis.*",
+    "texte": "Entre l'atelier lointain qui impose des milliers de pièces et la production en France hors de prix, la Tunisie offre un savoir-faire textile reconnu, des séries courtes et une grande proximité.",
+    "raisons": [
+      {
+        "titre": "À deux heures de Paris",
+        "texte": "Venez valider une collection dans la journée. Vos colis arrivent en France en quelques jours, pas en quelques semaines."
+      },
+      {
+        "titre": "Des petites séries",
+        "texte": "Dès 50 pièces par modèle : testez un modèle, relancez ce qui se vend, et gardez un stock léger."
+      },
+      {
+        "titre": "En français, à l'heure de Paris",
+        "texte": "Une heure de décalage au plus, la même langue, les mêmes tailles : les échanges sont simples et les erreurs rares."
+      },
+      {
+        "titre": "Sans droits de douane",
+        "texte": "Un vêtement d'origine tunisienne entre dans l'Union européenne sans droits de douane, avec son certificat d'origine. Nous vous disons, pour chaque commande, si les tissus choisis le permettent."
+      }
     ]
   },
 
@@ -73,7 +102,7 @@
       },
       {
         "titre": "Le patronage",
-        "texte": "Chaque modèle naît d'un patron gradué taille par taille. Vous avez une référence ? Nous la reproduisons, ou l'adaptons à votre clientèle.",
+        "texte": "Chaque modèle naît d'un patron gradué taille par taille, selon les tailles françaises. Vous avez une référence ? Nous la reproduisons, ou l'adaptons à votre clientèle.",
         "image": "atelier-patronage.jpg"
       },
       {
@@ -127,6 +156,8 @@
     "titre": "{nombre} modèles, *prêts à produire.*",
     "texte": "Des bases qui se vendent toute l'année, à produire telles quelles ou à adapter : tissu, couleur, finitions, étiquette. Chaque modèle se commande dès quelques dizaines de pièces.",
     "textePage": "Chaque modèle se produit tel quel ou s'adapte à votre boutique : tissu, coloris, finitions et étiquette à votre marque. Tailles et coloris panachables dans une même commande.",
+    "seoTitre": "Collection : t-shirts, sweats, enfants et femme",
+    "seoDescription": "{nombre} modèles fabriqués en Tunisie pour les marques françaises : t-shirts, sweats, enfants et prêt-à-porter femme, dès 30 à 60 pièces par modèle.",
     "surMesure": {
       "surtitre": "Sur mesure",
       "titre": "Votre modèle n'est pas là ? *Nous le fabriquons.*",
@@ -141,10 +172,10 @@
     "texte": "Des conditions claires, écrites noir sur blanc dans chaque devis. Pas de frais cachés, pas de surprise à la livraison.",
     "cartes": [
       { "titre": "À partir de 50 pièces", "texte": "par modèle, tailles et coloris panachés. Moins ? Parlons-en, surtout pour une première commande." },
-      { "titre": "Échantillon en 5 jours", "texte": "Vous validez la matière, la coupe et les finitions en main avant de lancer la série." },
+      { "titre": "Échantillon en 5 jours", "texte": "préparé à l'atelier, puis envoyé en France : vous validez la matière, la coupe et les finitions en main." },
       { "titre": "Production en 15 à 25 jours", "texte": "selon la quantité et la saison. Le délai est fixé noir sur blanc dans votre devis." },
-      { "titre": "Livraison partout", "texte": "en 24 à 72 h dans toute la Tunisie. Export possible vers l'Europe et le Maghreb, sur devis." },
-      { "titre": "Paiement en deux fois", "texte": "30 % à la commande, le solde à la livraison. Virement ou espèces." },
+      { "titre": "Livraison en France", "texte": "par la route et la mer, ou en express, jusqu'à votre boutique. Nous préparons la facture, la liste de colisage et le certificat d'origine." },
+      { "titre": "Paiement en deux fois", "texte": "30 % à la validation de l'échantillon, le solde avant l'expédition, par virement bancaire." },
       { "titre": "Vos modèles, vos couleurs", "texte": "Nous produisons nos modèles à votre marque, ou les vôtres à partir d'une photo ou d'une pièce type." }
     ]
   },
@@ -153,17 +184,17 @@
     "surtitre": "Comment ça se passe",
     "titre": "Quatre étapes, un seul interlocuteur.",
     "etapes": [
-      { "titre": "Vous nous écrivez", "texte": "Modèles, quantités, personnalisation : un message suffit. Réponse sous 24 h." },
-      { "titre": "Vous recevez votre échantillon", "texte": "Avec un devis détaillé : prix par pièce, délai, conditions." },
-      { "titre": "Vous validez", "texte": "L'acompte lance la production. Nous vous tenons au courant à chaque étape." },
-      { "titre": "Vous vendez", "texte": "Livraison contrôlée, pièces pliées par taille. Il ne reste qu'à les mettre en rayon." }
+      { "titre": "Vous nous écrivez", "texte": "Modèles, quantités, personnalisation : un message suffit. Réponse sous 24 h, en français." },
+      { "titre": "Vous recevez votre échantillon", "texte": "Avec un devis détaillé : prix par pièce, délai, transport jusqu'en France." },
+      { "titre": "Vous validez", "texte": "L'acompte lance la production. Nous vous tenons au courant à chaque étape, photos à l'appui." },
+      { "titre": "Vous vendez", "texte": "Livraison en France, pièces pliées par taille. Il ne reste qu'à les mettre en rayon." }
     ]
   },
 
   "galerie": {
     "surtitre": "Dans l'atelier",
     "titre": "Venez voir *par vous-même.*",
-    "texte": "L'atelier se visite, sur rendez-vous. Rien ne remplace le toucher d'un tissu et le bruit des machines.",
+    "texte": "L'atelier se visite, sur rendez-vous, à une trentaine de minutes de l'aéroport de Monastir. Rien ne remplace le toucher d'un tissu et le bruit des machines.",
     "images": ["atelier-machines.jpg", "atelier-fils.jpg", "atelier-pile.jpg", "atelier-couture.jpg", "atelier-tissus.jpg", "atelier-controle.jpg"]
   },
 
@@ -171,9 +202,9 @@
     "surtitre": "Ils nous font confiance",
     "titre": "Des boutiques *qui reviennent.*",
     "avis": [
-      { "texte": "Les t-shirts oversize partent en une semaine. Surtout, la troisième commande est identique à la première : même tissu, même coupe. C'est rare.", "nom": "Sarra B.", "boutique": "Concept store, Tunis" },
-      { "texte": "J'ai lancé ma marque enfants avec 60 pièces par modèle. Ils ont pris le temps de me conseiller sur les tissus et les tailles.", "nom": "Amel K.", "boutique": "Marque enfants, Sousse" },
-      { "texte": "Délais tenus pendant le ramadan, ce n'était pas gagné. Les sweats à notre marque sont impeccables, les clients les redemandent.", "nom": "Mehdi T.", "boutique": "Boutique streetwear, Sfax" }
+      { "texte": "Les t-shirts oversize partent en une semaine. Surtout, la troisième commande est identique à la première : même tissu, même coupe. C'est rare.", "nom": "Sarah B.", "boutique": "Concept store, Lyon" },
+      { "texte": "J'ai lancé ma marque enfants avec 60 pièces par modèle. Ils ont pris le temps de me conseiller sur les tissus et les tailles, en visio, comme si l'atelier était à côté.", "nom": "Amélie K.", "boutique": "Marque enfants, Bordeaux" },
+      { "texte": "Délais tenus pour la rentrée, livraison comprise. Les sweats à notre marque sont impeccables, les clients les redemandent.", "nom": "Mehdi T.", "boutique": "Boutique streetwear, Marseille" }
     ]
   },
 
@@ -182,21 +213,22 @@
     "titre": "Tout ce qu'on *nous demande.*",
     "questions": [
       { "question": "Quel est le minimum de commande ?", "reponse": "50 pièces par modèle en général, et vous pouvez panacher les tailles et les coloris. Pour une première commande ou un test, nous étudions volontiers des quantités plus petites." },
-      { "question": "Puis-je avoir un échantillon avant de commander ?", "reponse": "Oui. Nous vous envoyons un échantillon sous 5 jours ouvrés environ. Il est déduit de votre première commande." },
+      { "question": "Puis-je avoir un échantillon avant de commander ?", "reponse": "Oui. Nous préparons l'échantillon en 5 jours ouvrés environ, puis nous vous l'envoyons en France. Il est déduit de votre première commande." },
+      { "question": "Y a-t-il des droits de douane pour la France ?", "reponse": "Un vêtement d'origine tunisienne entre dans l'Union européenne sans droits de douane, grâce à l'accord d'association entre l'Union européenne et la Tunisie, à condition de respecter les règles d'origine et de fournir un certificat d'origine (EUR.1). Nous vous indiquons, pour chaque commande, si les tissus retenus le permettent. La TVA à l'importation reste due, comme pour tout achat hors de l'Union." },
+      { "question": "Comment se passe la livraison en France ?", "reponse": "Par transporteur, de l'atelier jusqu'à votre adresse : par la route et la mer, ou en express pour les commandes urgentes. Nous préparons la facture, la liste de colisage et le certificat d'origine ; le transporteur ou votre transitaire se charge du dédouanement à l'arrivée." },
       { "question": "Pouvez-vous mettre ma marque sur les vêtements ?", "reponse": "Oui : étiquette tissée à votre nom, étiquette de taille, sérigraphie, broderie et emballage personnalisé. Envoyez-nous votre logo, nous vous proposons un rendu." },
       { "question": "Pouvez-vous fabriquer mon propre modèle ?", "reponse": "Oui, à partir d'une pièce type, d'une photo ou d'un croquis. Nous réalisons le patron, un prototype, puis la série après votre validation." },
-      { "question": "Quels sont les délais de production ?", "reponse": "De 15 à 25 jours après validation de l'échantillon, selon la quantité et la période. Le délai exact figure dans votre devis." },
-      { "question": "Livrez-vous hors de Tunisie ?", "reponse": "Oui, vers l'Europe et le Maghreb, sur devis. Nous préparons les documents d'expédition avec vous." },
-      { "question": "Comment se passe le paiement ?", "reponse": "30 % d'acompte à la validation, le solde à la livraison, par virement ou en espèces." }
+      { "question": "Quels sont les délais ?", "reponse": "Comptez 15 à 25 jours de production après validation de l'échantillon, selon la quantité et la saison, puis quelques jours de transport jusqu'en France. Le délai exact figure dans votre devis." },
+      { "question": "Comment se passe le paiement ?", "reponse": "30 % d'acompte à la validation de l'échantillon, le solde avant l'expédition, par virement bancaire." }
     ]
   },
 
   "appelFinal": {
     "titre": "Parlons de votre *prochaine collection.*",
-    "texte": "Dites-nous ce que vous cherchez : nous revenons vers vous sous 24 h avec des conseils, des prix et un délai.",
+    "texte": "Dites-nous ce que vous cherchez : nous revenons vers vous sous 24 h avec des conseils, des prix et un délai de livraison en France.",
     "boutonDevis": "Demander un devis",
     "boutonWhatsapp": "Écrire sur WhatsApp",
-    "visite": "Vous êtes dans le Sahel ? Venez visiter l'atelier, sur rendez-vous."
+    "visite": "De passage en Tunisie ? Venez visiter l'atelier, sur rendez-vous."
   },
 
   "pied": {
@@ -208,8 +240,65 @@
     "titre": "Demande de devis",
     "surtitre": "Devis gratuit · réponse sous 24 h",
     "titrePage": "Parlons de votre *commande.*",
-    "texte": "Quelques informations, et votre demande part sur WhatsApp, déjà rédigée. Nous vous répondons sous 24 h avec un prix par pièce et un délai.",
+    "texte": "Quelques informations, et votre demande part sur WhatsApp, déjà rédigée. Nous vous répondons sous 24 h avec un prix par pièce, un délai et le coût de livraison en France.",
+    "seoDescription": "Demandez un devis gratuit à l'atelier Yomna Fashion : prix par pièce, délai de production et livraison en France, réponse sous 24 h.",
     "quantites": ["50 à 100 pièces", "100 à 300 pièces", "300 à 1 000 pièces", "Plus de 1 000 pièces", "Je ne sais pas encore"],
     "confirmation": "Votre demande est prête dans WhatsApp : il ne reste qu'à l'envoyer. Si WhatsApp ne s'est pas ouvert, appelez-nous ou écrivez-nous par e-mail."
+  },
+
+  "pageAtelier": {
+    "seoTitre": "L'atelier : confection textile à Moknine, en Tunisie",
+    "seoDescription": "Découvrez l'atelier Yomna Fashion à Moknine : son équipe, ses machines, sa méthode de contrôle qualité et ses conditions pour les marques françaises.",
+    "surtitre": "L'atelier",
+    "titre": "Un atelier du Sahel tunisien, *ouvert aux marques françaises.*",
+    "intro": "Moknine est au cœur du Sahel, la région qui a fait de la Tunisie l'un des grands pays de la confection pour l'Europe. C'est là que nous coupons, cousons et contrôlons chaque pièce, pour des boutiques et des marques qui veulent produire près de chez elles.",
+    "histoire": [
+      "Tout a commencé par quelques machines et une conviction : un vêtement bien fait se reconnaît au toucher, à la tenue des coutures, à la façon dont il vieillit. Nous avons grandi en gardant cette exigence, commande après commande.",
+      "Aujourd'hui, l'atelier réunit coupe, confection, finitions et contrôle sous un même toit. Pas de sous-traitance en cascade : la pièce que vous validez en échantillon est fabriquée par les mêmes mains que votre série.",
+      "Nous travaillons en français, avec des marques et des boutiques de toute la France : premières collections, réassorts de basiques, séries à la marque du client. Chaque projet a son interlocuteur, joignable sur WhatsApp."
+    ],
+    "equipements": [
+      "Tables de coupe et matelassage",
+      "Surjeteuses et recouvreuses",
+      "Piqueuses plates et machines à boutonnières",
+      "Presses et repassage vapeur",
+      "Poste de contrôle qualité et d'emballage"
+    ],
+    "visite": "L'atelier se visite sur rendez-vous, à une trentaine de minutes de l'aéroport de Monastir. Prévenez-nous de votre venue : nous préparons les échantillons et les tissus qui vous intéressent."
+  },
+
+  "pageMarqueBlanche": {
+    "seoTitre": "Marque blanche : vos vêtements fabriqués en Tunisie",
+    "seoDescription": "Lancez votre marque de vêtements : t-shirts, sweats, enfants et femme fabriqués en Tunisie avec vos étiquettes, dès 50 pièces par modèle.",
+    "surtitre": "Marque blanche",
+    "titre": "Votre marque de vêtements, *fabriquée en Tunisie.*",
+    "intro": "Vous avez un nom, une idée, une clientèle. Nous avons l'atelier. Choisissez un modèle de notre collection ou apportez le vôtre : nous le produisons à votre marque, en petite ou grande série, et vos clients ne verront que votre nom.",
+    "personnalisations": [
+      { "titre": "Étiquette tissée", "texte": "Votre logo tissé, cousu au col ou en couture de côté. Écru, noir ou à vos couleurs." },
+      { "titre": "Étiquette de taille et d'entretien", "texte": "La composition en fibres, obligatoire en Europe, avec la taille, les symboles d'entretien et l'origine." },
+      { "titre": "Sérigraphie", "texte": "Pour les visuels francs et les grandes surfaces, jusqu'à plusieurs couleurs." },
+      { "titre": "Broderie", "texte": "Pour un logo discret en poitrine ou une signature en relief, qui dure autant que le vêtement." },
+      { "titre": "Étiquette volante", "texte": "Le carton accroché à la pièce, avec votre nom, votre histoire et votre code-barres." },
+      { "titre": "Emballage", "texte": "Pliage, sachet, sticker ou boîte : la pièce arrive prête à être vendue ou expédiée." }
+    ],
+    "etapes": [
+      { "titre": "Votre projet", "texte": "Modèles, quantités, logo, budget : nous en parlons sur WhatsApp ou en visio." },
+      { "titre": "Le prototype", "texte": "Nous réalisons la pièce à votre marque : tissu, coupe, étiquettes, finitions." },
+      { "titre": "La validation", "texte": "Vous recevez l'échantillon en France et le devis final. Vous ajustez, puis validez." },
+      { "titre": "La série", "texte": "Production, contrôle pièce par pièce, emballage, puis livraison jusqu'à vous." }
+    ],
+    "faq": [
+      { "question": "Faut-il une marque déposée pour commander ?", "reponse": "Non. Il suffit d'un nom et d'un logo. Nous vous conseillons toutefois de protéger votre marque auprès de l'INPI avant de lancer une collection importante." },
+      { "question": "Quel minimum pour une première collection ?", "reponse": "Dès 50 pièces par modèle en général, tailles et coloris panachés. Une première collection de trois ou quatre modèles est donc accessible." },
+      { "question": "Les étiquettes sont-elles conformes pour la France ?", "reponse": "Oui. La composition en fibres, en pourcentage, est la seule mention obligatoire dans l'Union européenne : elle figure sur chaque pièce. Nous ajoutons aussi, à votre demande, la taille, les symboles d'entretien et le pays de fabrication." }
+    ]
+  },
+
+  "pageGuides": {
+    "seoTitre": "Guides pour faire fabriquer ses vêtements en Tunisie",
+    "seoDescription": "Conseils pratiques pour les marques et boutiques françaises : produire en Tunisie, choisir ses tissus, prévoir ses quantités et lancer sa marque de vêtements.",
+    "surtitre": "Guides",
+    "titre": "Faire fabriquer ses vêtements, *sans se tromper.*",
+    "intro": "Tissus, quantités, délais, douane : ce que nous expliquons chaque semaine aux marques qui nous contactent, rassemblé ici."
   }
 }

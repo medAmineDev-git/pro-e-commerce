@@ -1,6 +1,6 @@
 ---
 import Icone from './Icone.astro';
-import { gammes, lienTelephone, lienWhatsapp, site, titre } from '../lib/contenu';
+import { gammes, lienGamme, lienTelephone, lienWhatsapp, site, titre } from '../lib/contenu';
 
 const annee = new Date().getFullYear();
 const reseaux = [
@@ -25,9 +25,11 @@ const reseaux = [
       </div>
 
       <div>
-        <p class="pied__titre">La collection</p>
+        <p class="pied__titre">Nos métiers</p>
         <ul>
-          {gammes.map((gamme) => <li><a href={`/collection?gamme=${gamme.id}`}>{gamme.nom}</a></li>)}
+          {gammes.map((gamme) => <li><a href={lienGamme(gamme)}>{gamme.nom}</a></li>)}
+          <li><a href="/marque-blanche">Marque blanche</a></li>
+          <li><a href="/collection">Toute la collection</a></li>
         </ul>
       </div>
 
@@ -42,9 +44,11 @@ const reseaux = [
       </div>
 
       <div>
-        <p class="pied__titre">Au détail</p>
+        <p class="pied__titre">Ressources</p>
         <ul>
-          <li><a href={site.marque.siteBoutique} target="_blank" rel="noopener">Notre boutique en ligne</a></li>
+          <li><a href="/atelier">L'atelier</a></li>
+          <li><a href="/guides">Guides</a></li>
+          <li><a href={site.marque.siteBoutique} target="_blank" rel="noopener">Notre boutique au détail</a></li>
           {reseaux.map((reseau) => <li><a href={reseau.lien} target="_blank" rel="noopener">{reseau.nom}</a></li>)}
         </ul>
       </div>

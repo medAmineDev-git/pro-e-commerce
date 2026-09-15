@@ -315,6 +315,10 @@ p {
   }
 }
 
+.insecable {
+  white-space: nowrap;
+}
+
 .visuellement-cache {
   position: absolute;
   width: 1px;
